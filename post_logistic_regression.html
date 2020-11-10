@@ -1,0 +1,1768 @@
+<!DOCTYPE html>
+<html lang="en"> 
+<head>
+    <title>Logistic Regression</title>
+    <!-- Meta. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Blog Template">
+    <meta name="author" content="Xiaoying Riley at 3rd Wave Media">
+    <link rel="shortcut icon" href="favicon.ico"> 
+    <!-- FontAwesome JS-->
+    <script defer src="https://use.fontawesome.com/releases/v5.7.1/js/all.js" integrity="sha384-eVEQC9zshBn0rFj4+TU78eNA19HMNigMviK/PU/FFjLXqa/GKPgX58rvt5Z8PLs7" crossorigin="anonymous"></script>
+    <!-- Plugin CSS -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/styles/monokai-sublime.min.css">
+    <!-- Theme CSS -->  
+    <link id="theme-style" rel="stylesheet" href="assets/css/theme.css">
+</head> 
+
+<body>
+<!-- ------------------------- Side Menu -------------------- -->
+    <header class="header text-center">
+      <div>
+          <h1><a class="name" href="index.html">Jhonatan Montilla</a></h1>
+      </div>
+      <nav class="navbar navbar-expand-lg navbar-dark">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation" aria-controls="navigation" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+      </button>
+      <div id="navigation" class="collapse navbar-collapse flex-column">
+        <div class="profile-section pt-3 pt-lg-0">
+            <img class="profile-image mb-3 rounded-circle mx-auto" src="assets/images/profile.png" alt="image">
+          <div class="bio mb-3">I've got a huge passion for data patterns discovery through data analysis. <br>-----<br> Master in Big Data & Business Intelligence, MBA mention Enterprises and Industrial Engineer Professional.</div><!--//bio-->
+          <!--ul class="social-list list-inline py-3 mx-auto">
+                  <li class="list-inline-item"><a href="#"><i class="fab fa-twitter fa-fw"></i></a></li>
+                  <li class="list-inline-item"><a href="#"><i class="fab fa-linkedin-in fa-fw"></i></a></li>
+                  <li class="list-inline-item"><a href="#"><i class="fab fa-github-alt fa-fw"></i></a></li>
+                  <li class="list-inline-item"><a href="#"><i class="fab fa-stack-overflow fa-fw"></i></a></li>
+                  <li class="list-inline-item"><a href="#"><i class="fab fa-codepen fa-fw"></i></a></li>
+              </ul--><!--//social-list-->
+              <hr>
+        </div><!--//profile-section-->
+				<ul class="navbar-nav flex-column text-left">
+					<li class="nav-item">
+					    <a class="nav-link" href="index.html"><i class="fas fa-home fa-fw mr-2"></i>Blog Home <span class="sr-only">(current)</span></a>
+					</li>
+					<li class="nav-item active">
+					    <a class="nav-link" href="#.html"><i class="fas fa-bookmark fa-fw mr-2"></i>Blog Post</a>
+					</li>
+					<li class="nav-item">
+					    <a class="nav-link" href="about.html"><i class="fas fa-user fa-fw mr-2"></i>About Me</a>
+					</li>
+				</ul>
+			</div>
+		</nav>
+    </header>
+<!-- ------------------------- Side Menu -------------------- -->
+    <div class="main-wrapper">
+	    <article>
+      <article class="about-section py-5">
+		    <div class="container">
+			    <header class="blog-post-header">
+				    <h2 class="title mb-2">Logistic Regression using Python</h2>
+				    <div class="meta mb-3"><span class="date">Published: Nov 07, 2020</span><span class="time">20 min read</span><span class="comment"><a href="https://www.python.org">Python</a></span></div>
+			    </header>
+			    
+			    <div class="blog-post-body">
+<!-- ------------------------- Images -------------------- -->
+				    <figure class="blog-banner">
+				        <a href="#"><img class="img-fluid" src="assets/images/blog/post_logistic_regression/post_logistic_regresion_banner.jpg" alt="image"></a>
+				        <figcaption class="mt-2 text-center image-caption p-gray">Image Credit: <a href="https://en.wikipedia.org/wiki/Logistic_regression#Logistic_function,_odds,_odds_ratio,_and_logit" target="_blank">Wikipedia: Logistic Regression</a></figcaption>
+				    </figure>
+<!-- ------------------------- Images -------------------- -->
+<p class="p-gray">Logistic regression is a machine learning classification algorithm used to predict the probability of a categorical dependent variable. In logistic regression, the dependent variable is a binary variable that contains data coded as 1 for affirmative answer (yes), success, etc. and 0  for negative answer (no), failure, etc. Therefore a logistic regression model predicts P (Y = 1) as a function of X.</p>
+
+<h5>Logistic regression assumptions</h5>
+<ul class="p-code">
+  <li>Binary logistic regression requires that the dependent variable be binary.</li>
+  <li>For a binary regression, the factor 1 level of the dependent variable should represent the desired result.</li>
+  <li>Only significant variables should be included.</li>
+  <li>The independent variables must be independent of each other. That is, the model must have little or no multicollinearity.</li>
+  <li>The independent variables are linearly related to the logarithmic probabilities.</li>
+  <li>Logistic regression requires fairly large sample sizes.</li>
+</ul>
+
+<p class="p-gray">Keeping the above assumptions in mind, let's make an excercise through a real life example.</p>
+
+<p class="p-gray">We'll using dataset that comes from the UCI Machine Learning repository related to direct marketing campaigns (throgh phone calls) from a Portuguese banking institution.</p>
+
+<p class="p-gray">The classification target is to predict whether the customers will subscribe, yes or not (1 or 0) to a long term deposit (Variable y).</p>
+
+<p class="p-gray">First at all, do load the necessary python libraries.</p>
+
+<!-- ------------------------- Codes -------------------- -->
+<div class="pre-code">
+<small class="p-codes">Code:</small>
+<pre>
+<code class="p-code">
+import numpy as np
+import statsmodels.api as sm
+import pandas as pd
+pd.options.display.float_format = '{:.4f}'.format
+import seaborn as sns
+sns.set(style="white")
+sns.set(style="whitegrid", color_codes=True)
+import matplotlib.pyplot as plt 
+plt.rc("font", size=14)
+import warnings
+warnings.filterwarnings('ignore')
+from sklearn import preprocessing
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+from imblearn.over_sampling import SMOTE
+from sklearn.feature_selection import RFE
+from sklearn.linear_model import LogisticRegression
+from sklearn.linear_model import LogisticRegression
+from sklearn import metrics
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import classification_report
+from sklearn.metrics import roc_auc_score
+from sklearn.metrics import roc_curve
+</code>
+</pre>
+</div>
+<br>
+<p class="p-gray">Do load the dataset, that you can get from my github repository following this link <a href="#">Logistic Regression</a>.</p>
+<br>
+<div class="pre-code">
+<small class="p-codes">Code:</small>
+<pre>
+<code class="p-code">
+data = pd.read_csv('banking.csv', header=0)
+data = data.dropna()
+</code>
+</pre>
+</div>
+<br>
+<p class="p-gray">Do dataset review using shape() python object property, this way can see the numbers of rows and  columns (variables) inside dataset.</p>
+<br>
+<div class="pre-code">
+<small class="p-codes">Code:</small>
+<pre>
+<code class="p-code">
+print(data.shape)
+</code>
+</pre>
+<hr>
+<small class="p-codes">Output:</small>
+<pre>
+<code-out class="p-code">
+(41188, 21)
+</code-out>
+</pre>
+</div>
+<br>
+<p class="p-gray">The dataset provides the bank's customer information, there are 41.188 rows and 21 columns in dataset. Do check columns names showing through a list</p>
+<br>
+<div class="pre-code">
+<small class="p-codes">Code:</small>
+<pre>
+<code class="p-code">
+print(list(data.columns))
+</code>
+</pre>
+<hr>
+<small class="p-codes">Output:</small>
+<pre>
+<code-out class="p-code">
+['age', 'job', 'marital', 'education', 'default', 'housing', 'loan',
+'contact', 'month', 'day_of_week', 'duration', 'campaign', 'pdays',
+'previous', 'poutcome', 'emp_var_rate', 'cons_price_idx', 'cons_conf_idx',
+'euribor3m', 'nr_employed', 'y']
+</code-out>
+</pre>
+</div>
+<br>
+<p class="p-gray">Now, do check the dataset head and its data into the five first rows.</p>
+<br>
+<div class="pre-code">
+<small class="p-codes">Code:</small>
+<pre>
+<code class="p-code">
+data.head(5)
+</code>
+</pre>
+<hr>
+<small class="p-codes">Output:</small>
+<pre>
+<table class="table table-striped my-5">
+  <thead>
+    <tr>
+      <th></th>
+      <th>age</th>
+      <th>job</th>
+      <th>marital</th>
+      <th>education</th>
+      <th>default</th>
+      <th>housing</th>
+      <th>loan</th>
+      <th>contact</th>
+      <th>month</th>
+      <th>day_of_week</th>
+      <th>...</th>
+      <th>campaign</th>
+      <th>pdays</th>
+      <th>previous</th>
+      <th>poutcome</th>
+      <th>emp_var_rate</th>
+      <th>cons_price_idx</th>
+      <th>cons_conf_idx</th>
+      <th>euribor3m</th>
+      <th>nr_employed</th>
+      <th>y</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>44</td>
+      <td>blue-collar</td>
+      <td>married</td>
+      <td>basic.4y</td>
+      <td>unknown</td>
+      <td>yes</td>
+      <td>no</td>
+      <td>cellular</td>
+      <td>aug</td>
+      <td>thu</td>
+      <td>...</td>
+      <td>1</td>
+      <td>999</td>
+      <td>0</td>
+      <td>nonexistent</td>
+      <td>1.4000</td>
+      <td>93.4440</td>
+      <td>-36.1000</td>
+      <td>4.9630</td>
+      <td>5228.1000</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>53</td>
+      <td>technician</td>
+      <td>married</td>
+      <td>unknown</td>
+      <td>no</td>
+      <td>no</td>
+      <td>no</td>
+      <td>cellular</td>
+      <td>nov</td>
+      <td>fri</td>
+      <td>...</td>
+      <td>1</td>
+      <td>999</td>
+      <td>0</td>
+      <td>nonexistent</td>
+      <td>-0.1000</td>
+      <td>93.2000</td>
+      <td>-42.0000</td>
+      <td>4.0210</td>
+      <td>5195.8000</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>28</td>
+      <td>management</td>
+      <td>single</td>
+      <td>university.degree</td>
+      <td>no</td>
+      <td>yes</td>
+      <td>no</td>
+      <td>cellular</td>
+      <td>jun</td>
+      <td>thu</td>
+      <td>...</td>
+      <td>3</td>
+      <td>6</td>
+      <td>2</td>
+      <td>success</td>
+      <td>-1.7000</td>
+      <td>94.0550</td>
+      <td>-39.8000</td>
+      <td>0.7290</td>
+      <td>4991.6000</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>39</td>
+      <td>services</td>
+      <td>married</td>
+      <td>high.school</td>
+      <td>no</td>
+      <td>no</td>
+      <td>no</td>
+      <td>cellular</td>
+      <td>apr</td>
+      <td>fri</td>
+      <td>...</td>
+      <td>2</td>
+      <td>999</td>
+      <td>0</td>
+      <td>nonexistent</td>
+      <td>-1.8000</td>
+      <td>93.0750</td>
+      <td>-47.1000</td>
+      <td>1.4050</td>
+      <td>5099.1000</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>55</td>
+      <td>retired</td>
+      <td>married</td>
+      <td>basic.4y</td>
+      <td>no</td>
+      <td>yes</td>
+      <td>no</td>
+      <td>cellular</td>
+      <td>aug</td>
+      <td>fri</td>
+      <td>...</td>
+      <td>1</td>
+      <td>3</td>
+      <td>1</td>
+      <td>success</td>
+      <td>-2.9000</td>
+      <td>92.2010</td>
+      <td>-31.4000</td>
+      <td>0.8690</td>
+      <td>5076.2000</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+<code-out class="p-code">
+5 rows × 21 columns
+</code-out>
+</pre>
+</div>
+    <br>
+    <p class="p-gray">Do make a Input variables review following this way:</p>
+    <ul class="p-code">
+      <li>age: (numeric)</li>
+      <li>work: type of work (categorical: "administrator", "worker", "entrepreneur", "domestic worker", "management", "retired", "self-employed", "services", "student", "technician", " unemployed ”,“ unknown ”)</li>
+      <li>marital: marital status (categorical: "divorced", "married", "single", "unknown")</li>
+      <li>education: (categorical: "basic.4y", "basic.6y", "basic.9y", "preparatory", "illiterate", "professional.curse", "university degree", "unknown")</li>
+      <li>default: do you have credit in default? (categorical: "no", "yes", "unknown")</li>
+      <li>housing: do you have a home loan? (categorical: "no", "yes", "unknown")</li>
+      <li>loan: do you have a personal loan? (categorical: "no", "yes", "unknown")</li>
+      <li>contact: type of contact communication (categorical: "cell phone", "phone")</li>
+      <li>month: last contact month of the year (categorical: "jan", "feb", "mar", ..., "nov", "dec")</li>
+      <li>day_of_week: last contact day of the week (categorical: "Mon", "Tue", "Wed", "Thu", "Fri")</li>
+      <li>duration: duration of the last contact, in seconds (numeric).</li>
+    </ul>
+    <br>
+      <p class="p-gray">Important note: this attribute greatly affects the output target (for example, if duration = 0, then y = "no"). The duration is not known before a call is made, furthermore, after the end of the call, it is obviously known and. Therefore, this entry should only be included for reference purposes and should be discarded if the intention is to have a realistic predictive model.</p>
+    <br>
+    <ul class="p-gray">
+      <li>campaign: number of contacts made during this campaign and for this customer (numeric, includes the last contact)</li>
+      <li>pdays: number of days that passed after the customer was last contacted from a previous campaign (numeric; 999 means the customer was not contacted previously)</li>
+      <li>previous: number of contacts made before this campaign and for this customer (numeric)</li>
+      <li>poutcome: result of the previous marketing campaign (categorical: "failure", "non-existent", "success")</li>
+      <li>emp_var_rate: employment variation rate - (numerical)</li>
+      <li>cons_price_idx: consumer price index - (numeric)</li>
+      <li>cons_conf_idx: Consumer Confidence Index - (numeric)</li>
+      <li>euribor3m: 3-month Euribor interest rate - (numeric)</li>
+      <li>nr_employed: number of employees - (numeric)</li>
+    </ul>
+    <h5>Target variable (desired target):</h5>
+    <p class="p-gray">"y" will be the following question: Did customer make a long term deposit?. The answer will be binary: "1" will be mean "Yes", and "0" wil mean "No".</p>
+    <p class="p-gray">The education variable from dataset has many categories, it'll be necessary reduce these categories in order to build a better prediction modeling. The following categories, "basic.4y", "basic.9y" and "basic.6y" could be together, therefore they can be grouped and called "basic".</p>
+    <br>
+<div class="pre-code">
+<small class="p-codes">Code:</small>
+<pre>
+<code class="p-code">
+data['education']=np.where(data['education'] =='basic.9y', 'Basic', data['education'])
+data['education']=np.where(data['education'] =='basic.6y', 'Basic', data['education'])
+data['education']=np.where(data['education'] =='basic.4y', 'Basic', data['education'])
+</code>
+</pre>
+</div>
+    <br>
+    <p class="p-gray">Now, do check the education categories from education variable and verify that “basic.4y”, “basic.9y” y “basic.6y” categories are "basic".</p>
+<div class="pre-code">
+<small class="p-codes">Code:</small>
+<pre>
+<code class="p-code">
+data['education'].unique()
+</code>
+</pre>
+<hr>
+<small class="p-codes">Output:</small>
+<pre>
+<code-out class="p-code">
+array(['Basic', 'unknown', 'university.degree', 'high.school',
+       'professional.course', 'illiterate'], dtype=object)
+</code-out>
+</pre>
+</div>
+    <br>
+    <h5>Data exploration.</h5>
+    <p class="p-gray">Do review how many registers are "1" or "0" in entire dataset.</p>
+<div class="pre-code">
+<small class="p-codes">Code:</small>
+<pre>
+<code class="p-code">
+data['y'].value_counts()
+</code>
+</pre>
+<hr>
+<small class="p-codes">Output:</small>
+<pre>
+<code-out class="p-code">
+0    36548
+1     4640
+Name: y, dtype: int64
+</code-out>
+</pre>
+</div>
+    <br>
+    <p class="p-gray">The difference between "1" and "0"  amount is truly significant, let's check them using a bar chart.
+    </p>
+<div class="pre-code">
+<small class="p-codes">Code:</small>
+<pre>
+<code class="p-code">
+sns.countplot(x='y', data=data, palette='hls')
+plt.show()
+plt.savefig('count_plot')
+</code>
+</pre>
+<hr>
+<small class="p-codes">Output:</small>
+<pre>
+<figure><img class="img-fluid" src="assets/images/blog/post_logistic_regression/image01.png" alt="image"></figure>
+</pre>
+</div>
+    <br>
+    <p class="p-gray">
+    The bar chart shows a significant difference proportion between customers with no long term deposit inside this dataset. let's do  a percentage review of them.
+    </p>
+<div class="pre-code">
+<small class="p-codes">Code:</small>
+<pre>
+<code class="p-code">
+count_no_sub = len(data[data['y']==0])
+count_sub = len(data[data['y']==1])
+pct_of_no_sub = count_no_sub/(count_no_sub+count_sub)
+print("Percentage of unsubscribed:", pct_of_no_sub*100)
+</code>
+</pre>
+<hr>
+<small class="p-codes">Output:</small>
+<pre>
+<code-out class="p-code">
+Percentage of unsubscribed: 88.73458288821988
+</code-out>
+</pre>
+</div>
+    <br>
+    <p class="p-gray">
+    There are 88,73% of customers without long term deposit subcription. Let's check the another group.
+    </p>
+<div class="pre-code">
+<small class="p-codes">Code:</small>
+<pre>
+<code class="p-code">
+pct_of_sub = count_sub/(count_no_sub+count_sub)
+print("Subscriber percentage:", pct_of_sub*100)
+</code>
+</pre>
+<hr>
+<small class="p-codes">Output:</small>
+<pre>
+<code-out class="p-code">
+Subscriber percentage: 11.265417111780131
+</code-out>
+</pre>
+</div>
+    <br>
+    <p class="p-gray">
+    There are 11,27% of customers subscribed with long term deposit. Now, do calculate the mean for subscription and no subscription mean of all independent variables.
+    </p>
+<div class="pre-code">
+<small class="p-codes">Code:</small>
+<pre>
+<code class="p-code">
+data.groupby('y').mean()
+</code>
+</pre>
+<hr>
+<small class="p-codes">Output:</small>
+<pre>
+<table class="table table-striped my-5">
+  <thead>
+    <tr>
+      <th></th>
+      <th>age</th>
+      <th>duration</th>
+      <th>campaign</th>
+      <th>pdays</th>
+      <th>previous</th>
+      <th>emp_var_rate</th>
+      <th>cons_price_idx</th>
+      <th>cons_conf_idx</th>
+      <th>euribor3m</th>
+      <th>nr_employed</th>
+    </tr>
+    <tr>
+      <th>y</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>39.9112</td>
+      <td>220.8448</td>
+      <td>2.6331</td>
+      <td>984.1139</td>
+      <td>0.1324</td>
+      <td>0.2489</td>
+      <td>93.6038</td>
+      <td>-40.5931</td>
+      <td>3.8115</td>
+      <td>5176.1666</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>40.9131</td>
+      <td>553.1912</td>
+      <td>2.0517</td>
+      <td>792.0356</td>
+      <td>0.4927</td>
+      <td>-1.2334</td>
+      <td>93.3544</td>
+      <td>-39.7898</td>
+      <td>2.1231</td>
+      <td>5095.1160</td>
+    </tr>
+  </tbody>
+</table>
+</pre>
+</div>
+<br>
+<p class="p-gray">Let' make following observations:
+</p>
+    <ul class="p-gray">
+      <li>
+        The average customer age with long term deposit subscription is higher than that of the clients who did not.
+      </li>
+      <li>
+        The pdays (days since the customer was last contacted) are understandably lower for customers who are suscripbed. The lower the days, the better the memory of the last call and therefore the greater the chances of selling.
+      </li>
+      <li>
+        Surprisingly, the campaigns (number of contacts or calls made during the current campaign) are lower for customers with long term deposit subscription.
+      </li>
+    </ul>
+    <p class="p-gray">
+      Now, do calculate categorical means for other categorical variables such as education, marital status, etc. to get a more detailed information from data.
+    </p>
+    <p class="p-gray">
+      By job:
+    </p>
+<div class="pre-code">
+<small class="p-codes">Code:</small>
+<pre>
+<code class="p-code">
+data.groupby('job').mean()
+</code>
+</pre>
+<hr>
+<small class="p-codes">Output:</small>
+<pre class="pre-scrollable">
+<table class="table table-striped my-5">
+  <thead>
+    <tr>
+      <th></th>
+      <th>age</th>
+      <th>duration</th>
+      <th>campaign</th>
+      <th>pdays</th>
+      <th>previous</th>
+      <th>emp_var_rate</th>
+      <th>cons_price_idx</th>
+      <th>cons_conf_idx</th>
+      <th>euribor3m</th>
+      <th>nr_employed</th>
+      <th>y</th>
+    </tr>
+    <tr>
+      <th>job</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>admin.</th>
+      <td>38.1873</td>
+      <td>254.3121</td>
+      <td>2.6235</td>
+      <td>954.3192</td>
+      <td>0.1890</td>
+      <td>0.0156</td>
+      <td>93.5341</td>
+      <td>-40.2454</td>
+      <td>3.5503</td>
+      <td>5164.1254</td>
+      <td>0.1297</td>
+    </tr>
+    <tr>
+      <th>blue-collar</th>
+      <td>39.5558</td>
+      <td>264.5424</td>
+      <td>2.5585</td>
+      <td>985.1604</td>
+      <td>0.1225</td>
+      <td>0.2490</td>
+      <td>93.6567</td>
+      <td>-41.3758</td>
+      <td>3.7720</td>
+      <td>5175.6152</td>
+      <td>0.0689</td>
+    </tr>
+    <tr>
+      <th>entrepreneur</th>
+      <td>41.7232</td>
+      <td>263.2679</td>
+      <td>2.5357</td>
+      <td>981.2672</td>
+      <td>0.1387</td>
+      <td>0.1587</td>
+      <td>93.6054</td>
+      <td>-41.2837</td>
+      <td>3.7911</td>
+      <td>5176.3135</td>
+      <td>0.0852</td>
+    </tr>
+    <tr>
+      <th>housemaid</th>
+      <td>45.5000</td>
+      <td>250.4547</td>
+      <td>2.6396</td>
+      <td>960.5792</td>
+      <td>0.1377</td>
+      <td>0.4334</td>
+      <td>93.6766</td>
+      <td>-39.4953</td>
+      <td>4.0096</td>
+      <td>5179.5296</td>
+      <td>0.1000</td>
+    </tr>
+    <tr>
+      <th>management</th>
+      <td>42.3629</td>
+      <td>257.0581</td>
+      <td>2.4761</td>
+      <td>962.6471</td>
+      <td>0.1850</td>
+      <td>-0.0127</td>
+      <td>93.5228</td>
+      <td>-40.4895</td>
+      <td>3.6113</td>
+      <td>5166.6505</td>
+      <td>0.1122</td>
+    </tr>
+    <tr>
+      <th>retired</th>
+      <td>62.0273</td>
+      <td>273.7122</td>
+      <td>2.4767</td>
+      <td>897.9360</td>
+      <td>0.3273</td>
+      <td>-0.6983</td>
+      <td>93.4308</td>
+      <td>-38.5731</td>
+      <td>2.7701</td>
+      <td>5122.2622</td>
+      <td>0.2523</td>
+    </tr>
+    <tr>
+      <th>self-employed</th>
+      <td>39.9493</td>
+      <td>264.1422</td>
+      <td>2.6608</td>
+      <td>976.6214</td>
+      <td>0.1436</td>
+      <td>0.0942</td>
+      <td>93.5600</td>
+      <td>-40.4881</td>
+      <td>3.6894</td>
+      <td>5170.6744</td>
+      <td>0.1049</td>
+    </tr>
+    <tr>
+      <th>services</th>
+      <td>37.9264</td>
+      <td>258.3981</td>
+      <td>2.5878</td>
+      <td>979.9740</td>
+      <td>0.1550</td>
+      <td>0.1754</td>
+      <td>93.6347</td>
+      <td>-41.2900</td>
+      <td>3.6992</td>
+      <td>5171.6001</td>
+      <td>0.0814</td>
+    </tr>
+    <tr>
+      <th>student</th>
+      <td>25.8949</td>
+      <td>283.6834</td>
+      <td>2.1040</td>
+      <td>840.2171</td>
+      <td>0.5246</td>
+      <td>-1.4080</td>
+      <td>93.3316</td>
+      <td>-40.1875</td>
+      <td>1.8842</td>
+      <td>5085.9391</td>
+      <td>0.3143</td>
+    </tr>
+    <tr>
+      <th>technician</th>
+      <td>38.5076</td>
+      <td>250.2322</td>
+      <td>2.5773</td>
+      <td>964.4081</td>
+      <td>0.1538</td>
+      <td>0.2746</td>
+      <td>93.5615</td>
+      <td>-39.9276</td>
+      <td>3.8204</td>
+      <td>5175.6484</td>
+      <td>0.1083</td>
+    </tr>
+    <tr>
+      <th>unemployed</th>
+      <td>39.7337</td>
+      <td>249.4517</td>
+      <td>2.5641</td>
+      <td>935.3166</td>
+      <td>0.1992</td>
+      <td>-0.1117</td>
+      <td>93.5638</td>
+      <td>-40.0076</td>
+      <td>3.4666</td>
+      <td>5157.1565</td>
+      <td>0.1420</td>
+    </tr>
+    <tr>
+      <th>unknown</th>
+      <td>45.5636</td>
+      <td>239.6758</td>
+      <td>2.6485</td>
+      <td>938.7273</td>
+      <td>0.1545</td>
+      <td>0.3579</td>
+      <td>93.7189</td>
+      <td>-38.7979</td>
+      <td>3.9490</td>
+      <td>5172.9318</td>
+      <td>0.1121</td>
+    </tr>
+  </tbody>
+</table>
+</pre>
+</div>
+    <br>
+    <p class="p-gray">
+        By marital status:
+    </p>
+<div class="pre-code">
+<small class="p-codes">Code:</small>
+<pre>
+<code class="p-code">
+data.groupby('marital').mean()
+</code>
+</pre>
+<hr>
+<small class="p-codes">Output:</small>
+<pre>
+<table class="table table-striped my-5">
+  <thead>
+    <tr>
+      <th></th>
+      <th>age</th>
+      <th>duration</th>
+      <th>campaign</th>
+      <th>pdays</th>
+      <th>previous</th>
+      <th>emp_var_rate</th>
+      <th>cons_price_idx</th>
+      <th>cons_conf_idx</th>
+      <th>euribor3m</th>
+      <th>nr_employed</th>
+      <th>y</th>
+    </tr>
+    <tr>
+      <th>marital</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>divorced</th>
+      <td>44.8994</td>
+      <td>253.7903</td>
+      <td>2.6134</td>
+      <td>968.6399</td>
+      <td>0.1687</td>
+      <td>0.1640</td>
+      <td>93.6066</td>
+      <td>-40.7071</td>
+      <td>3.7156</td>
+      <td>5170.8786</td>
+      <td>0.1032</td>
+    </tr>
+    <tr>
+      <th>married</th>
+      <td>42.3072</td>
+      <td>257.4386</td>
+      <td>2.5728</td>
+      <td>967.2477</td>
+      <td>0.1556</td>
+      <td>0.1836</td>
+      <td>93.5974</td>
+      <td>-40.2707</td>
+      <td>3.7458</td>
+      <td>5171.8488</td>
+      <td>0.1016</td>
+    </tr>
+    <tr>
+      <th>single</th>
+      <td>33.1587</td>
+      <td>261.5244</td>
+      <td>2.5338</td>
+      <td>949.9096</td>
+      <td>0.2114</td>
+      <td>-0.1680</td>
+      <td>93.5173</td>
+      <td>-40.9187</td>
+      <td>3.3174</td>
+      <td>5155.1993</td>
+      <td>0.1400</td>
+    </tr>
+    <tr>
+      <th>unknown</th>
+      <td>40.2750</td>
+      <td>312.7250</td>
+      <td>3.1875</td>
+      <td>937.1000</td>
+      <td>0.2750</td>
+      <td>-0.2213</td>
+      <td>93.4712</td>
+      <td>-40.8200</td>
+      <td>3.3130</td>
+      <td>5157.3937</td>
+      <td>0.1500</td>
+    </tr>
+  </tbody>
+</table>
+</pre>
+</div>
+    <br>
+    <p class="p-gray">
+        By education:
+    </p>
+<div class="pre-code">
+<small class="p-codes">Code:</small>
+<pre>
+<code class="p-code">
+data.groupby('education').mean()
+</code>
+</pre>
+<hr>
+<small class="p-codes">Output:</small>
+<pre>
+<table class="table table-striped my-5">
+  <thead>
+    <tr>
+      <th></th>
+      <th>age</th>
+      <th>duration</th>
+      <th>campaign</th>
+      <th>pdays</th>
+      <th>previous</th>
+      <th>emp_var_rate</th>
+      <th>cons_price_idx</th>
+      <th>cons_conf_idx</th>
+      <th>euribor3m</th>
+      <th>nr_employed</th>
+      <th>y</th>
+    </tr>
+    <tr>
+      <th>education</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Basic</th>
+      <td>42.1639</td>
+      <td>263.0439</td>
+      <td>2.5595</td>
+      <td>974.8780</td>
+      <td>0.1411</td>
+      <td>0.1913</td>
+      <td>93.6399</td>
+      <td>-40.9276</td>
+      <td>3.7297</td>
+      <td>5172.0141</td>
+      <td>0.0870</td>
+    </tr>
+    <tr>
+      <th>high.school</th>
+      <td>37.9982</td>
+      <td>260.8868</td>
+      <td>2.5686</td>
+      <td>964.3584</td>
+      <td>0.1859</td>
+      <td>0.0329</td>
+      <td>93.5849</td>
+      <td>-40.9406</td>
+      <td>3.5562</td>
+      <td>5164.9947</td>
+      <td>0.1084</td>
+    </tr>
+    <tr>
+      <th>illiterate</th>
+      <td>48.5000</td>
+      <td>276.7778</td>
+      <td>2.2778</td>
+      <td>943.8333</td>
+      <td>0.1111</td>
+      <td>-0.1333</td>
+      <td>93.3173</td>
+      <td>-39.9500</td>
+      <td>3.5166</td>
+      <td>5171.7778</td>
+      <td>0.2222</td>
+    </tr>
+    <tr>
+      <th>professional.course</th>
+      <td>40.0801</td>
+      <td>252.5339</td>
+      <td>2.5861</td>
+      <td>960.7660</td>
+      <td>0.1631</td>
+      <td>0.1730</td>
+      <td>93.5699</td>
+      <td>-40.1241</td>
+      <td>3.7105</td>
+      <td>5170.1560</td>
+      <td>0.1135</td>
+    </tr>
+    <tr>
+      <th>university.degree</th>
+      <td>38.8792</td>
+      <td>253.2234</td>
+      <td>2.5635</td>
+      <td>951.8077</td>
+      <td>0.1924</td>
+      <td>-0.0281</td>
+      <td>93.4935</td>
+      <td>-39.9758</td>
+      <td>3.5297</td>
+      <td>5163.2263</td>
+      <td>0.1372</td>
+    </tr>
+    <tr>
+      <th>unknown</th>
+      <td>43.4812</td>
+      <td>262.3905</td>
+      <td>2.5962</td>
+      <td>942.8307</td>
+      <td>0.2265</td>
+      <td>0.0591</td>
+      <td>93.6586</td>
+      <td>-39.8778</td>
+      <td>3.5711</td>
+      <td>5159.5495</td>
+      <td>0.1450</td>
+    </tr>
+  </tbody>
+</table>
+</pre>
+</div>
+    <br>
+    <h5>
+       Visualizations.
+    </h5>
+    <br>
+<div class="pre-code">
+<small class="p-codes">Code:</small>
+<pre>
+<code class="p-code">
+%matplotlib inline
+pd.crosstab(data.job,data.y).plot(kind='bar')
+plt.title('Job suscription frequency')
+plt.xlabel('Job')
+plt.ylabel('Suscription frequency')
+plt.savefig('purchase_fre_job')
+</code>
+</pre>
+<hr>
+<small class="p-codes">Output:</small>
+<pre>
+<figure><img class="img-fluid" src="assets/images/blog/post_logistic_regression/image02.png" alt="image"></figure>
+</pre>
+</div>
+    <p class="p-gray">
+    The long term deposit subscription frequency is highly dependent of job title. Therefore, the job title can be a good predictor for the target variable (y).
+    </p>
+    <br>
+<div class="pre-code">
+<small class="p-codes">Code:</small>
+<pre>
+<code class="p-code">
+table=pd.crosstab(data.marital,data.y)
+table.div(table.sum(1).astype(float), axis=0).plot(kind='bar', stacked=True)
+plt.title('Marital Status vs. Buy stacked bar chart')
+plt.xlabel('Marital status')
+plt.ylabel('Customers proportion')
+plt.savefig('mariral_vs_pur_stack')
+</code>
+</pre>
+<hr>
+<small class="p-codes">Output:</small>
+<pre>
+<figure><img class="img-fluid" src="assets/images/blog/post_logistic_regression/image03.png" alt="image"></figure>
+</pre>
+</div>
+    <p class="p-gray">
+    Previous chart shows the marital status does not appear to be a strong predictor for target variable.
+    </p>
+    <br>
+<div class="pre-code">
+<small class="p-codes">Code:</small>
+<pre>
+<code class="p-code">
+table=pd.crosstab(data.education,data.y)
+table.div(table.sum(1).astype(float), axis=0).plot(kind='bar', stacked=True)
+plt.title('Education vs. Buy stacked bar chart')
+plt.xlabel('Education')
+plt.ylabel('Customers Proportion')
+plt.savefig('edu_vs_pur_stack')
+</code>
+</pre>
+<hr>
+<small class="p-codes">Output:</small>
+<pre>
+<figure><img class="img-fluid" src="assets/images/blog/post_logistic_regression/image04.png" alt="image"></figure>
+</pre>
+</div>
+    <p class="p-gray">
+    Previous chart shows the education does appear to be a strong predictor for target variable.
+    </p>
+    <br>
+<div class="pre-code">
+<small class="p-codes">Code:</small>
+<pre>
+<code class="p-code">
+pd.crosstab(data.day_of_week,data.y).plot(kind='bar')
+plt.title('Purchase frequency by day of the week')
+plt.xlabel('Weekday')
+plt.ylabel('Purchase frequency')
+plt.savefig('pur_dayofweek_bar')
+</code>
+</pre>
+<hr>
+<small class="p-codes">Output:</small>
+<pre>
+<figure><img class="img-fluid" src="assets/images/blog/post_logistic_regression/image05.png" alt="image"></figure>
+</pre>
+</div>
+    <p class="p-gray">
+    Previous chart shows the day of week does not appear to be a good predictor for target variable.
+    </p>
+    <br>
+<div class="pre-code">
+<small class="p-codes">Code:</small>
+<pre>
+<code class="p-code">
+pd.crosstab(data.month,data.y).plot(kind='bar')
+plt.title('Purchase frequency per month')
+plt.xlabel('Month')
+plt.ylabel('Purchase frequency')
+plt.savefig('pur_fre_month_bar')
+</code>
+</pre>
+<hr>
+<small class="p-codes">Output:</small>
+<pre>
+<figure><img class="img-fluid" src="assets/images/blog/post_logistic_regression/image06.png" alt="image"></figure>
+</pre>
+</div>
+    <p class="p-gray">
+    Previous chart shows the month could be a strong predictor for target variable.
+    </p>
+    <br>
+<div class="pre-code">
+<small class="p-codes">Code:</small>
+<pre>
+<code class="p-code">
+data.age.hist()
+plt.title('Age histogram')
+plt.xlabel('Years')
+plt.ylabel('Frecuency')
+plt.savefig('hist_age')
+</code>
+</pre>
+<hr>
+<small class="p-codes">Output:</small>
+<pre>
+<figure><img class="img-fluid" src="assets/images/blog/post_logistic_regression/image07.png" alt="image"></figure>
+</pre>
+</div>
+    <p class="p-gray">
+    Most customers bank are between 30 and 40 years old in this dataset old.
+    </p>
+    <br>
+<div class="pre-code">
+<small class="p-codes">Code:</small>
+<pre>
+<code class="p-code">
+pd.crosstab(data.poutcome,data.y).plot(kind='bar')
+plt.title('Result purchase frequency')
+plt.xlabel('Poutcome')
+plt.ylabel('Purchase frequency')
+plt.savefig('pur_fre_pout_bar')
+</code>
+</pre>
+<hr>
+<small class="p-codes">Output:</small>
+<pre>
+<figure><img class="img-fluid" src="assets/images/blog/post_logistic_regression/image08.png" alt="image"></figure>
+</pre>
+</div>
+    <p class="p-gray">
+    Previous chart shows poutcome variable could be a strong predictor for target variable.
+    </p>
+    <br>
+    <h5>
+    Dummy Variables
+    </h5>
+    <p class="p-gray">
+    Now, do create dummy variables, these should be binary variable type for each variable representative analyzed previously.
+    </p>
+<div class="pre-code">
+<small class="p-codes">Code:</small>
+<pre>
+<code class="p-code">
+cat_vars=['job','marital','education','default','housing',
+          'loan','contact','month','day_of_week','poutcome']
+
+for var in cat_vars:
+    cat_list='var'+'_'+var
+    cat_list = pd.get_dummies(data[var], prefix=var)
+    data1=data.join(cat_list)
+    data=data1
+</code>
+</pre>
+</div>
+    <br>
+<div class="pre-code">
+<small class="p-codes">Code:</small>
+<pre>
+<code class="p-code">
+cat_vars=['job','marital','education','default','housing',
+          'loan','contact','month','day_of_week','poutcome']
+data_vars=data.columns.values.tolist()
+to_keep=[i for i in data_vars if i not in cat_vars]
+</code>
+</pre>
+</div>
+    <br>
+    <p class="p-gray">
+    Now, dataset has the following columns:
+    </p>
+<div class="pre-code">
+<small class="p-codes">Code:</small>
+<pre>
+<code class="p-code">
+data_final=data[to_keep]
+data_final.columns.values
+</code>
+</pre>
+<hr>
+<small class="p-codes">Output:</small>
+<pre class="pre-scrollable">
+<code-out class="p-code">
+array(['age', 'duration', 'campaign', 'pdays', 'previous', 'emp_var_rate',
+       'cons_price_idx', 'cons_conf_idx', 'euribor3m', 'nr_employed', 'y',
+       'job_admin.', 'job_blue-collar', 'job_entrepreneur',
+       'job_housemaid', 'job_management', 'job_retired',
+       'job_self-employed', 'job_services', 'job_student',
+       'job_technician', 'job_unemployed', 'job_unknown',
+       'marital_divorced', 'marital_married', 'marital_single',
+       'marital_unknown', 'education_Basic', 'education_high.school',
+       'education_illiterate', 'education_professional.course',
+       'education_university.degree', 'education_unknown', 'default_no',
+       'default_unknown', 'default_yes', 'housing_no', 'housing_unknown',
+       'housing_yes', 'loan_no', 'loan_unknown', 'loan_yes',
+       'contact_cellular', 'contact_telephone', 'month_apr', 'month_aug',
+       'month_dec', 'month_jul', 'month_jun', 'month_mar', 'month_may',
+       'month_nov', 'month_oct', 'month_sep', 'day_of_week_fri',
+       'day_of_week_mon', 'day_of_week_thu', 'day_of_week_tue',
+       'day_of_week_wed', 'poutcome_failure', 'poutcome_nonexistent',
+       'poutcome_success'], dtype=object)
+</code-out>
+</pre>
+</div>
+    <br>
+    <h5>Oversampling using Synthetic Minority Oversampling Technique (SMOTE)</h5>
+    <br>
+    <p class="p-gray">
+      With training data created, Do sample the non long term deposit subscription using SMOTE technique. This technique works by creating synthetic samples of the minor class (the unsubscribed long term deposit) instead of creating copies, most be randomly choose of the k closest neighbors and use it to create a new one, similar but randomly modified observations. It works as following:
+    </p>
+    <br>
+<div class="pre-code">
+<small class="p-codes">Code:</small>
+<pre>
+<code class="p-code">
+X = data_final.loc[:, data_final.columns != 'y']
+y = data_final.loc[:, data_final.columns == 'y']
+</code>
+</pre>
+</div>
+    <br>
+<div class="pre-code">
+<small class="p-codes">Code:</small>
+<pre>
+<code class="p-code">
+os = SMOTE(random_state=0)
+X_train, X_test, y_train, y_test = train_test_split(X,
+                                                    y,
+                                                    test_size=0.3,
+                                                    random_state=0)
+columns = X_train.columns
+os_data_X,os_data_y = os.fit_sample(X_train, y_train)
+os_data_X = pd.DataFrame(data=os_data_X,columns=columns)
+os_data_y= pd.DataFrame(data=os_data_y,columns=['y'])
+</code>
+</pre>
+</div>
+    <br>
+<div class="pre-code">
+<small class="p-codes">Code:</small>
+<pre>
+<code class="p-code">
+# Check the data values
+print("Length of the over-sampled data is: ",len(os_data_X))
+print("Number of unsubscribed in over-sampled data: ",len(os_data_y[os_data_y['y']==0]))
+print("Number of subscriptions: ",len(os_data_y[os_data_y['y']==1]))
+print("The proportion of unsubscribed data in over-sampled data is: ",len(os_data_y[os_data_y['y']==0])/len(os_data_X))
+print("The ratio of subscription data to over-sampled data is: ",len(os_data_y[os_data_y['y']==1])/len(os_data_X))
+</code>
+</pre>
+<hr>
+<small class="p-codes">Output:</small>
+<pre>
+<code-out class="p-code">
+Length of the over-sampled data is:  51134
+Number of unsubscribed in over-sampled data:  25567
+Number of subscriptions:  25567
+Number of subscriptions:  0.5
+The proportion of unsubscribed data in over-sampled data is:  0.5
+</code-out>
+</pre>
+</div>
+    <p class="p-gray">
+      Now we have perfectly balanced data! You may have noticed that I oversampled only on the training data, because by oversampling only on the training data, none of the information in the test data is used to create synthetic observations, therefore no information will be indented from the test data in the training model.
+    </p>
+    <br>
+    <h5>Recursive Feature Removal (RFE).</h5>
+    <br>
+    <p class="p-gray">
+      Is based on the idea of repeatedly building a model and choosing the best or worst performing feature, putting the feature aside and then repeating the process with the rest of the features. This process is applied until all the characteristics of the data set are exhausted. The goal of RFE is to select features by recursively considering smaller and smaller sets of features.
+    </p>
+    <br>
+<div class="pre-code">
+<small class="p-codes">Code:</small>
+<pre>
+<code class="p-code">
+data_final_vars=data_final.columns.values.tolist()
+y=['y']
+X=[i for i in data_final_vars if i not in y]
+
+logreg = LogisticRegression()
+
+rfe = RFE(logreg, 20)
+rfe = rfe.fit(os_data_X, os_data_y.values.ravel())
+</code>
+</pre>
+</div>
+    <br>
+<div class="pre-code">
+<small class="p-codes">Code:</small>
+<pre>
+<code class="p-code">
+print(rfe.support_)
+print(rfe.ranking_)
+</code>
+</pre>
+<hr>
+<small class="p-codes">Output:</small>
+<pre>
+<code-out class="p-code">
+[False False False False False False False False False False False False
+ False False False False False False False False False False  True  True
+  True  True  True  True False  True  True  True False False False  True
+  True  True  True  True  True False False False False False False False
+ False False False False False  True  True  True  True  True False False
+ False]
+[37 36 34 39 33 29 30 41 27 35 13  6  8  7 12 16 11  9 17 10 15 14  1  1
+  1  1  1  1 40  1  1  1 38 28 42  1  1  1  1  1  1  3  2 22 18 24 20 23
+ 32 21 19 26 25  1  1  1  1  1  5  4 31]
+</code-out>
+</pre>
+</div>
+    <br>
+    <p class="p-gray">
+      The RFE has helped to select the following characteristics:
+      "euribor3m", "job_blue-collar", "job_housemaid", "marital_unknown", "education_illiterate", "default_no", "default_unknown", "contact_cellular", "contact_telephone", " month_abr "," month_aug "," month_dec", "month_jul", "month_jun", "month_mar","month_may", " month_nov", "month_oct", "poutcome_failure", "poutcome_success".
+    </p>
+    <br>
+<div class="pre-code">
+<small class="p-codes">Code:</small>
+<pre>
+<code class="p-code">
+cols=['euribor3m', 'job_blue-collar', 'job_housemaid', 'marital_unknown', 'education_illiterate', 'default_no', 'default_unknown', 
+      'contact_cellular', 'contact_telephone', 'month_apr', 'month_aug', 'month_dec', 'month_jul', 'month_jun', 'month_mar', 
+      'month_may', 'month_nov', 'month_oct', "poutcome_failure", "poutcome_success"] 
+X=os_data_X[cols]
+y=os_data_y['y'
+</code>
+</pre>
+</div>
+    <br>
+    <h5>
+      Model development
+    </h5>
+    <br>
+<div class="pre-code">
+<small class="p-codes">Code:</small>
+<pre>
+<code class="p-code">
+logit_model=sm.Logit(y,X)
+result=logit_model.fit()
+print(result.summary2())
+</code>
+</pre>
+<hr>
+<small class="p-codes">Output:</small>
+<pre class="pre-scrollable">
+<code-out class="p-code">
+Optimization terminated successfully.
+         Current function value: 0.455646
+         Iterations 7
+                           Results: Logit
+=====================================================================
+Model:                Logit             Pseudo R-squared:  0.343     
+Dependent Variable:   y                 AIC:               46637.9802
+Date:                 2020-11-03 20:59  BIC:               46814.8243
+No. Observations:     51134             Log-Likelihood:    -23299.   
+Df Model:             19                LL-Null:           -35443.   
+Df Residuals:         51114             LLR p-value:       0.0000    
+Converged:            1.0000            Scale:             1.0000    
+No. Iterations:       7.0000                                         
+---------------------------------------------------------------------
+                      Coef.  Std.Err.    z     P>|z|   [0.025  0.975]
+---------------------------------------------------------------------
+euribor3m             0.1613   0.0082  19.7907 0.0000  0.1454  0.1773
+job_blue-collar      -0.9962   0.0381 -26.1210 0.0000 -1.0710 -0.9215
+job_housemaid        -1.6291   0.1377 -11.8313 0.0000 -1.8990 -1.3593
+marital_unknown      -1.1079   0.4206  -2.6344 0.0084 -1.9322 -0.2836
+education_illiterate  0.2405   0.6653   0.3615 0.7177 -1.0635  1.5446
+default_no            0.7975   0.0371  21.5120 0.0000  0.7249  0.8702
+default_unknown      -0.4643   0.0569  -8.1548 0.0000 -0.5759 -0.3527
+contact_cellular      1.5100   0.0442  34.1992 0.0000  1.4235  1.5965
+contact_telephone    -0.3732   0.0574  -6.4992 0.0000 -0.4857 -0.2606
+month_apr            -2.1774   0.0546 -39.8633 0.0000 -2.2844 -2.0703
+month_aug            -3.6208   0.0529 -68.4450 0.0000 -3.7245 -3.5171
+month_dec            -1.7427   0.1714 -10.1666 0.0000 -2.0786 -1.4067
+month_jul            -3.4498   0.0530 -65.1501 0.0000 -3.5536 -3.3460
+month_jun            -2.0958   0.0529 -39.5837 0.0000 -2.1996 -1.9921
+month_mar            -1.0946   0.0955 -11.4636 0.0000 -1.2817 -0.9074
+month_may            -2.5259   0.0441 -57.2330 0.0000 -2.6124 -2.4394
+month_nov            -3.6153   0.0577 -62.6943 0.0000 -3.7284 -3.5023
+month_oct            -1.0515   0.0856 -12.2870 0.0000 -1.2192 -0.8837
+poutcome_failure     -0.8994   0.0462 -19.4634 0.0000 -0.9899 -0.8088
+poutcome_success      2.4588   0.0662  37.1305 0.0000  2.3290  2.5885
+=====================================================================
+</code-out>
+</pre>
+</div>
+    <p class="p-gray">
+      The p-values for most variables are less than 0.05, except two variables (marital_unknown and education_illiterate), therefore they will be eliminate.
+    </p>
+    <br>
+<div class="pre-code">
+<small class="p-codes">Code:</small>
+<pre>
+<code class="p-code">
+cols=['euribor3m','job_blue-collar','job_housemaid',
+      'default_no','default_unknown','contact_cellular',
+      'contact_telephone','month_apr','month_aug','month_dec',
+      'month_jul','month_jun','month_mar','month_may',
+      'month_nov','month_oct','poutcome_failure',
+      'poutcome_success']
+
+X=os_data_X[cols]
+y=os_data_y['y']
+logit_model=sm.Logit(y,X)
+result=logit_model.fit()
+
+print(result.summary2())
+</code>
+</pre>
+<hr>
+<small class="p-codes">Output:</small>
+<pre class="pre-scrollable">
+<code-out class="p-code">
+Optimization terminated successfully.
+         Current function value: 0.455731
+         Iterations 7
+                          Results: Logit
+==================================================================
+Model:               Logit            Pseudo R-squared: 0.343     
+Dependent Variable:  y                AIC:              46642.7007
+Date:                2020-11-03 20:59 BIC:              46801.8604
+No. Observations:    51134            Log-Likelihood:   -23303.   
+Df Model:            17               LL-Null:          -35443.   
+Df Residuals:        51116            LLR p-value:      0.0000    
+Converged:           1.0000           Scale:            1.0000    
+No. Iterations:      7.0000                                       
+------------------------------------------------------------------
+                   Coef.  Std.Err.    z     P>|z|   [0.025  0.975]
+------------------------------------------------------------------
+euribor3m          0.1612   0.0082  19.7763 0.0000  0.1452  0.1772
+job_blue-collar   -0.9965   0.0381 -26.1266 0.0000 -1.0712 -0.9217
+job_housemaid     -1.6320   0.1377 -11.8547 0.0000 -1.9018 -1.3621
+default_no         0.7976   0.0371  21.5114 0.0000  0.7249  0.8702
+default_unknown   -0.4635   0.0569  -8.1408 0.0000 -0.5751 -0.3519
+contact_cellular   1.5101   0.0442  34.2026 0.0000  1.4236  1.5967
+contact_telephone -0.3728   0.0574  -6.4929 0.0000 -0.4853 -0.2603
+month_apr         -2.1772   0.0546 -39.8646 0.0000 -2.2843 -2.0702
+month_aug         -3.6215   0.0529 -68.4670 0.0000 -3.7252 -3.5179
+month_dec         -1.7423   0.1714 -10.1643 0.0000 -2.0782 -1.4063
+month_jul         -3.4504   0.0529 -65.1647 0.0000 -3.5542 -3.3466
+month_jun         -2.0973   0.0529 -39.6182 0.0000 -2.2010 -1.9935
+month_mar         -1.0964   0.0955 -11.4816 0.0000 -1.2835 -0.9092
+month_may         -2.5273   0.0441 -57.2702 0.0000 -2.6137 -2.4408
+month_nov         -3.6163   0.0577 -62.7213 0.0000 -3.7293 -3.5033
+month_oct         -1.0520   0.0856 -12.2962 0.0000 -1.2197 -0.8843
+poutcome_failure  -0.9012   0.0462 -19.5089 0.0000 -0.9917 -0.8106
+poutcome_success   2.4575   0.0662  37.1234 0.0000  2.3278  2.5873
+==================================================================
+</code-out>
+</pre>
+</div>
+    <br>
+    <h5>
+    Fitting the logistic regression model
+    </h5>
+    <br>
+<div class="pre-code">
+<small class="p-codes">Code:</small>
+<pre>
+<code class="p-code">
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=0)
+logreg = LogisticRegression()
+logreg.fit(X_train, y_train)
+</code>
+</pre>
+<hr>
+<small class="p-codes">Output:</small>
+<pre>
+<code-out class="p-code">
+LogisticRegression()
+</code-out>
+</pre>
+</div>
+    <br>
+<div class="pre-code">
+<small class="p-codes">Code:</small>
+<pre>
+<code class="p-code">
+y_pred = logreg.predict(X_test)
+print('Logistic regression classifier accuracy in the test set: {:.2f}'.format(logreg.score(X_test, y_test)))
+</code>
+</pre>
+<hr>
+<small class="p-codes">Output:</small>
+<pre>
+<code-out class="p-code">
+Logistic regression classifier accuracy  in the test set: 0.87
+</code-out>
+</pre>
+</div>
+    <p class="p-gray">
+      The logistic regression classifier accuracy in the test set is: 87%, it's a good accuracy result. 
+    </p>
+    <br>
+    <h5>
+    Predict test results and calculate accuracy
+    </h5>
+    <br>
+<div class="pre-code">
+<small class="p-codes">Code:</small>
+<pre>
+<code class="p-code">
+confusion_matrix = confusion_matrix(y_test, y_pred)
+print(confusion_matrix)
+</code>
+</pre>
+<hr>
+<small class="p-codes">Output:</small>
+<pre>
+<code-out class="p-code">
+[[7020  646]
+ [1335 6340]]
+</code-out>
+</pre>
+</div>
+    <p class="p-gray">
+      The matrix confusion shows 7020 + 6340 correct predictions and 1335 + 646 incorrect predictions. Now, do calculate precision.
+
+    </p>
+    <p class="p-gray">
+      The precision is the relation tp / (tp + fp) where tp is the number of true positives and fp the number of false positives. Accuracy is intuitively the ability of the classifier not to label a sample as positive if it's negative.
+    </p>
+    <p class="p-gray">
+      The recovery is the relation tp / (tp + fn) where tp is the number of true positives and fn the number of false negatives. Withdrawal is intuitively the classifier's ability to find all positive samples.
+    </p>
+    <p class="p-gray">
+      The F-beta score can be interpreted as a weighted harmonic mean of precision and recovery, where an F-beta score reaches its best value at 1 and its worst score at 0.
+    </p>
+    <p class="p-gray">
+      The F-beta score outweighs the recall than the precision by a factor of beta. beta = 1.0 means that memory and precision are equally important.
+    </p>
+    <p class="p-gray">
+      Support is the number of occurrences of each class in y_test.
+    </p>
+    <br>
+<div class="pre-code">
+<small class="p-codes">Code:</small>
+<pre>
+<code class="p-code">
+print(classification_report(y_test, y_pred))
+</code>
+</pre>
+<hr>
+<small class="p-codes">Output:</small>
+<pre>
+<code-out class="p-code">
+precision    recall  f1-score   support
+
+           0       0.84      0.92      0.88      7666
+           1       0.91      0.83      0.86      7675
+
+    accuracy                           0.87     15341
+   macro avg       0.87      0.87      0.87     15341
+weighted avg       0.87      0.87      0.87     15341
+</code-out>
+</pre>
+</div>
+    <p class="p-gray">
+      Interpretation: Out of the entire test set, 87% of the advertised long term deposit was the subscription that customers like. therefore the 87% of the customers preferred long term deposits. 
+    </p>
+    <p class="p-gray">
+      Now, do use the Receiver Operating Characteristic curve (ROC) is another common tool used with binary classifiers. The dotted line represents the ROC curve of a purely random classifier; a good classifier stays as far away from that line as possible (towards the upper left corner). 
+    </p>
+    <br>
+<div class="pre-code">
+<small class="p-codes">Code:</small>
+<pre>
+<code class="p-code">
+logit_roc_auc = roc_auc_score(y_test, logreg.predict(X_test))
+fpr, tpr, thresholds = roc_curve(y_test, logreg.predict_proba(X_test)[:,1])
+plt.figure()
+plt.plot(fpr, tpr, label='Logistic regression (area = %0.2f)' % logit_roc_auc)
+plt.plot([0, 1], [0, 1],'r--')
+plt.xlim([0.0, 1.0])
+plt.ylim([0.0, 1.05])
+plt.xlabel('False positive rate')
+plt.ylabel('True positives rate')
+plt.title('Receiver Operating Characteristic')
+plt.legend(loc="lower right")
+plt.savefig('Log_ROC')
+plt.show()
+</code>
+</pre>
+<hr>
+<small class="p-codes">Output:</small>
+<pre>
+<code-out class="p-code">
+<figure><img class="img-fluid" src="assets/images/blog/post_logistic_regression/image09.png" alt="image"></figure>
+</code-out>
+</pre>
+</div>
+<br>
+<br>
+<br>
+
+
+
+<!-- ------------------------- Codes -------------------- -->
+<!--div class="pre-code">
+<small class="p-codes">Code:</small>
+<pre>
+<code class="p-code">
+Code
+</code>
+</pre>
+<hr>
+<small class="p-codes">Output:</small>
+<pre class="pre-scrollable">
+<code-out class="p-code">
+Code
+</code-out>
+</pre>
+</div-->
+<!-- ------------------------- Codes -------------------- -->
+
+<!-- ------------------------- Bullet Points ------------ --> 
+				    <!--h5 class="my-3">Bullet Points:</h5>
+				    
+            <ul class="mb-5" style="color:lightgray;">
+  					  <li class="mb-2">Lorem ipsum dolor sit amet consectetuer.</li>
+  					  <li class="mb-2">Aenean commodo ligula eget dolor.</li>
+  					  <li class="mb-2">Aenean massa cum sociis natoque penatibus.</li>
+					  </ul>
+            
+  					<ol class="mb-5" style="color:lightgray;">
+  					  <li class="mb-2">Lorem ipsum dolor sit amet consectetuer.</li>
+  					  <li class="mb-2">Aenean commodo ligula eget dolor.</li>
+  					  <li class="mb-2">Aenean massa cum sociis natoque penatibus.</li>
+  					</ol-->
+<!-- ------------------------- Bullet Points ------------ --> 
+
+<!-- ------------------------- Quotes ------------------- -->
+					<!--h5 class="my-3">Quote Example:</h5>
+					<blockquote class="blockquote m-lg-5 py-3 pl-4 px-lg-5">
+						<p class="mb-2" style="color:lightgray;">You might not think that programmers are artists, but programming is an extremely creative profession. It's logic-based creativity.</p>
+						<footer class="blockquote-footer">John Romero</footer>
+					</blockquote-->
+<!-- ------------------------- Quotes ------------------- -->
+
+<!-- ------------------------- Tables ------------------- -->
+					<!--h5 class="my-3">Table Example:</h5>
+					<table class="table table-striped my-5">
+						<thead>
+							<tr>
+								<th scope="col">#</th>
+								<th scope="col">First</th>
+								<th scope="col">Last</th>
+								<th scope="col">Handle</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<th scope="row">1</th>
+								<td>Mark</td>
+								<td>Otto</td>
+								<td>@mdo</td>
+							</tr>
+							<tr>
+								<th scope="row">2</th>
+								<td>Jacob</td>
+								<td>Thornton</td>
+								<td>@fat</td>
+							</tr>
+							<tr>
+								<th scope="row">3</th>
+								<td>Larry</td>
+								<td>the Bird</td>
+								<td>@twitter</td>
+							</tr>
+						</tbody>
+					</table-->
+<!-- ------------------------- Tables ------------------- -->
+
+<!-- ------------------------- Tweeters ----------------- -->
+					<!--h5 class="mb-3">Embed A Tweet:</h5>
+					
+					<blockquote class="twitter-tweet" data-lang="en">
+            <p lang="en" dir="ltr">1969:<br>-what&#39;re you doing with that 2KB of RAM?<br>-sending people to the moon<br><br>2017:<br>-what&#39;re you doing with that 1.5GB of RAM?<br>-running Slack</p>&mdash; I Am Devloper (@iamdevloper) <a href="https://twitter.com/iamdevloper/status/926458505355235328?ref_src=twsrc%5Etfw">November 3, 2017</a>
+          </blockquote>
+          <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script-->
+<!-- ------------------------- Tweeters ----------------- -->
+
+<!-- ------------------------- Youtube Video ------------ -->
+				  <!--h3 class="mt-5 mb-3">Video Title</h3>
+				  <p style="color:lightgray;">Parrafo. </p>
+				  <div class="embed-responsive embed-responsive-16by9">
+					   <iframe width="560" height="315" src="https://www.youtube.com/embed/hnCmSXCZEpU" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>	
+					</div-->
+<!-- ----------------- Youtube Video -------------------- -->
+			   </div>
+<!-- ----------------- Nav Buttons -------------------- -->
+	    <!--nav class="blog-nav nav nav-justified my-5">
+  		  <a class="nav-link-prev nav-item nav-link rounded-left" href="#">Previous<i class="arrow-prev fas fa-long-arrow-alt-left"></i></a>
+  		  <a class="nav-link-next nav-item nav-link rounded-right" href="#">Next<i class="arrow-next fas fa-long-arrow-alt-right"></i></a>
+	    </nav-->
+<!-- ----------------- Nav Buttons -------------------- -->
+    </article>
+    </div>
+<!-- ----------------- Footer -------------------- -->
+      <footer class="footer text-center py-2 theme-bg-dark">
+        <small class="copyright">Designed by <a href="http://themes.3rdwavemedia.com" target="_blank">Xiaoying Riley</a> for developer: <span style="font-weight: bold">Jhonatan Montilla</span></small>
+      </footer>
+<!-- ----------------- Footer -------------------- -->
+    <!-- Javascript -->          
+    <script src="assets/plugins/jquery-3.3.1.min.js"></script>
+    <script src="assets/plugins/popper.min.js"></script> 
+    <script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <!-- Page Specific JS -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/highlight.min.js"></script>
+    <!-- Custom JS -->
+    <script src="assets/js/blog.js"></script>
+</body>
+</html>
