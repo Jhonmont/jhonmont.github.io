@@ -86,16 +86,15 @@
       <div class="jp-InputPrompt jp-InputArea-prompt">
       </div>
       <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-        <h1 id="Un-estudio-de-la-agrupaci%C3%B3n-jer%C3%A1rquica:-aprendizaje-autom%C3%A1tico-no-supervisado.">Un
-          estudio
-          de la agrupación jerárquica: aprendizaje automático no supervisado.<a class="anchor-link"
-            href="#Un-estudio-de-la-agrupaci%C3%B3n-jer%C3%A1rquica:-aprendizaje-autom%C3%A1tico-no-supervisado.">&#182;</a>
+        <h1>
+          Agrupación Jerárquica: Aprendizaje Automático No Supervisado.
         </h1>
+        <p style="font-size: medium;"><strong>05 de Diciembre del 2020</strong> - Jhonatan Montilla</p></br>
         <p>
           Otro método popular de agrupamiento es la agrupación jerárquica. Hemos visto que en la agrupación K-Means
-          que es necesario indicar el número de agrupaciones. La agrupación jerárquica no requiere de esto. La
-          agrupación jerárquica nos presenta es que algunas filas largas forman grupos entre sí. En la agrupación
-          jerárquica, dicho gráfico se denomina dendrograma.
+          es necesario indicar el número de agrupaciones. La agrupación jerárquica no requiere de esto. La
+          agrupación jerárquica nos presenta algunas filas largas que forman grupos entre sí. En la agrupación
+          jerárquica, su representación gráfica se denomina dendrograma.
         </p>
         <p>
           La agrupación jerárquica se divide en dos tipos, aglomerativa y divisiva. La explicación detallada
@@ -110,12 +109,12 @@
           Aglomerativa: Es exactamente lo opuesto a la agrupación Divisiva, también llamado método de abajo
           hacia arriba. En este tipo, cada punto de datos se trata inicialmente como un grupo separado. Luego,
           sobre la base de la distancia de estos grupos, se forman pequeños grupos con ellos, por lo que estos
-          pequeños grupos vuelven a formar grandes grupos. Consulte la (Fig.2) para comprender la diferencia
-          entre el enfoque de arriba y de abajo hacia abajo.
+          pequeños grupos vuelven a formar grandes grupos.
         </p>
         <p>
-          La agrupación aglomerativa se puede realizar de varias formas, para ilustrar, distancia completa, distancia
-          simple, distancia promedio, enlace centroide y método de palabras. Veamos la explicación de este enfoque:
+          La agrupación aglomerativa se puede realizar de varias maneras, para ilustrar, distancia completa,
+          distancia simple, distancia promedio, enlace centroide y método de palabras. Veamos la explicación
+          de este enfoque:
         </p>
         <ul>
           <li>
@@ -140,9 +139,8 @@
               diferentes clústeres.</p>
           </li>
         </ul>
-        <h3 id="Aplicaci%C3%B3n-en-la-vida-real-de-la-agrupaci%C3%B3n-en-cl%C3%BAsteres-jer%C3%A1rquica:">
-          Aplicación en la vida real de Agrupación Jerárquica en clústeres:<a class="anchor-link"
-            href="#Aplicaci%C3%B3n-en-la-vida-real-de-la-agrupaci%C3%B3n-en-cl%C3%BAsteres-jer%C3%A1rquica:">&#182;</a>
+        <h3>
+          Aplicación en la vida real de Agrupación Jerárquica en clústeres:
         </h3>
         <ul>
           <li>Clasificar animales y plantas basándose en secuencias de ADN.</li>
@@ -283,7 +281,7 @@
       <div class="jp-InputPrompt jp-InputArea-prompt">
       </div>
       <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-        <p>Normalizaremos todo el conjunto de datos para facilitar la agrupación.</p>
+        <p>Se debe normalizar todo el conjunto de datos para facilitar la agrupación.</p>
       </div>
     </div>
     <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
@@ -391,11 +389,11 @@
       <div class="jp-InputPrompt jp-InputArea-prompt">
       </div>
       <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-        <p>La creación de un dendrograma de un conjunto de datos normalizado creará un gráfico como el de la Fig. 4.
-          Hemos
-          creado este dendrograma utilizando el método Word Linkage. Podemos crear dendrogramas de otras formas si
-          queremos. A partir de este dendrograma, se entiende que los puntos de datos primero están formando pequeños
-          grupos, luego estos pequeños grupos se están convirtiendo gradualmente en grupos más grandes.</p>
+        <p>La creación de un dendrograma de un conjunto de datos normalizado creará un gráfico como el que se
+          muestra a continuación, se creará un dendrograma utilizando el método Word Linkage, también es posible
+          crear dendrogramas de otro tipo si se requiere a partir de este dendrograma, se entiende que los puntos
+          de datos primero están formando pequeños grupos, luego estos pequeños grupos se convierten gradualmente
+          en grupos más grandes.</p>
       </div>
     </div>
     <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
@@ -430,12 +428,13 @@
       <div class="jp-InputPrompt jp-InputArea-prompt">
       </div>
       <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-        <p>Al observar el dendrograma de la figura 4, podemos ver que los grupos más pequeños están formando grupos más
-          grandes gradualmente. Se dan los puntos de datos en el eje X y la distancia del grupo en el eje Y. La
-          distancia
-          máxima para los dos grupos más grandes formados por la línea azul es 7 (no se han formado nuevos grupos desde
-          entonces y la distancia no ha aumentado). Hemos trazado una línea para esta distancia, para la conveniencia de
-          nuestra comprensión. Hagamos el dendrograma usando otro enfoque que es Enlace completo:</p>
+        <p>Al observar el dendrograma, se pueden ver que los grupos más pequeños están formando
+          grupos más grandes gradualmente. Se dan los puntos de datos en el eje X y la distancia del grupo en el
+          eje Y. La distancia máxima para los dos grupos más grandes formados por la línea azul es 7 (no se han
+          formado nuevos grupos desde entonces y la distancia no ha aumentado). Se traza una línea para esta
+          distancia para la conveniencia de nuestra comprensión. Hagamos el dendrograma usando otro enfoque que
+          es Enlace completo:
+        </p>
       </div>
     </div>
     <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
@@ -470,7 +469,7 @@
       <div class="jp-InputPrompt jp-InputArea-prompt">
       </div>
       <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-        <p>Hagamos los dendrogramas utilizando un enlace único:</p>
+        <p>Se crearán dendrogramas utilizando un enlace único:</p>
       </div>
     </div>
     <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
@@ -505,7 +504,7 @@
       <div class="jp-InputPrompt jp-InputArea-prompt">
       </div>
       <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-        <p>Ahora la haremos usando Promedio:</p>
+        <p>Ahora utilizando el Promedio:</p>
       </div>
     </div>
     <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
@@ -540,8 +539,8 @@
       <div class="jp-InputPrompt jp-InputArea-prompt">
       </div>
       <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-        <p>Ahora veremos el grupo por el valor medio de un grupo, de modo que entendamos qué tipo de productos se venden
-          en promedio en qué grupo.</p>
+        <p>Ahora se observa el grupo por valor medio a manera de entender qué tipo de productos se venden
+          en promedio y en cual grupo.</p>
       </div>
     </div>
     <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
@@ -659,12 +658,10 @@
       <div class="jp-InputPrompt jp-InputArea-prompt">
       </div>
       <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-        <p>Para concluir, este artículo ilustra la canalización de la agrupación jerárquica y los diferentes tipos de
-          dendrogramas. El agrupamiento jerárquico es muy importante, lo que se muestra en este artículo al
-          implementarlo
-          sobre el conjunto de datos mayorista. Este artículo muestra dendrogramas en otros métodos, como Enlace
-          completo,
-          Enlace único, Enlace promedio y Método de palabras.</p>
+        <p>Para concluir, en este artículo se ilustró la agrupación jerárquica y los diferentes tipos de
+          dendrogramas implementados sobre el conjunto de datos de mayoristas, también se pudieron observar 
+          los dendrogramas de distintos tipos, como Enlace completo, Enlace único, Enlace promedio y Método
+          de palabras.</p>
       </div>
     </div>
   </div>
