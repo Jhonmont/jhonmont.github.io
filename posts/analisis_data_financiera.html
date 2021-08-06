@@ -1,0 +1,1555 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Análisis de Datos Financieros</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+  <link rel="stylesheet" href="posts_css/posts.css" />
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-MML-AM_CHTML-full,Safe"> </script>
+  <script type="text/x-mathjax-config">
+    init_mathjax = function() {
+        if (window.MathJax) {
+        // MathJax loaded
+            MathJax.Hub.Config({
+                TeX: {
+                    equationNumbers: {
+                    autoNumber: "AMS",
+                    useLabelIds: true
+                    }
+                },
+                tex2jax: {
+                    inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+                    displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+                    processEscapes: true,
+                    processEnvironments: true
+                },
+                displayAlign: 'center',
+                CommonHTML: {
+                    linebreaks: { 
+                    automatic: true 
+                    }
+                },
+                "HTML-CSS": {
+                    linebreaks: { 
+                    automatic: true 
+                    }
+                }
+            });
+        
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+        }
+    }
+    init_mathjax();
+    </script>
+  <!-- ************************ Common Code ************************ -->
+  <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .bd-placeholder-img {
+      font-size: 1.125rem;
+      text-anchor: middle;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      user-select: none;
+    }
+
+    @media (min-width: 768px) {
+      .bd-placeholder-img-lg {
+        font-size: 3.5rem;
+      }
+    }
+  </style>
+  <link href="../assets/css/headers.css" rel="stylesheet">
+  <!-- ************************ Common Code ************************ -->
+</head>
+<body class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
+  <!-- ************************ Common Code ************************ -->
+  <div class="container">
+    <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+      <a href="../index.html" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+        <svg class="bi me-2" width="40" height="32">
+          <use xlink:href="#bootstrap" />
+        </svg>
+        <span style="color: var(--jp-content-link-color);">Volver al Inicio</span>
+      </a>
+      <ul class="nav nav-pills">
+        <!--li class="nav-item"><a href="../index.html" class="nav-link">Inicio</a></li-->
+        <li class="nav-item"><a href="agrupacion_jerarquica.html" class="nav-link">Anterior</a></li>
+        <li class="nav-item"><a href="analisis_exploratorio_1.html" class="nav-link">Siguiente</a></li>
+      </ul>
+    </header>
+  </div>
+  <div style="padding-left: 50px; padding-right: 100px;">
+    <!-- ************************ Common Code ************************ -->
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h2 id="Analizando-datos-financieros-en-Python,-Explorando-datos-financieros-con-Python">Analizando datos
+          financieros con Python<a class="anchor-link"
+            href="#Analizando-datos-financieros-en-Python,-Explorando-datos-financieros-con-Python">&#182;</a></h2>
+        <p>En este apartado se analizarán los precios de las acciones de tres empresas: Amazon (AMZN), Google (GOOGL) y
+          Apple (AAPL). Se realizará un análisis de datos exploratorio simple de estas acciones mediante la generación
+          de visualizaciones y estadísticas resumidas, análisis de riesgo y rendimiento, y la generación de indicadores
+          rezagados para comprender las tendencias de los precios de las acciones. Esto debería formar una base sólida
+          para el principiante que quiera comenzar a aprender a analizar datos financieros en Python. Antes de comenzar,
+          estas son algunas de las herramientas que usaremos.</p>
+        <p>Pandas-datareader es una biblioteca de Python que permite a los usuarios acceder fácilmente a los datos de
+          precios de las acciones y realizar tareas de análisis estadístico como calcular retornos, riesgos, promedios
+          móviles y más. Además, matplotlib y seaborn son bibliotecas en Python que le permiten crear visualizaciones de
+          datos como diagramas de caja y diagramas de series de tiempo. La combinación de estas bibliotecas permite a
+          los
+          científicos de datos obtener información valiosa de los datos financieros con relativamente pocas líneas de
+          código.</p>
+        <p>El análisis de riesgo de las acciones es importante para comprender la incertidumbre en la fluctuación del
+          precio de las acciones. Esto puede ayudar a los inversores a elegir en qué acciones les gustaría invertir en
+          función de su tolerancia al riesgo. Podemos utilizar cálculos de promedio móvil para informar aún más las
+          decisiones de inversión mediante la descripción de la tendencia direccional en el movimiento del precio de las
+          acciones.</p>
+        <p>Por último, los gráficos de la banda de Bollinger son una forma útil de visualizar la volatilidad de los
+          precios. Los gráficos de la banda de Bollinger y los promedios móviles son lo que llamamos indicadores
+          rezagados. Esto significa que se basan en cambios a largo plazo y nos ayudan a comprender las tendencias a
+          largo
+          plazo. Esto contrasta con los indicadores adelantados que se utilizan para predecir futuros movimientos de
+          precios.</p>
+        <h3 id="Acceder-a-datos-financieros-mediante-Pandas-Datareader">Acceder a datos financieros mediante
+          Pandas-Datareader<a class="anchor-link"
+            href="#Acceder-a-datos-financieros-mediante-Pandas-Datareader">&#182;</a></h3>
+        <p>Para comenzar, es necesario instalar la biblioteca pandas-datareader usando el siguiente comando en la
+          terminal:</p>
+        <p><strong>pip install pandas-datareader</strong></p>
+        <p>A continuación, importar el objeto web desde el módulo pandas_datareader.data. También importar el paquete
+          datetime integrado que permitirá crear objetos datetime de Python:</p>
+
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[1]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="kn">import</span> <span class="nn">pandas_datareader.data</span> <span class="k">as</span> <span class="nn">web</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+</pre>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <p>Se extráen los datos de precios de acciones para Amazon, se almacenan en una variable llamada amzn, se
+          visualizan las primeras cinco filas de datos:</p>
+
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[2]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">amzn</span> <span class="o">=</span> <span class="n">web</span><span class="o">.</span><span class="n">DataReader</span><span class="p">(</span><span class="s2">&quot;AMZN&quot;</span><span class="p">,</span><span class="s2">&quot;yahoo&quot;</span><span class="p">)</span>
+<span class="n">amzn</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[2]:</div>
+            <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+              data-mime-type="text/html">
+              <div>
+                <table border="1" class="dataframe">
+                  <thead>
+                    <tr style="text-align: right;">
+                      <th></th>
+                      <th>High</th>
+                      <th>Low</th>
+                      <th>Open</th>
+                      <th>Close</th>
+                      <th>Volume</th>
+                      <th>Adj Close</th>
+                    </tr>
+                    <tr>
+                      <th>Date</th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>2016-07-25</th>
+                      <td>748.500000</td>
+                      <td>735.349976</td>
+                      <td>746.549988</td>
+                      <td>739.609985</td>
+                      <td>2679300</td>
+                      <td>739.609985</td>
+                    </tr>
+                    <tr>
+                      <th>2016-07-26</th>
+                      <td>743.130005</td>
+                      <td>732.750000</td>
+                      <td>742.710022</td>
+                      <td>735.590027</td>
+                      <td>2529700</td>
+                      <td>735.590027</td>
+                    </tr>
+                    <tr>
+                      <th>2016-07-27</th>
+                      <td>740.940002</td>
+                      <td>733.859985</td>
+                      <td>737.969971</td>
+                      <td>736.669983</td>
+                      <td>2913100</td>
+                      <td>736.669983</td>
+                    </tr>
+                    <tr>
+                      <th>2016-07-28</th>
+                      <td>753.359985</td>
+                      <td>739.700012</td>
+                      <td>745.979980</td>
+                      <td>752.609985</td>
+                      <td>7617600</td>
+                      <td>752.609985</td>
+                    </tr>
+                    <tr>
+                      <th>2016-07-29</th>
+                      <td>766.000000</td>
+                      <td>755.000000</td>
+                      <td>765.000000</td>
+                      <td>758.809998</td>
+                      <td>6777100</td>
+                      <td>758.809998</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <p>Se observa que el dataset contiene las columnas: Alto, Bajo, Abierto, Cerrado, Volumen y Cierre ajustado.
+          Estos
+          valores se basan en los precios de las acciones durante una sesión de negociación que suele ser entre las 9:30
+          am y las 4:00 pm. Se considera que cada columna significa:</p>
+        <ul>
+          <li>
+            <p>Precio alto: el precio más alto de una acción durante una sesión de negociación.</p>
+          </li>
+          <li>
+            <p>Precio bajo: el precio más bajo de una acción durante una sesión de negociación.</p>
+          </li>
+          <li>
+            <p>Precio de cierre: el precio de una acción al final de una sesión de negociación.</p>
+          </li>
+          <li>
+            <p>Precio de apertura: el precio de una acción al comienzo de una sesión de negociación.</p>
+          </li>
+          <li>
+            <p>Cierre ajustado: el precio de cierre después de realizar ajustes por división de acciones y dividendos.
+            </p>
+          </li>
+        </ul>
+        <p>El siguiente paso consiste en guardar estos datos en un archivo .csv utilizando el método pandas to_csv:</p>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[3]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">amzn</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;amzn_data_financiera.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <p>Una vez guardado los datos datos de AMZN, se extráen los datos para GOOGLE y APPLE. Primero GOOGLE y luego
+          AAPL.</p>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[4]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">googl</span> <span class="o">=</span> <span class="n">web</span><span class="o">.</span><span class="n">DataReader</span><span class="p">(</span><span class="s2">&quot;GOOGL&quot;</span><span class="p">,</span><span class="s2">&quot;yahoo&quot;</span><span class="p">)</span>
+<span class="n">googl</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[4]:</div>
+            <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+              data-mime-type="text/html">
+              <div>
+                <table border="1" class="dataframe">
+                  <thead>
+                    <tr style="text-align: right;">
+                      <th></th>
+                      <th>High</th>
+                      <th>Low</th>
+                      <th>Open</th>
+                      <th>Close</th>
+                      <th>Volume</th>
+                      <th>Adj Close</th>
+                    </tr>
+                    <tr>
+                      <th>Date</th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>2016-07-25</th>
+                      <td>759.820007</td>
+                      <td>754.070007</td>
+                      <td>757.679993</td>
+                      <td>757.520020</td>
+                      <td>1073300</td>
+                      <td>757.520020</td>
+                    </tr>
+                    <tr>
+                      <th>2016-07-26</th>
+                      <td>759.260010</td>
+                      <td>752.750000</td>
+                      <td>757.520020</td>
+                      <td>757.650024</td>
+                      <td>1189600</td>
+                      <td>757.650024</td>
+                    </tr>
+                    <tr>
+                      <th>2016-07-27</th>
+                      <td>764.450012</td>
+                      <td>755.929993</td>
+                      <td>758.969971</td>
+                      <td>761.969971</td>
+                      <td>1608600</td>
+                      <td>761.969971</td>
+                    </tr>
+                    <tr>
+                      <th>2016-07-28</th>
+                      <td>768.969971</td>
+                      <td>759.090027</td>
+                      <td>768.840027</td>
+                      <td>765.840027</td>
+                      <td>3673200</td>
+                      <td>765.840027</td>
+                    </tr>
+                    <tr>
+                      <th>2016-07-29</th>
+                      <td>803.940002</td>
+                      <td>790.000000</td>
+                      <td>797.710022</td>
+                      <td>791.340027</td>
+                      <td>5090500</td>
+                      <td>791.340027</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[5]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">googl</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;googl_data_financiera.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <p>A continuación, AAPL:</p>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[6]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">aapl</span> <span class="o">=</span> <span class="n">web</span><span class="o">.</span><span class="n">DataReader</span><span class="p">(</span><span class="s2">&quot;AAPL&quot;</span><span class="p">,</span><span class="s2">&quot;yahoo&quot;</span><span class="p">)</span>
+<span class="n">aapl</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[6]:</div>
+            <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+              data-mime-type="text/html">
+              <div>
+                <table border="1" class="dataframe">
+                  <thead>
+                    <tr style="text-align: right;">
+                      <th></th>
+                      <th>High</th>
+                      <th>Low</th>
+                      <th>Open</th>
+                      <th>Close</th>
+                      <th>Volume</th>
+                      <th>Adj Close</th>
+                    </tr>
+                    <tr>
+                      <th>Date</th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>2016-07-25</th>
+                      <td>24.709999</td>
+                      <td>24.2300</td>
+                      <td>24.562500</td>
+                      <td>24.334999</td>
+                      <td>161531600.0</td>
+                      <td>22.733387</td>
+                    </tr>
+                    <tr>
+                      <th>2016-07-26</th>
+                      <td>24.492500</td>
+                      <td>24.1050</td>
+                      <td>24.205000</td>
+                      <td>24.167500</td>
+                      <td>224959200.0</td>
+                      <td>22.576918</td>
+                    </tr>
+                    <tr>
+                      <th>2016-07-27</th>
+                      <td>26.087500</td>
+                      <td>25.6875</td>
+                      <td>26.067499</td>
+                      <td>25.737499</td>
+                      <td>369379200.0</td>
+                      <td>24.043583</td>
+                    </tr>
+                    <tr>
+                      <th>2016-07-28</th>
+                      <td>26.112499</td>
+                      <td>25.7050</td>
+                      <td>25.707500</td>
+                      <td>26.084999</td>
+                      <td>159479200.0</td>
+                      <td>24.368214</td>
+                    </tr>
+                    <tr>
+                      <th>2016-07-29</th>
+                      <td>26.137501</td>
+                      <td>25.9200</td>
+                      <td>26.047501</td>
+                      <td>26.052500</td>
+                      <td>110934800.0</td>
+                      <td>24.337851</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[7]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">aapl</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;aapl_data_financiera.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <p>Ahora se tienen almacenados tres archivos que contienen dos años con los precios de acciones para AMZN, GOOGL
+          y
+          AAPL. Se procede a leer estos archivos y almacenarlos en nuevos dataset utilizando pandas:</p>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[8]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">amzn_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;amzn_data_financiera.csv&quot;</span><span class="p">)</span>
+<span class="n">googl_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;googl_data_financiera.csv&quot;</span><span class="p">)</span>
+<span class="n">aapl_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;aapl_data_financiera.csv&quot;</span><span class="p">)</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h3 id="Exploraci%C3%B3n-y-visualizaci%C3%B3n-de-datos-financieros">Exploraci&#243;n y visualizaci&#243;n de
+          datos
+          financieros<a class="anchor-link"
+            href="#Exploraci%C3%B3n-y-visualizaci%C3%B3n-de-datos-financieros">&#182;</a>
+        </h3>
+        <p>A continuación, se generan algunos datos estadísticos simples. Una métrica importante para comprender los
+          movimientos del precio de las acciones es su rendimiento. El retorno se define como el precio de apertura
+          menos
+          el precio de cierre dividido por el precio de apertura (R = [apertura-cierre] / apertura). Se calculan los
+          retornos para cada empresa.</p>
+        <p>Se calculan los retornos diarios de AMZN:</p>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[9]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">amzn_df</span><span class="p">[</span><span class="s2">&quot;Returns&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">amzn_df</span><span class="p">[</span><span class="s2">&quot;Close&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">amzn_df</span><span class="p">[</span><span class="s2">&quot;Open&quot;</span><span class="p">])</span><span class="o">/</span><span class="n">amzn_df</span><span class="p">[</span><span class="s2">&quot;Open&quot;</span><span class="p">]</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <p>Una visualización simple es un histograma para los rendimientos diarios en el precio de las acciones de AMZN.
+          Se utilizan las librerías matplotlib para generar histogramas y seaborn para diagramas de caja:</p>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[10]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">amzn_df</span><span class="p">[</span><span class="s2">&quot;Returns&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">amzn_df</span><span class="p">[</span><span class="s2">&quot;Close&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">amzn_df</span><span class="p">[</span><span class="s2">&quot;Open&quot;</span><span class="p">])</span><span class="o">/</span><span class="n">amzn_df</span><span class="p">[</span><span class="s2">&quot;Open&quot;</span><span class="p">]</span>
+<span class="n">amzn_df</span><span class="p">[</span><span class="s2">&quot;Returns&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">hist</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;AMZN - Distribución del Rendimiento de Acciones&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedImage jp-OutputArea-output ">
+              <img src="posts_images/analisis_data_financiera/image_0001.png">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[11]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">googl_df</span><span class="p">[</span><span class="s2">&quot;Returns&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">googl_df</span><span class="p">[</span><span class="s2">&quot;Close&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">googl_df</span><span class="p">[</span><span class="s2">&quot;Open&quot;</span><span class="p">])</span><span class="o">/</span><span class="n">googl_df</span><span class="p">[</span><span class="s2">&quot;Open&quot;</span><span class="p">]</span>
+<span class="n">googl_df</span><span class="p">[</span><span class="s2">&quot;Returns&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">hist</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;GOOGL - Distribución del Rendimiento de Acciones&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedImage jp-OutputArea-output ">
+              <img src="posts_images/analisis_data_financiera/image_0002.png">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[12]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">aapl_df</span><span class="p">[</span><span class="s2">&quot;Returns&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">aapl_df</span><span class="p">[</span><span class="s2">&quot;Close&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">aapl_df</span><span class="p">[</span><span class="s2">&quot;Open&quot;</span><span class="p">])</span><span class="o">/</span><span class="n">aapl_df</span><span class="p">[</span><span class="s2">&quot;Open&quot;</span><span class="p">]</span>
+<span class="n">aapl_df</span><span class="p">[</span><span class="s2">&quot;Returns&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">hist</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;AAPL - Distribución del Rendimiento de Acciones&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedImage jp-OutputArea-output ">
+              <img src="posts_images/analisis_data_financiera/image_0003.png">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <p>También se pueden calcular los rendimientos medios y la desviación estándar en los rendimientos de cada
+          acción
+          y mostrarlos en el título del histograma. Estas estadísticas son muy importantes para los inversores. Los
+          rendimientos medios nos dan una idea de la rentabilidad de una inversión en acciones. La desviación estándar
+          es
+          una medida de cuánto fluctúan los rendimientos. A esto se le llama riesgo en el mundo financiero. Por lo
+          general, los riesgos más altos están asociados con retornos más altos. A continuación un ejemplo para AMZN.
+          Primero se almacenan la media y la desviación estándar en variables, se utiliza la cadena f para formatear el
+          título:</p>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[13]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">mean_amnz_returns</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">amzn_df</span><span class="p">[</span><span class="s2">&quot;Returns&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="mi">5</span><span class="p">)</span>
+<span class="n">std_amnz_returns</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">amzn_df</span><span class="p">[</span><span class="s2">&quot;Returns&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">amzn_df</span><span class="p">[</span><span class="s2">&quot;Returns&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">hist</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;AMZN - Distribución del Rendimiento de Acciones: </span><span class="se">\n</span><span class="s1">Media </span><span class="si">{</span><span class="n">mean_amnz_returns</span><span class="si">}</span><span class="s1">, Desviación Estandar: </span><span class="si">{</span><span class="n">std_amnz_returns</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedImage jp-OutputArea-output ">
+              <img src="posts_images/analisis_data_financiera/image_0004.png">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <p>Otra visualización de datos útil son los diagramas de caja. Similar a los histogramas, esta es otra forma de
+          visualizar la media, la dispersión y la asimetría en los datos. En el contexto de los datos financieros
+          obtenidos, se pueden comparar los rendimientos medios, la dispersión de los rendimientos y la asimetría en los
+          rendimientos de cada acción, esto permite tomar las decisiones de inversión. Primero, se combinan los
+          rendimientos de cada acción en un solo marco de datos:</p>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[14]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">amzn_df</span><span class="p">[</span><span class="s2">&quot;Ticker&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;AMZN&quot;</span>
+<span class="n">googl_df</span><span class="p">[</span><span class="s2">&quot;Ticker&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;GOOGL&quot;</span>
+<span class="n">aapl_df</span><span class="p">[</span><span class="s2">&quot;Ticker&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;AAPL&quot;</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">amzn_df</span><span class="p">,</span> <span class="n">googl_df</span><span class="p">,</span> <span class="n">aapl_df</span><span class="p">])</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s2">&quot;Ticker&quot;</span><span class="p">,</span> <span class="s2">&quot;Returns&quot;</span><span class="p">]]</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[14]:</div>
+            <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+              data-mime-type="text/html">
+              <div>
+                <table border="1" class="dataframe">
+                  <thead>
+                    <tr style="text-align: right;">
+                      <th></th>
+                      <th>Ticker</th>
+                      <th>Returns</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>0</th>
+                      <td>AMZN</td>
+                      <td>-0.009296</td>
+                    </tr>
+                    <tr>
+                      <th>1</th>
+                      <td>AMZN</td>
+                      <td>-0.009587</td>
+                    </tr>
+                    <tr>
+                      <th>2</th>
+                      <td>AMZN</td>
+                      <td>-0.001762</td>
+                    </tr>
+                    <tr>
+                      <th>3</th>
+                      <td>AMZN</td>
+                      <td>0.008888</td>
+                    </tr>
+                    <tr>
+                      <th>4</th>
+                      <td>AMZN</td>
+                      <td>-0.008092</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[15]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Ticker&quot;</span><span class="p">],</span> <span class="n">y</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Retornos de Acciones&quot;</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Diagramas de Caja de Retornos de Acciones de: </span><span class="se">\n</span><span class="s2">AMZN, GOOGL y AAPL&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedImage jp-OutputArea-output ">
+              <img src="posts_images/analisis_data_financiera/image_0005.png">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <p>La visualización final a realizar es la correlación para los retornos. Esta visualización permite comprender
+          si
+          existen relaciones lineales entre los rendimientos del precio de las acciones. Esto es importante porque puede
+          proporcionar información sobre la relación entre las acciones en la cartera de un inversor y, como resultado,
+          también puede ayudar a informar cómo un inversor construye su cartera. Para crear el mapa de calor, primero se
+          crea un nuevo marco de datos que contenga una columna para cada ticker:</p>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[16]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">df_corr</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;AMZN&quot;</span><span class="p">:</span><span class="n">amzn_df</span><span class="p">[</span><span class="s2">&quot;Returns&quot;</span><span class="p">],</span> <span class="s2">&quot;GOOGL&quot;</span><span class="p">:</span><span class="n">googl_df</span><span class="p">[</span><span class="s2">&quot;Returns&quot;</span><span class="p">],</span> <span class="s2">&quot;AAPL&quot;</span><span class="p">:</span><span class="n">aapl_df</span><span class="p">[</span><span class="s2">&quot;Returns&quot;</span><span class="p">]})</span>
+<span class="n">df_corr</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[16]:</div>
+            <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+              data-mime-type="text/html">
+              <div>
+                <table border="1" class="dataframe">
+                  <thead>
+                    <tr style="text-align: right;">
+                      <th></th>
+                      <th>AMZN</th>
+                      <th>GOOGL</th>
+                      <th>AAPL</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>0</th>
+                      <td>-0.009296</td>
+                      <td>-0.000211</td>
+                      <td>-0.009262</td>
+                    </tr>
+                    <tr>
+                      <th>1</th>
+                      <td>-0.009587</td>
+                      <td>0.000172</td>
+                      <td>-0.001549</td>
+                    </tr>
+                    <tr>
+                      <th>2</th>
+                      <td>-0.001762</td>
+                      <td>0.003953</td>
+                      <td>-0.012659</td>
+                    </tr>
+                    <tr>
+                      <th>3</th>
+                      <td>0.008888</td>
+                      <td>-0.003902</td>
+                      <td>0.014684</td>
+                    </tr>
+                    <tr>
+                      <th>4</th>
+                      <td>-0.008092</td>
+                      <td>-0.007985</td>
+                      <td>0.000192</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[29]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">df_corr</span><span class="p">[[</span><span class="s1">&#39;AMZN&#39;</span><span class="p">,</span><span class="s1">&#39;GOOGL&#39;</span><span class="p">,</span><span class="s1">&#39;AAPL&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">corr</span><span class="p">(),</span> <span class="n">annot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cmap</span> <span class="o">=</span> <span class="s1">&#39;Blues&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedImage jp-OutputArea-output ">
+              <img src="posts_images/analisis_data_financiera/image_0006.png">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <p>Este tipo de gráfico muestra, estas acciones tienen una relación lineal positiva. Esto significa que cuando
+          aumentan los rendimientos diarios de AMZN, es probable que también aumenten AAPL y GOOGL. Lo contrario también
+          es cierto. Si los retornos de AMZN disminuyen, es probable que los demás también disminuyan. Una buena cartera
+          de inversiones contiene activos diversificados. En este contexto, esto significa que se debe seleccionar
+          acciones que no estén fuertemente correlacionadas entre sí, como AAPL, AMZN y GOOGL. Esto se debe a que si los
+          rendimientos de una acción caen, los rendimientos de toda su cartera también disminuirán. En una cartera
+          diversificada con acciones que no están correlacionadas, el precio de una acción no necesariamente disminuirá
+          o
+          aumentará junto con los demás.</p>
+        <h3 id="Indicadores-de-retraso">Indicadores de retraso<a class="anchor-link"
+            href="#Indicadores-de-retraso">&#182;</a></h3>
+        <p>Los siguientes cálculos que se analizan son dos tipos diferentes de indicadores rezagados, la media móvil y
+          los
+          gráficos de la banda de Bollinger. El promedio móvil es una técnica común que utilizan los analistas para
+          suavizar las fluctuaciones a corto plazo en los precios de las acciones para comprender las tendencias en la
+          dirección de los precios. Aquí traza la media móvil de AMZN, GOOGL y AAPL. Comenzando con AMZN, se traza el
+          promedio móvil de 10 días para el precio de las acciones de cierre ajustado de AMZN y se consideran los
+          precios
+          de las acciones después del 23 de enero de 2021:</p>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[17]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">cutoff</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2021</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">23</span><span class="p">)</span>
+<span class="n">amzn_df</span><span class="p">[</span><span class="s2">&quot;Date&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">amzn_df</span><span class="p">[</span><span class="s2">&quot;Date&quot;</span><span class="p">],</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;%Y/%m/</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">amzn_df</span> <span class="o">=</span> <span class="n">amzn_df</span><span class="p">[</span><span class="n">amzn_df</span><span class="p">[</span><span class="s2">&quot;Date&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">cutoff</span><span class="p">]</span>
+<span class="n">amzn_df</span><span class="p">[</span><span class="s2">&quot;SMA_10&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">amzn_df</span><span class="p">[</span><span class="s2">&quot;Close&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="n">window</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">amzn_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[17]:</div>
+            <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+              data-mime-type="text/html">
+              <div>
+                <table border="1" class="dataframe">
+                  <thead>
+                    <tr style="text-align: right;">
+                      <th></th>
+                      <th>Date</th>
+                      <th>High</th>
+                      <th>Low</th>
+                      <th>Open</th>
+                      <th>Close</th>
+                      <th>Volume</th>
+                      <th>Adj Close</th>
+                      <th>Returns</th>
+                      <th>Ticker</th>
+                      <th>SMA_10</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>1133</th>
+                      <td>2021-01-25</td>
+                      <td>3363.889893</td>
+                      <td>3243.149902</td>
+                      <td>3328.500000</td>
+                      <td>3294.000000</td>
+                      <td>3749800</td>
+                      <td>3294.000000</td>
+                      <td>-0.010365</td>
+                      <td>AMZN</td>
+                      <td>NaN</td>
+                    </tr>
+                    <tr>
+                      <th>1134</th>
+                      <td>2021-01-26</td>
+                      <td>3338.000000</td>
+                      <td>3282.870117</td>
+                      <td>3296.360107</td>
+                      <td>3326.129883</td>
+                      <td>2955200</td>
+                      <td>3326.129883</td>
+                      <td>0.009031</td>
+                      <td>AMZN</td>
+                      <td>NaN</td>
+                    </tr>
+                    <tr>
+                      <th>1135</th>
+                      <td>2021-01-27</td>
+                      <td>3346.520020</td>
+                      <td>3207.080078</td>
+                      <td>3341.489990</td>
+                      <td>3232.580078</td>
+                      <td>4660200</td>
+                      <td>3232.580078</td>
+                      <td>-0.032593</td>
+                      <td>AMZN</td>
+                      <td>NaN</td>
+                    </tr>
+                    <tr>
+                      <th>1136</th>
+                      <td>2021-01-28</td>
+                      <td>3301.679932</td>
+                      <td>3228.689941</td>
+                      <td>3235.040039</td>
+                      <td>3237.620117</td>
+                      <td>3149200</td>
+                      <td>3237.620117</td>
+                      <td>0.000798</td>
+                      <td>AMZN</td>
+                      <td>NaN</td>
+                    </tr>
+                    <tr>
+                      <th>1137</th>
+                      <td>2021-01-29</td>
+                      <td>3236.989990</td>
+                      <td>3184.550049</td>
+                      <td>3230.000000</td>
+                      <td>3206.199951</td>
+                      <td>4293600</td>
+                      <td>3206.199951</td>
+                      <td>-0.007368</td>
+                      <td>AMZN</td>
+                      <td>NaN</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[20]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">amzn_df</span><span class="p">[</span><span class="s2">&quot;Date&quot;</span><span class="p">],</span> <span class="n">amzn_df</span><span class="p">[</span><span class="s2">&quot;SMA_10&quot;</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">amzn_df</span><span class="p">[</span><span class="s2">&quot;Date&quot;</span><span class="p">],</span> <span class="n">amzn_df</span><span class="p">[</span><span class="s2">&quot;Adj Close&quot;</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Promedio y Precio de Cierre Ajustado para AMZN&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Precio de Cierre Ajustado&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Fecha&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedImage jp-OutputArea-output ">
+              <img src="posts_images/analisis_data_financiera/image_0007.png">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <p>En el gráfico anterior, la línea azul muestra la media móvil y la naranja el precio de cierre ajustado. Se
+          realizará el mismo gráfico para el resto de empresas.</p>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[21]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">googl_df</span><span class="p">[</span><span class="s2">&quot;Date&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">googl_df</span><span class="p">[</span><span class="s2">&quot;Date&quot;</span><span class="p">],</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;%Y/%m/</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">googl_df</span> <span class="o">=</span> <span class="n">googl_df</span><span class="p">[</span><span class="n">googl_df</span><span class="p">[</span><span class="s2">&quot;Date&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">cutoff</span><span class="p">]</span>
+<span class="n">googl_df</span><span class="p">[</span><span class="s2">&quot;SMA_10&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">googl_df</span><span class="p">[</span><span class="s2">&quot;Close&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="n">window</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">googl_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[21]:</div>
+            <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+              data-mime-type="text/html">
+              <div>
+                <table border="1" class="dataframe">
+                  <thead>
+                    <tr style="text-align: right;">
+                      <th></th>
+                      <th>Date</th>
+                      <th>High</th>
+                      <th>Low</th>
+                      <th>Open</th>
+                      <th>Close</th>
+                      <th>Volume</th>
+                      <th>Adj Close</th>
+                      <th>Returns</th>
+                      <th>Ticker</th>
+                      <th>SMA_10</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>1133</th>
+                      <td>2021-01-25</td>
+                      <td>1921.819946</td>
+                      <td>1859.160034</td>
+                      <td>1912.739990</td>
+                      <td>1894.280029</td>
+                      <td>2529300</td>
+                      <td>1894.280029</td>
+                      <td>-0.009651</td>
+                      <td>GOOGL</td>
+                      <td>NaN</td>
+                    </tr>
+                    <tr>
+                      <th>1134</th>
+                      <td>2021-01-26</td>
+                      <td>1915.750000</td>
+                      <td>1876.130005</td>
+                      <td>1885.989990</td>
+                      <td>1907.949951</td>
+                      <td>1573100</td>
+                      <td>1907.949951</td>
+                      <td>0.011644</td>
+                      <td>GOOGL</td>
+                      <td>NaN</td>
+                    </tr>
+                    <tr>
+                      <th>1135</th>
+                      <td>2021-01-27</td>
+                      <td>1880.469971</td>
+                      <td>1797.280029</td>
+                      <td>1874.910034</td>
+                      <td>1818.939941</td>
+                      <td>4125600</td>
+                      <td>1818.939941</td>
+                      <td>-0.029852</td>
+                      <td>GOOGL</td>
+                      <td>NaN</td>
+                    </tr>
+                    <tr>
+                      <th>1136</th>
+                      <td>2021-01-28</td>
+                      <td>1887.989990</td>
+                      <td>1831.000000</td>
+                      <td>1831.000000</td>
+                      <td>1853.199951</td>
+                      <td>2763900</td>
+                      <td>1853.199951</td>
+                      <td>0.012124</td>
+                      <td>GOOGL</td>
+                      <td>NaN</td>
+                    </tr>
+                    <tr>
+                      <th>1137</th>
+                      <td>2021-01-29</td>
+                      <td>1847.540039</td>
+                      <td>1801.560059</td>
+                      <td>1834.020020</td>
+                      <td>1827.359985</td>
+                      <td>2226500</td>
+                      <td>1827.359985</td>
+                      <td>-0.003631</td>
+                      <td>GOOGL</td>
+                      <td>NaN</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[22]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">googl_df</span><span class="p">[</span><span class="s2">&quot;Date&quot;</span><span class="p">],</span> <span class="n">googl_df</span><span class="p">[</span><span class="s2">&quot;SMA_10&quot;</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">googl_df</span><span class="p">[</span><span class="s2">&quot;Date&quot;</span><span class="p">],</span> <span class="n">googl_df</span><span class="p">[</span><span class="s2">&quot;Adj Close&quot;</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Promedio y Precio de Cierre Ajustado para GOOGL&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Precio de Cierre Ajustado&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Fecha&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedImage jp-OutputArea-output ">
+              <img src="posts_images/analisis_data_financiera/image_0008.png">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[23]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">aapl_df</span><span class="p">[</span><span class="s2">&quot;Date&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">aapl_df</span><span class="p">[</span><span class="s2">&quot;Date&quot;</span><span class="p">],</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;%Y/%m/</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">aapl_df</span> <span class="o">=</span> <span class="n">aapl_df</span><span class="p">[</span><span class="n">aapl_df</span><span class="p">[</span><span class="s2">&quot;Date&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">cutoff</span><span class="p">]</span>
+<span class="n">aapl_df</span><span class="p">[</span><span class="s2">&quot;SMA_10&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">aapl_df</span><span class="p">[</span><span class="s2">&quot;Close&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="n">window</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">aapl_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[23]:</div>
+            <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+              data-mime-type="text/html">
+              <div>
+                <table border="1" class="dataframe">
+                  <thead>
+                    <tr style="text-align: right;">
+                      <th></th>
+                      <th>Date</th>
+                      <th>High</th>
+                      <th>Low</th>
+                      <th>Open</th>
+                      <th>Close</th>
+                      <th>Volume</th>
+                      <th>Adj Close</th>
+                      <th>Returns</th>
+                      <th>Ticker</th>
+                      <th>SMA_10</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>1133</th>
+                      <td>2021-01-25</td>
+                      <td>145.089996</td>
+                      <td>136.539993</td>
+                      <td>143.070007</td>
+                      <td>142.919998</td>
+                      <td>157611700.0</td>
+                      <td>142.464767</td>
+                      <td>-0.001049</td>
+                      <td>AAPL</td>
+                      <td>NaN</td>
+                    </tr>
+                    <tr>
+                      <th>1134</th>
+                      <td>2021-01-26</td>
+                      <td>144.300003</td>
+                      <td>141.369995</td>
+                      <td>143.600006</td>
+                      <td>143.160004</td>
+                      <td>98390600.0</td>
+                      <td>142.704010</td>
+                      <td>-0.003064</td>
+                      <td>AAPL</td>
+                      <td>NaN</td>
+                    </tr>
+                    <tr>
+                      <th>1135</th>
+                      <td>2021-01-27</td>
+                      <td>144.300003</td>
+                      <td>140.410004</td>
+                      <td>143.429993</td>
+                      <td>142.059998</td>
+                      <td>140843800.0</td>
+                      <td>141.607513</td>
+                      <td>-0.009552</td>
+                      <td>AAPL</td>
+                      <td>NaN</td>
+                    </tr>
+                    <tr>
+                      <th>1136</th>
+                      <td>2021-01-28</td>
+                      <td>141.990005</td>
+                      <td>136.699997</td>
+                      <td>139.520004</td>
+                      <td>137.089996</td>
+                      <td>142621100.0</td>
+                      <td>136.653336</td>
+                      <td>-0.017417</td>
+                      <td>AAPL</td>
+                      <td>NaN</td>
+                    </tr>
+                    <tr>
+                      <th>1137</th>
+                      <td>2021-01-29</td>
+                      <td>136.740005</td>
+                      <td>130.210007</td>
+                      <td>135.830002</td>
+                      <td>131.960007</td>
+                      <td>177523800.0</td>
+                      <td>131.539673</td>
+                      <td>-0.028491</td>
+                      <td>AAPL</td>
+                      <td>NaN</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[24]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">aapl_df</span><span class="p">[</span><span class="s2">&quot;Date&quot;</span><span class="p">],</span> <span class="n">aapl_df</span><span class="p">[</span><span class="s2">&quot;SMA_10&quot;</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">aapl_df</span><span class="p">[</span><span class="s2">&quot;Date&quot;</span><span class="p">],</span> <span class="n">aapl_df</span><span class="p">[</span><span class="s2">&quot;Adj Close&quot;</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Promedio y Precio de Cierre Ajustado para AAPL&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Precio de Cierre Ajustado&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Fecha&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedImage jp-OutputArea-output ">
+              <img src="posts_images/analisis_data_financiera/image_0009.png">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <p>El último tipo de gráfico a utilizar, es el gráfico de la Banda de Bollinger, este es una forma de visualizar
+          la dispersión en la media móvil. Las bandas están definidas por límites superior e inferior que están a dos
+          desviaciones estándar de la media móvil simple. Esto es útil para los comerciantes porque permite aprovechar
+          las
+          fluctuaciones en la volatilidad de los precios. Se procede a generar un gráfico de banda de Bollinger para
+          AMZN:
+        </p>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[25]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">amzn_df</span><span class="p">[</span><span class="s2">&quot;SMA_10_STD&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">amzn_df</span><span class="p">[</span><span class="s2">&quot;Adj Close&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="n">window</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+<span class="n">amzn_df</span><span class="p">[</span><span class="s2">&quot;Upper Band&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">amzn_df</span><span class="p">[</span><span class="s2">&quot;SMA_10&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">amzn_df</span><span class="p">[</span><span class="s2">&quot;SMA_10_STD&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">amzn_df</span><span class="p">[</span><span class="s2">&quot;Lower Band&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">amzn_df</span><span class="p">[</span><span class="s2">&quot;SMA_10&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="p">(</span><span class="n">amzn_df</span><span class="p">[</span><span class="s2">&quot;SMA_10_STD&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">amzn_df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">amzn_df</span><span class="p">[</span><span class="s2">&quot;Date&quot;</span><span class="p">]</span>
+<span class="n">amzn_df</span><span class="p">[[</span><span class="s2">&quot;Adj Close&quot;</span><span class="p">,</span> <span class="s2">&quot;SMA_10&quot;</span><span class="p">,</span> <span class="s2">&quot;Upper Band&quot;</span><span class="p">,</span> <span class="s2">&quot;Lower Band&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Banda Bollinger de 10 días para Amazon&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Precio de Cierre Ajustado&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedImage jp-OutputArea-output ">
+              <img src="posts_images/analisis_data_financiera/image_0010.png">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[26]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">googl_df</span><span class="p">[</span><span class="s2">&quot;SMA_10_STD&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">googl_df</span><span class="p">[</span><span class="s2">&quot;Adj Close&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="n">window</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+<span class="n">googl_df</span><span class="p">[</span><span class="s2">&quot;Upper Band&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">googl_df</span><span class="p">[</span><span class="s2">&quot;SMA_10&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">googl_df</span><span class="p">[</span><span class="s2">&quot;SMA_10_STD&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">googl_df</span><span class="p">[</span><span class="s2">&quot;Lower Band&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">googl_df</span><span class="p">[</span><span class="s2">&quot;SMA_10&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="p">(</span><span class="n">googl_df</span><span class="p">[</span><span class="s2">&quot;SMA_10_STD&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">googl_df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">googl_df</span><span class="p">[</span><span class="s2">&quot;Date&quot;</span><span class="p">]</span>
+<span class="n">googl_df</span><span class="p">[[</span><span class="s2">&quot;Adj Close&quot;</span><span class="p">,</span> <span class="s2">&quot;SMA_10&quot;</span><span class="p">,</span> <span class="s2">&quot;Upper Band&quot;</span><span class="p">,</span> <span class="s2">&quot;Lower Band&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Banda Bollinger de 10 días para Google&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Precio de Cierre Ajustado&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedImage jp-OutputArea-output ">
+              <img src="posts_images/analisis_data_financiera/image_0011.png">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[27]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">aapl_df</span><span class="p">[</span><span class="s2">&quot;SMA_10_STD&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">aapl_df</span><span class="p">[</span><span class="s2">&quot;Adj Close&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="n">window</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+<span class="n">aapl_df</span><span class="p">[</span><span class="s2">&quot;Upper Band&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">aapl_df</span><span class="p">[</span><span class="s2">&quot;SMA_10&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">aapl_df</span><span class="p">[</span><span class="s2">&quot;SMA_10_STD&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">aapl_df</span><span class="p">[</span><span class="s2">&quot;Lower Band&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">aapl_df</span><span class="p">[</span><span class="s2">&quot;SMA_10&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="p">(</span><span class="n">aapl_df</span><span class="p">[</span><span class="s2">&quot;SMA_10_STD&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">aapl_df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">aapl_df</span><span class="p">[</span><span class="s2">&quot;Date&quot;</span><span class="p">]</span>
+<span class="n">aapl_df</span><span class="p">[[</span><span class="s2">&quot;Adj Close&quot;</span><span class="p">,</span> <span class="s2">&quot;SMA_10&quot;</span><span class="p">,</span> <span class="s2">&quot;Upper Band&quot;</span><span class="p">,</span> <span class="s2">&quot;Lower Band&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Banda Bollinger de 10 días para Apple&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Precio de Cierre Ajustado&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedImage jp-OutputArea-output ">
+              <img src="posts_images/analisis_data_financiera/image_0012.png">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <p>Existen una amplia variedad de herramientas útiles para extraer, analizar y generar información a partir de
+          datos financieros. La combinación de estas herramientas facilita a los principiantes comenzar a trabajar con
+          datos financieros en Python. Estas habilidades se pueden utilizar para inversiones personales, operaciones
+          algorítmicas, creación de carteras y más. Poder generar rápidamente conocimientos estadísticos, visualizar
+          relaciones e identificar tendencias en datos financieros es invaluable para cualquier analista o científico de
+          datos interesado en las finanzas.</p>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span> 
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
