@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+  <title>Combinación de Multiples Gráficos</title>
+  <link id="theme-style" rel="stylesheet" href="r_css/r_posts.css">
+</head>
+
+<body>
+  <div class="container-fluid main-container">
+    <!-- ************************ Common Code ************************ -->
+    <div style="margin-top: 10px;">
+      <div>
+        <a style="font-size: medium;" href="../../index.html">
+          Volver al Inicio
+        </a>
+      </div>
+      <div>
+        <ul style="list-style: none; margin-left: 70%; margin-top: -22px;">
+          <li style="font-size: medium;">
+            <a href="exploracion_de_datos.html" class="nav-link">Anterior</a>
+          </li>
+          <li style="font-size: medium; margin-left: 100px; margin-top: -22px;">
+            <a href="conceptos_estadisticos.html" class="nav-link">Siguiente</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <hr>
+    <!-- ************************ Common Code ************************ -->
+    <div class="container-fluid main-container">
+      <div id="header">
+        <h1 class="title toc-ignore">Combinación de Multiples Gráficos: Librerías ggplot2</h1>
+        <p style="font-size: medium;"><strong>29 de Mayo del 2020</strong> - Jhonatan Montilla</p></br>
+      </div>
+      <div id="combinación-de-múltiples-gráficos-de-ggplot2-para-publicaciones-científicas." class="section level2">
+        <p>El ggplot2 es una de las librerías de trazado más populares que se pueden aprovechar para obtener hermosos
+          gráficos listos para publicación. El problema surge cuando desea combinar sus múltiples parcelas juntas.</p>
+        <p>Es posible que desee combinar varios gráficos para ilustrar comparaciones o mostrar información de manera
+          agregada.</p>
+        <ul>
+          <li>Esquema del artículo</li>
+          <li>Objetivo de este artículo</li>
+          <li>Generación de parcelas</li>
+          <li>Combinar parcelas usando el paquete de cuadrícula</li>
+          <li>Combinar parcelas usando el paquete gridExtra</li>
+          <li>Combinar parcelas usando el paquete ggpubr</li>
+          <li>Combinar parcelas usando un paquete de mosaico</li>
+          <li>Apuntar</li>
+        </ul>
+        <p>En este artículo, aprenderemos cómo podemos aprovechar diferentes librerías de R para combinar múltiples
+          gráficos de ggplot2.</p>
+      </div>
+      <div id="observación-del-conjunto-de-datos" class="section level3">
+        <h3>Observación del conjunto de datos</h3>
+        <p>En este artículo, vamos a utilizar el conjunto de datos incorporado en mtcars. Puede ver las primeras 6
+          observaciones usando la función head ().</p>
+        <pre class="r"><code>head(mtcars)</code></pre>
+        <pre><code>##                    mpg cyl disp  hp drat    wt  qsec vs am gear carb
+## Mazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
+## Mazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
+## Datsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4    1
+## Hornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
+## Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2
+## Valiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1</code></pre>
+      </div>
+      <div id="cargando-librerías-relevantes" class="section level3">
+        <h3>Cargando librerías relevantes</h3>
+        <p>El siguiente paso es cargar las librerías relevantes usando la función library (). Primero debe instalar
+          estas librerías usando la función install.packages ().</p>
+        <pre class="r"><code>library(tidyverse)
+library(grid)
+library(gridExtra)
+library(ggpubr)
+library(patchwork)</code></pre>
+      </div>
+      <div id="fondo-de-datos" class="section level3">
+        <h3>Fondo de datos</h3>
+        <p>Los datos se extrajeron de la revista Motor Trend de EE. UU. De 1974, y comprenden el consumo de combustible
+          y 10 aspectos del diseño y el rendimiento del automóvil para 32 automóviles (modelos 1973–74).</p>
+        <p>El marco de datos contiene 32 observaciones sobre 11 variables (numéricas).</p>
+        <ul>
+          <li>mpg: Millas / (EE. UU.) galón</li>
+          <li>cilindros: Número de cilindros</li>
+          <li>disp: Desplazamiento (pulgadas cúbicas)</li>
+          <li>hp: potencia bruta</li>
+          <li>drat: relación del eje trasero</li>
+          <li>peso: Peso (1000 libras)</li>
+          <li>qsec: tiempo de 1/4 de milla</li>
+          <li>vs: motor (0: en forma de V, 1: recto)</li>
+          <li>am: Transmisión (0: automática, 1: manual)</li>
+          <li>marcha: número de marchas hacia adelante</li>
+          <li>carb: Número de carburadores</li>
+        </ul>
+      </div>
+      <div id="estructura-de-mtcars" class="section level3">
+        <h3>Estructura de mtcars</h3>
+        <p>Veamos el tipo de datos de cada columna usando la función glimpse () del paquete tidyverse. El paquete
+          tidyverse contiene los paquetes base ggplot2 (usado para trazar) y dplyr (usado para manipulación de datos).
+        </p>
+        <pre class="r"><code>glimpse(mtcars)</code></pre>
+        <pre><code>## Rows: 32
+## Columns: 11
+## $ mpg  &lt;dbl&gt; 21.0, 21.0, 22.8, 21.4, 18.7, 18.1, 14.3, 24.4, 22.8, 19.2, 17.8,~
+## $ cyl  &lt;dbl&gt; 6, 6, 4, 6, 8, 6, 8, 4, 4, 6, 6, 8, 8, 8, 8, 8, 8, 4, 4, 4, 4, 8,~
+## $ disp &lt;dbl&gt; 160.0, 160.0, 108.0, 258.0, 360.0, 225.0, 360.0, 146.7, 140.8, 16~
+## $ hp   &lt;dbl&gt; 110, 110, 93, 110, 175, 105, 245, 62, 95, 123, 123, 180, 180, 180~
+## $ drat &lt;dbl&gt; 3.90, 3.90, 3.85, 3.08, 3.15, 2.76, 3.21, 3.69, 3.92, 3.92, 3.92,~
+## $ wt   &lt;dbl&gt; 2.620, 2.875, 2.320, 3.215, 3.440, 3.460, 3.570, 3.190, 3.150, 3.~
+## $ qsec &lt;dbl&gt; 16.46, 17.02, 18.61, 19.44, 17.02, 20.22, 15.84, 20.00, 22.90, 18~
+## $ vs   &lt;dbl&gt; 0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0,~
+## $ am   &lt;dbl&gt; 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0,~
+## $ gear &lt;dbl&gt; 4, 4, 4, 3, 3, 3, 3, 4, 4, 4, 4, 3, 3, 3, 3, 3, 3, 4, 4, 4, 3, 3,~
+## $ carb &lt;dbl&gt; 4, 4, 1, 1, 2, 1, 4, 2, 2, 4, 4, 3, 3, 3, 4, 4, 4, 1, 2, 1, 1, 2,~</code></pre>
+      </div>
+      <div id="clase-de-verificación-tipo-de-datos" class="section level3">
+        <h3>Clase de verificación (tipo de datos)</h3>
+        <p>Aquí, vamos a utilizar las variables gear y am que son de tipo numérico. Puede verificar el tipo usando la
+          función class ().</p>
+        <pre class="r"><code>class(mtcars$gear)</code></pre>
+        <pre><code>## [1] &quot;numeric&quot;</code></pre>
+        <pre class="r"><code>class(mtcars$am)</code></pre>
+        <pre><code>## [1] &quot;numeric&quot;</code></pre>
+      </div>
+      <div id="conversión-a-variable-categórica" class="section level3">
+        <h3>Conversión a variable categórica</h3>
+        <p>Para trazar, necesitamos convertir tanto gear como am en variables categóricas usando la función as.factor ()
+          ya que ambas contienen pocas categorías distintas.</p>
+        <pre class="r"><code>mtcars$gear &lt;- as.factor(mtcars$gear)
+mtcars$am &lt;- as.factor(mtcars$am)
+class(mtcars$gear)</code></pre>
+        <pre><code>## [1] &quot;factor&quot;</code></pre>
+        <pre class="r"><code>class(mtcars$am)</code></pre>
+        <pre><code>## [1] &quot;factor&quot;</code></pre>
+      </div>
+      <div id="preparando-parcelas" class="section level3">
+        <h3>Preparando parcelas</h3>
+        <p>Para demostrar cómo podemos combinar gráficos, primero, necesitamos generar algunos gráficos. Este gráfico
+          puede ser cualquier gráfico como barra, dispersión, caja, línea, etc.</p>
+      </div>
+      <div id="plot1-gráfico-de-dispersión" class="section level3">
+        <h3>Plot1: Gráfico de dispersión</h3>
+        <p>El primer gráfico es un gráfico de dispersión en el que trazaremos el peso en el eje xy mpg en el eje y y
+          colorearemos los puntos según el engranaje (variable categórica)</p>
+        <pre class="r"><code>plot1 &lt;- ggplot(data = mtcars, mapping = aes(x = wt, y = mpg,
+                                             colour = gear)) +
+  geom_point(size=3) +
+  ggtitle(&quot;plot1&quot;)
+plot1</code></pre>
+        <p><img src="r_images/combinacion_de_multiples_graficos/image_0001.png" /></p>
+      </div>
+      <div id="plot2-gráfico-de-histograma" class="section level3">
+        <h3>Plot2: Gráfico de histograma</h3>
+        <p>El segundo gráfico es un histograma, donde graficamos la distribución de la variable mpg.</p>
+        <pre class="r"><code>plot2 &lt;- ggplot(data = mtcars, mapping = aes(x = mpg)) +
+  geom_histogram(binwidth = 5) +
+  ggtitle(&quot;plot2&quot;)
+plot2</code></pre>
+        <p><img src="r_images/combinacion_de_multiples_graficos/image_0002.png" /></p>
+      </div>
+      <div id="plot3-gráfico-de-caja" class="section level3">
+        <h3>Plot3: Gráfico de caja</h3>
+        <p>El tercer gráfico es un gráfico de caja, en el que en el eje x graficamos la interacción del engranaje y am y
+          en el eje y, graficamos los valores de mpg.</p>
+        <pre class="r"><code>plot3 &lt;- ggplot(data = mtcars,
+                mapping = aes(x = interaction(gear,am), y=mpg)) +
+  geom_boxplot() +
+  ggtitle(&quot;plot3&quot;)
+plot3</code></pre>
+        <p><img src="r_images/combinacion_de_multiples_graficos/image_0003.png" /></p>
+      </div>
+      <div id="plot4-gráfico-de-línea" class="section level3">
+        <h3>Plot4: Gráfico de línea</h3>
+        <p>La cuarta (última) gráfica es una gráfica lineal, donde graficamos hp en el eje xy mpg en el eje y.</p>
+        <pre class="r"><code>plot4 &lt;- ggplot(data = mtcars, mapping = aes(x = hp, y=mpg)) +
+  geom_line() +
+  ggtitle(&quot;plot4&quot;)
+plot4</code></pre>
+        <p><img src="r_images/combinacion_de_multiples_graficos/image_0004.png" /></p>
+      </div>
+      <div id="combinando-múltiples-parcelas-usando-la-biblioteca-gird" class="section level3">
+        <h3>Combinando múltiples parcelas usando la biblioteca gird</h3>
+        <p>Primero, usaremos la biblioteca de cuadrículas para combinar las cuatro parcelas (plot1, plot2, plot3 y
+          plot4).</p>
+        <ul>
+          <li>Primero, necesitamos crear una página vacía usando la función grid.newpage ()</li>
+          <li>Segundo, necesitamos usar la función pushViewport () para empujar el diseño usando la función viewport ().
+            Aquí, hemos introducido un diseño de 2 por 2, lo que significa 2 filas y 2 columnas para nuestras cuatro
+            parcelas.</li>
+        </ul>
+        <p>Una vez que establezca el diseño, el siguiente paso es enviar sus trazados dentro del diseño usando la
+          función viewport () y dentro de eso, debe proporcionar el objeto de trazado y definir su posición de fila y
+          columna. Una vez que inserte todas las parcelas definidas dentro de su diseño, generará la siguiente parcela
+          combinada.</p>
+        <pre class="r"><code># Crea una nueva pagina
+grid.newpage()
+
+# Luego empuje el área visible con un diseño de 2 columnas y 2 filas usando pushViewport ()
+pushViewport(viewport(layout = grid.layout(2,2)))
+
+# Coloque la trama en el área por posición de fila y columna
+print(plot1, vp = viewport(layout.pos.row = 1, layout.pos.col = 1))
+print(plot2, vp = viewport(layout.pos.row = 1, layout.pos.col = 2))
+print(plot3, vp = viewport(layout.pos.row = 2, layout.pos.col = 1))
+print(plot4, vp = viewport(layout.pos.row = 2, layout.pos.col = 2))</code></pre>
+        <p><img src="r_images/combinacion_de_multiples_graficos/image_0005.png" /></p>
+      </div>
+      <div id="combinando-múltiples-parcelas-usando-la-biblioteca-gridextra" class="section level3">
+        <h3>Combinando múltiples parcelas usando la biblioteca gridExtra</h3>
+        <p>La siguiente biblioteca es gridExtra, que es muy fácil de usar. Después de cargar esta biblioteca, debe usar
+          la función grid.arrange () y, dentro de ella, debe proporcionar los gráficos uno por uno, según el orden en el
+          que desea trazarlos. Además, debe definir el número de filas y columnas que desea.</p>
+        <pre class="r"><code>grid.arrange(plot1, plot2, plot3, plot4, nrow = 2, ncol = 2)</code></pre>
+        <p><img src="r_images/combinacion_de_multiples_graficos/image_0006.png" /></p>
+        <p>Puede cambiar el orden de los gráficos cambiando el orden de los objetos del gráfico dentro de la función
+          grid.arrange (). Aquí hay un ejemplo, donde he cambiado el orden de los objetos de la trama (trama3, trama2,
+          trama4, trama1)</p>
+        <pre class="r"><code># Cambiar el orden
+grid.arrange(plot3, plot2, plot4, plot1, nrow = 2, ncol = 2)</code></pre>
+        <p><img src="r_images/combinacion_de_multiples_graficos/image_0007.png" /></p>
+      </div>
+      <div id="combinando-múltiples-parcelas-usando-la-biblioteca-ggpubr" class="section level3">
+        <h3>Combinando múltiples parcelas usando la biblioteca ggpubr</h3>
+        <p>La siguiente biblioteca es una de las librerías populares utilizadas para la publicación científica, conocida
+          como ggpubr. El mecanismo de combinación es el mismo que el de la biblioteca gridExtra.</p>
+        <pre class="r"><code>figure &lt;- ggarrange(plot1, plot2, plot3, plot4,
+                    ncol = 2, nrow = 2)
+figure</code></pre>
+        <p><img src="r_images/combinacion_de_multiples_graficos/image_0008.png" /></p>
+        <p>Puede organizar los gráficos anidando la función ggarange () en la posición de los objetos del gráfico. Aquí,
+          primero he trazado el objeto plot4 (extendiendo todo el ancho de columna de la primera fila) y otro objeto
+          ggarrange () en la segunda posición de la trama, que consta de plot1 y plot2.</p>
+        <pre class="r"><code>ggarrange(
+  plot4,    # plot4 en primera fila
+  ggarrange(plot1, plot2, ncol = 2), 
+  nrow = 2  # plot1 y plot2 en la segunda fila
+)</code></pre>
+        <p><img src="r_images/combinacion_de_multiples_graficos/image_0009.png" /></p>
+      </div>
+      <div id="combinando-múltiples-parcelas-usando-la-biblioteca-de-patchwork" class="section level3">
+        <h3>Combinando múltiples parcelas usando la biblioteca de patchwork</h3>
+        <p>La cuarta biblioteca conocida como patchwork hace que el proceso de combinación sea muy simple. Después de
+          cargar la biblioteca, puede usar notaciones matemáticas para combinar múltiples gráficos. Aquí, he combinado
+          plot1 y plot2 con solo un signo de suma (+).</p>
+        <pre class="r"><code>plot1 + plot2</code></pre>
+        <p><img src="r_images/combinacion_de_multiples_graficos/image_0010.png" /></p>
+        <p>Digamos que desea trazar plot1, plot2 y plot3 en la fila 1 y plot4 en la fila 2. Puedes lograr esto
+          proporcionando los objetos de la gráfica dentro de un corchete () separados con el operador OR (|). Puede usar
+          el operador dividir (/) para indicar que plot4 debe estar en la siguiente fila.</p>
+        <pre class="r"><code>(plot1 | plot2 | plot3) /
+  plot4</code></pre>
+        <p><img src="r_images/combinacion_de_multiples_graficos/image_0011.png" /></p>
+      </div>
+    </div>
+  </div>
+  <script>
+
+    // add bootstrap table styles to pandoc tables
+    function bootstrapStylePandocTables() {
+      $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+    }
+    $(document).ready(function () {
+      bootstrapStylePandocTables();
+    });
+  </script>
+  <!-- tabsets -->
+  <script>
+    $(document).ready(function () {
+      window.buildTabsets("TOC");
+    });
+
+    $(document).ready(function () {
+      $('.tabset-dropdown > .nav-tabs > li').click(function () {
+        $(this).parent().toggleClass('nav-tabs-open');
+      });
+    });
+  </script>
+  <!-- code folding -->
+  <!-- dynamically load mathjax for compatibility with self-contained -->
+  <script>
+    (function () {
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+      document.getElementsByTagName("head")[0].appendChild(script);
+    })();
+  </script>
+</body>
+
+</html>

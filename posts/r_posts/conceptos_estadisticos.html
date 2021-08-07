@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+  <meta name="author" content />
+  <title>Conceptos Estadísticos</title>
+  <link id="theme-style" rel="stylesheet" href="r_css/r_posts.css">
+</head>
+
+<body>
+  <div class="container-fluid main-container">
+    <!-- ************************ Common Code ************************ -->
+    <div style="margin-top: 10px;">
+      <div>
+        <a style="font-size: medium;" href="../../index.html">
+          Volver al Inicio
+        </a>
+      </div>
+      <div>
+        <ul style="list-style: none; margin-left: 70%; margin-top: -22px;">
+          <li style="font-size: medium;">
+            <a href="combinacion_de_multiples_graficos.html" class="nav-link">Anterior</a>
+          </li>
+          <li style="font-size: medium; margin-left: 100px; margin-top: -22px;">
+            <a href="#" class="nav-link">Siguiente</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <hr>
+    <!-- ************************ Common Code ************************ -->
+    <div class="fluid-row" id="header">
+      <h1 class="title toc-ignore">Conceptos Estadísticos</h1>
+    </div>
+    <div id="conceptos-de-estadística-descriptiva-explicados-mediante-r." class="section level1">
+      <h2>Estadística descriptiva explicada mediante R.</h2>
+      <p style="font-size: medium;"><strong>31 de Mayo del 2020</strong> - Jhonatan Montilla</p></br>
+      <div id="medidas-de-tendencia-central-dispersión-y-posición." class="section level2">
+        <h3>Medidas de tendencia central, dispersión y posición.</h3>
+        <p>Vivir en Nueva York puede ser caro, pero ¿cuánto de caro exactamente?, en este artículo
+          simple, encontraremos la media, la mediana y la moda de los cinco distritos de Nueva York:
+          Brooklyn, Manhattan y Queens.
+          <!-- ************************ Common Code ************************ -->
+          Primero se descargan los conjuntos de datos a través del siguiente
+          <a href="https://github.com/Jhonmont/all_datasets_repository" class="nav-link">
+            repositorio.
+          </a>
+          <!-- ************************ Common Code ************************ -->
+        </p>
+        <p>Seguidamente se importan las librerías de R:</p>
+        <pre class="r"><code># Load libraries
+library(readr)
+library(dplyr)</code></pre>
+        <pre><code>## 
+## Attaching package: &#39;dplyr&#39;</code></pre>
+        <pre><code>## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     filter, lag</code></pre>
+        <pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     intersect, setdiff, setequal, union</code></pre>
+        <pre class="r"><code>library(DescTools)
+library(ggplot2)
+library(tidyr)</code></pre>
+        <p>Luego, carguemos los tres conjuntos de datos en R:</p>
+        <pre class="r"><code>brooklyn_one_bed &lt;- read_csv(&#39;brooklyn-one-bed.csv&#39;)
+brooklyn_price &lt;- brooklyn_one_bed$rent</code></pre>
+        <pre class="r"><code>manhattan_one_bed &lt;- read_csv(&#39;manhattan-one-bed.csv&#39;)
+manhattan_price &lt;- manhattan_one_bed$rent</code></pre>
+        <pre class="r"><code>queens_one_bed &lt;- read_csv(&#39;queens-one-bed.csv&#39;)
+queens_price &lt;- queens_one_bed$rent</code></pre>
+        <p>Nota: el signo “$” se utiliza para seleccionar una columna de un conjunto de datos determinado.</p>
+        <p>Nota: “read_csv” se utiliza para cargar el archivo .csv en el objeto R.</p>
+        <p>Calculemos la media:</p>
+        <pre class="r"><code>brooklyn_mean &lt;- mean(brooklyn_price)
+print(brooklyn_mean)</code></pre>
+        <pre><code>## [1] 124.3832</code></pre>
+        <pre class="r"><code>manhattan_mean &lt;- mean(manhattan_price)
+print(manhattan_mean)</code></pre>
+        <pre><code>## [1] 196.8758</code></pre>
+        <pre class="r"><code>queens_mean &lt;- mean(queens_price)
+print(queens_mean)</code></pre>
+        <pre><code>## [1] 99.51765</code></pre>
+        <p>El costo promedio es bastante alto en Manhattan. ¿Alguien vive allí?</p>
+        <p>Entonces, la mediana:</p>
+        <pre class="r"><code>brooklyn_mean &lt;- mean(brooklyn_price)
+print(brooklyn_mean)</code></pre>
+        <pre><code>## [1] 124.3832</code></pre>
+        <pre class="r"><code>manhattan_mean &lt;- mean(manhattan_price)
+print(manhattan_mean)</code></pre>
+        <pre><code>## [1] 196.8758</code></pre>
+        <pre class="r"><code>queens_mean &lt;- mean(queens_price)
+print(queens_mean)</code></pre>
+        <pre><code>## [1] 99.51765</code></pre>
+        <p>El costo promedio es bastante alto en Brooklyn. ¿Alguien vive allí?</p>
+        <p>Entonces, la mediana:</p>
+        <pre class="r"><code>brooklyn_median &lt;- median(brooklyn_price)
+print(brooklyn_median)</code></pre>
+        <pre><code>## [1] 90</code></pre>
+        <pre class="r"><code>manhattan_median &lt;- median(manhattan_price)
+print(manhattan_median)</code></pre>
+        <pre><code>## [1] 150</code></pre>
+        <pre class="r"><code>queens_median &lt;- median(queens_price)
+print(queens_median)</code></pre>
+        <pre><code>## [1] 75</code></pre>
+        <p>Y finalmente la moda.</p>
+        <p>Para Brooklyn:</p>
+        <pre class="r"><code>brooklyn_mode &lt;- Mode(brooklyn_price)
+print(brooklyn_mode)</code></pre>
+        <pre><code>## [1] 100
+## attr(,&quot;freq&quot;)
+## [1] 867</code></pre>
+        <p>R nos dice que la moda es el valor 2500, que aparece 26 veces.</p>
+        <p>Para Manhattan:</p>
+        <pre class="r"><code>manhattan_mode &lt;- Mode(manhattan_price)
+print(manhattan_mode)</code></pre>
+        <pre><code>## [1] 150
+## attr(,&quot;freq&quot;)
+## [1] 1052</code></pre>
+        <p>R nos dice que la moda es el valor 3500, que aparece 56 veces.</p>
+        <p>Para Queens:</p>
+        <pre class="r"><code>queens_mode &lt;- Mode(queens_price)
+print(queens_mode)</code></pre>
+        <pre><code>## [1] 50
+## attr(,&quot;freq&quot;)
+## [1] 311</code></pre>
+        <p>R nos dice que la moda es el valor 1750, que aparece 11 veces.</p>
+        <h3>Para resumir todos los valores que tenemos:</h3>
+        <ul>
+          <li>Media: Brooklyn (3327.404), Manhattan (3993.477), Queens (2346.254)</li>
+          <li>Mediana: Brooklyn (3000), Manhattan (3800), Queens (2200)</li>
+          <li>Moda: Brooklyn (2500 | 26), Manhattan (3500 | 56), Queens (1750 | 11)</li>
+        </ul>
+        <p>Estos resultados nos dicen que Manhattan es el lugar más caro para vivir, con una tendencia
+          central de 3900, mientras que Brooklyn ocupa el segundo lugar, con una media de 3300USD,
+          y Queens el último, con una tendencia central de 2300USD.</p>
+        <p>La mediana y la moda parecen confirmarlo también.</p>
+        <p>Si desea profundizar más, intente hacer una suposición informada mirando sus histogramas.
+          Así es como se ven:
+        </p>
+        <pre class="r"><code>hist(brooklyn_price)</code></pre>
+        <p><img src="r_images/conceptos_estadisticos/image_0001.png" /></p>
+        <pre class="r"><code>hist(manhattan_price)</code></pre>
+        <p><img src="r_images/conceptos_estadisticos/image_0002.png" /></p>
+        <pre class="r"><code>hist(queens_price)</code></pre>
+        <p><img src="r_images/conceptos_estadisticos/image_0003.png" /></p>
+        <p>Ahora que sabemos qué son la media, la mediana y la moda y cómo encontrarlos usando R, hablemos
+          de la varianza y la desviación estándar. Medidas de dispersión Diferencia</p>
+        <p>Aprender acerca de la media, la mediana y la moda es un buen lugar para comenzar a describir
+          nuestros datos, pero ¿qué pasa si tenemos dos conjuntos de datos diferentes que se ven así?</p>
+        <pre class="r"><code>dataset_one &lt;- c(-4, -2, 0, 2, 4) 
+dataset_two &lt;- c(-400, -200, 0, 200, 400)</code></pre>
+        <p>Aunque los valores son bastante diferentes, la media siempre es 0.</p>
+        <p>Eso no es suficiente para comunicar diferencias.</p>
+        <p>Por eso presentamos Varianza.</p>
+        <p>La varianza le dice qué tan dispersos están los puntos en el conjunto de datos:</p>
+        <p>Presentamos dos conjuntos de datos de muestra:</p>
+        <pre
+          class="r"><code>teacher_one_grades &lt;- c(83.42, 88.04, 82.12, 85.02, 82.52, 87.47, 84.69, 85.18, 86.29, 85.53, 81.29, 82.54, 83.47, 83.91, 86.83, 88.5, 84.95, 83.79, 84.74, 84.03, 87.62, 81.15, 83.45, 80.24, 82.76, 83.98, 84.95, 83.37, 84.89, 87.29)</code></pre>
+        <pre
+          class="r"><code>teacher_two_grades &lt;- c(85.15, 95.64, 84.73, 71.46, 95.99, 81.61, 86.55, 79.81, 77.06, 92.86, 83.67, 73.63, 90.12, 80.64, 78.46, 76.86, 104.4, 88.53, 74.62, 91.27, 76.53, 94.37, 84.74, 81.84, 97.69, 70.77, 84.44, 88.06, 91.62, 65.82)</code></pre>
+        <p>Ahora, representemos ambas con un histograma.</p>
+        <pre
+          class="r"><code>t1_chart &lt;- qplot(teacher_one_grades,geom=&#39;histogram&#39;,binwidth = .8,main = &#39;Teacher One Grades&#39;,ylab = &#39;Grades&#39;,fill=I(&quot;blue&quot;),col=I(&quot;red&quot;),alpha=I(.2)) +geom_vline(aes(xintercept=mean(teacher_one_grades),color=&quot;mean&quot;), linetype=&quot;solid&quot;,size=1) +scale_color_manual(name = &quot;statistics&quot;, values = c(mean = &quot;red&quot; ))</code></pre>
+        <p>Expliquemos lo que hicimos:</p>
+        <p>con la función qplot creamos un histograma con las siguientes características:</p>
+        <p>tipo de gráfico de histograma un ancho de columna de 0.8 un título de “Maestro uno Grados” Eje Y llamado
+          “Calificaciones” llenando las columnas de azul y adornadas con rojo una línea // Eje Y correspondiente a la
+          media de “Teacher one Grades” la línea // Eje Y, tipo sólido y tamaño 1 color rojo para la línea dada</p>
+        <p>Nota: esta sintaxis es válida incluso para el siguiente gráfico de histograma.</p>
+        <p>Ahora veamos lo que obtenemos:</p>
+        <pre class="r"><code>t1_chart</code></pre>
+        <p><img src="r_images/conceptos_estadisticos/image_0004.png" /></p>
+        <p>Veamos el otro. Código:</p>
+        <pre
+          class="r"><code>t2_chart &lt;- qplot(teacher_two_grades,geom=&#39;histogram&#39;,binwidth = .8,main = &#39;Teacher One Grades&#39;,ylab = &#39;Grades&#39;,fill=I(&quot;blue&quot;),col=I(&quot;red&quot;),alpha=I(.2)) +geom_vline(aes(xintercept=mean(teacher_two_grades),color=&quot;mean&quot;), linetype=&quot;solid&quot;,size=1) +scale_color_manual(name = &quot;statistics&quot;, values = c(mean = &quot;red&quot; ))</code></pre>
+        <p>Misma sintaxis que la anterior.</p>
+        <p>Ahora veamos el gráfico:</p>
+        <pre class="r"><code>t2_chart</code></pre>
+        <p><img src="r_images/conceptos_estadisticos/image_0005.png" /></p>
+        <p>Intente responder la siguiente pregunta:</p>
+        <p>“¿Qué conjunto de datos está más extendido?”</p>
+        <p>Ahora, si queremos calcular la varianza nosotros mismos, este es el proceso que seguiríamos.</p>
+        <p>Primero, calculamos la distancia de cada valor a partir de la media del conjunto de datos.</p>
+        <p>Supongamos que tenemos el siguiente conjunto de datos:</p>
+        <pre class="r"><code>grades &lt;- c(88, 82, 85, 84, 90)</code></pre>
+        <p>Calculamos la media y la imprimimos:</p>
+        <pre class="r"><code>mean &lt;- mean(grades)
+print(mean)</code></pre>
+        <pre><code>## [1] 85.8</code></pre>
+        <p>La diferencia para cada uno de ellos se ve así:</p>
+        <pre class="r"><code>difference_one &lt;- 88 - mean
+difference_two &lt;- 82 - mean
+difference_three &lt;- 85 - mean
+difference_four &lt;- 84 - mean
+difference_five &lt;- 90 - mean</code></pre>
+        <p>Entonces, necesitamos el promedio de las distancias.</p>
+        <pre class="r"><code>difference_sum &lt;- difference_one + difference_two + difference_three + difference_four + difference_five
+average_difference &lt;- difference_sum / 5
+average_difference</code></pre>
+        <pre><code>## [1] 2.842171e-15</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // add bootstrap table styles to pandoc tables
+    function bootstrapStylePandocTables() {
+      $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+    }
+    $(document).ready(function () {
+      bootstrapStylePandocTables();
+    });
+  </script>
+
+  <!-- tabsets -->
+  <script>
+    $(document).ready(function () {
+      window.buildTabsets("TOC");
+    });
+
+    $(document).ready(function () {
+      $('.tabset-dropdown > .nav-tabs > li').click(function () {
+        $(this).parent().toggleClass('nav-tabs-open')
+      });
+    });
+  </script>
+
+  <!-- code folding -->
+  <!-- dynamically load mathjax for compatibility with self-contained -->
+  <script>
+    (function () {
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+      document.getElementsByTagName("head")[0].appendChild(script);
+    })();
+  </script>
+</body>
+
+</html>
