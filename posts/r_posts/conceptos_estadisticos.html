@@ -44,9 +44,9 @@
           simple, encontraremos la media, la mediana y la moda de los cinco distritos de Nueva York:
           Brooklyn, Manhattan y Queens.
           <!-- ************************ Common Code ************************ -->
-          Primero se descargan los conjuntos de datos a través del siguiente
-          <a href="https://github.com/Jhonmont/all_datasets_repository" class="nav-link">
-            repositorio.
+          Primero se descargan los conjuntos de datos a través del siguiente 
+          <a href="https://github.com/Jhonmont/all_datasets_repository" target="_blank">
+            enlace al repositorio.
           </a>
           <!-- ************************ Common Code ************************ -->
         </p>
@@ -142,11 +142,11 @@ print(queens_mode)</code></pre>
           Así es como se ven:
         </p>
         <pre class="r"><code>hist(brooklyn_price)</code></pre>
-        <p><img src="r_images/conceptos_estadisticos/image_0001.png" /></p>
+        <p><img src="r_images/conceptos_estadisticos/image_0001.jpg" /></p>
         <pre class="r"><code>hist(manhattan_price)</code></pre>
-        <p><img src="r_images/conceptos_estadisticos/image_0002.png" /></p>
+        <p><img src="r_images/conceptos_estadisticos/image_0002.jpg" /></p>
         <pre class="r"><code>hist(queens_price)</code></pre>
-        <p><img src="r_images/conceptos_estadisticos/image_0003.png" /></p>
+        <p><img src="r_images/conceptos_estadisticos/image_0003.jpg" /></p>
         <p>Ahora que sabemos qué son la media, la mediana y la moda y cómo encontrarlos usando R, hablemos
           de la varianza y la desviación estándar. Medidas de dispersión Diferencia</p>
         <p>Aprender acerca de la media, la mediana y la moda es un buen lugar para comenzar a describir
@@ -173,14 +173,14 @@ dataset_two &lt;- c(-400, -200, 0, 200, 400)</code></pre>
         <p>Nota: esta sintaxis es válida incluso para el siguiente gráfico de histograma.</p>
         <p>Ahora veamos lo que obtenemos:</p>
         <pre class="r"><code>t1_chart</code></pre>
-        <p><img src="r_images/conceptos_estadisticos/image_0004.png" /></p>
+        <p><img src="r_images/conceptos_estadisticos/image_0004.jpg" /></p>
         <p>Veamos el otro. Código:</p>
         <pre
           class="r"><code>t2_chart &lt;- qplot(teacher_two_grades,geom=&#39;histogram&#39;,binwidth = .8,main = &#39;Teacher One Grades&#39;,ylab = &#39;Grades&#39;,fill=I(&quot;blue&quot;),col=I(&quot;red&quot;),alpha=I(.2)) +geom_vline(aes(xintercept=mean(teacher_two_grades),color=&quot;mean&quot;), linetype=&quot;solid&quot;,size=1) +scale_color_manual(name = &quot;statistics&quot;, values = c(mean = &quot;red&quot; ))</code></pre>
         <p>Misma sintaxis que la anterior.</p>
         <p>Ahora veamos el gráfico:</p>
         <pre class="r"><code>t2_chart</code></pre>
-        <p><img src="r_images/conceptos_estadisticos/image_0005.png" /></p>
+        <p><img src="r_images/conceptos_estadisticos/image_0005.jpg" /></p>
         <p>Intente responder la siguiente pregunta:</p>
         <p>“¿Qué conjunto de datos está más extendido?”</p>
         <p>Ahora, si queremos calcular la varianza nosotros mismos, este es el proceso que seguiríamos.</p>

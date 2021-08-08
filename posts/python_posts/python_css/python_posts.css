@@ -12745,10 +12745,10 @@ h6:hover .jp-InternalAnchorLink {
   flex: 0 0 var(--jp-cell-prompt-width);
   color: var(--jp-cell-outprompt-font-color);
   font-family: var(--jp-cell-prompt-font-family);
-  padding: var(--jp-code-padding);
+  padding: 0px;
   letter-spacing: var(--jp-cell-prompt-letter-spacing);
   line-height: var(--jp-code-line-height);
-  font-size: var(--jp-code-font-size);
+  font-size: 12px;
   border: var(--jp-border-width) solid transparent;
   opacity: var(--jp-cell-prompt-opacity);
   /* Right align prompt text, don't wrap to handle large prompt numbers */
@@ -13009,11 +13009,11 @@ body.lm-mod-override-cursor .jp-OutputArea-output.jp-mod-isolated:before {
   flex: 0 0 var(--jp-cell-prompt-width);
   color: var(--jp-cell-inprompt-font-color);
   font-family: var(--jp-cell-prompt-font-family);
-  padding: var(--jp-code-padding);
+  padding: 0px;
   letter-spacing: var(--jp-cell-prompt-letter-spacing);
   opacity: var(--jp-cell-prompt-opacity);
   line-height: var(--jp-code-line-height);
-  font-size: var(--jp-code-font-size);
+  font-size: 12px;
   border: var(--jp-border-width) solid transparent;
   opacity: var(--jp-cell-prompt-opacity);
   /* Right align prompt text, don't wrap to handle large prompt numbers */

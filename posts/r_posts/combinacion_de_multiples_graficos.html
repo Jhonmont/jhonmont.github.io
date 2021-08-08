@@ -150,7 +150,7 @@ class(mtcars$gear)</code></pre>
   geom_point(size=3) +
   ggtitle(&quot;plot1&quot;)
 plot1</code></pre>
-        <p><img src="r_images/combinacion_de_multiples_graficos/image_0001.png" /></p>
+        <p><img src="r_images/combinacion_de_multiples_graficos/image_0001.jpg" /></p>
       </div>
       <div id="plot2-gráfico-de-histograma" class="section level3">
         <h3>Plot2: Gráfico de histograma</h3>
@@ -159,7 +159,7 @@ plot1</code></pre>
   geom_histogram(binwidth = 5) +
   ggtitle(&quot;plot2&quot;)
 plot2</code></pre>
-        <p><img src="r_images/combinacion_de_multiples_graficos/image_0002.png" /></p>
+        <p><img src="r_images/combinacion_de_multiples_graficos/image_0002.jpg" /></p>
       </div>
       <div id="plot3-gráfico-de-caja" class="section level3">
         <h3>Plot3: Gráfico de caja</h3>
@@ -170,7 +170,7 @@ plot2</code></pre>
   geom_boxplot() +
   ggtitle(&quot;plot3&quot;)
 plot3</code></pre>
-        <p><img src="r_images/combinacion_de_multiples_graficos/image_0003.png" /></p>
+        <p><img src="r_images/combinacion_de_multiples_graficos/image_0003.jpg" /></p>
       </div>
       <div id="plot4-gráfico-de-línea" class="section level3">
         <h3>Plot4: Gráfico de línea</h3>
@@ -179,7 +179,7 @@ plot3</code></pre>
   geom_line() +
   ggtitle(&quot;plot4&quot;)
 plot4</code></pre>
-        <p><img src="r_images/combinacion_de_multiples_graficos/image_0004.png" /></p>
+        <p><img src="r_images/combinacion_de_multiples_graficos/image_0004.jpg" /></p>
       </div>
       <div id="combinando-múltiples-parcelas-usando-la-biblioteca-gird" class="section level3">
         <h3>Combinando múltiples parcelas usando la biblioteca gird</h3>
@@ -206,7 +206,7 @@ print(plot1, vp = viewport(layout.pos.row = 1, layout.pos.col = 1))
 print(plot2, vp = viewport(layout.pos.row = 1, layout.pos.col = 2))
 print(plot3, vp = viewport(layout.pos.row = 2, layout.pos.col = 1))
 print(plot4, vp = viewport(layout.pos.row = 2, layout.pos.col = 2))</code></pre>
-        <p><img src="r_images/combinacion_de_multiples_graficos/image_0005.png" /></p>
+        <p><img src="r_images/combinacion_de_multiples_graficos/image_0005.jpg" /></p>
       </div>
       <div id="combinando-múltiples-parcelas-usando-la-biblioteca-gridextra" class="section level3">
         <h3>Combinando múltiples parcelas usando la biblioteca gridExtra</h3>
@@ -214,13 +214,13 @@ print(plot4, vp = viewport(layout.pos.row = 2, layout.pos.col = 2))</code></pre>
           la función grid.arrange () y, dentro de ella, debe proporcionar los gráficos uno por uno, según el orden en el
           que desea trazarlos. Además, debe definir el número de filas y columnas que desea.</p>
         <pre class="r"><code>grid.arrange(plot1, plot2, plot3, plot4, nrow = 2, ncol = 2)</code></pre>
-        <p><img src="r_images/combinacion_de_multiples_graficos/image_0006.png" /></p>
+        <p><img src="r_images/combinacion_de_multiples_graficos/image_0006.jpg" /></p>
         <p>Puede cambiar el orden de los gráficos cambiando el orden de los objetos del gráfico dentro de la función
           grid.arrange (). Aquí hay un ejemplo, donde he cambiado el orden de los objetos de la trama (trama3, trama2,
           trama4, trama1)</p>
         <pre class="r"><code># Cambiar el orden
 grid.arrange(plot3, plot2, plot4, plot1, nrow = 2, ncol = 2)</code></pre>
-        <p><img src="r_images/combinacion_de_multiples_graficos/image_0007.png" /></p>
+        <p><img src="r_images/combinacion_de_multiples_graficos/image_0007.jpg" /></p>
       </div>
       <div id="combinando-múltiples-parcelas-usando-la-biblioteca-ggpubr" class="section level3">
         <h3>Combinando múltiples parcelas usando la biblioteca ggpubr</h3>
@@ -229,7 +229,7 @@ grid.arrange(plot3, plot2, plot4, plot1, nrow = 2, ncol = 2)</code></pre>
         <pre class="r"><code>figure &lt;- ggarrange(plot1, plot2, plot3, plot4,
                     ncol = 2, nrow = 2)
 figure</code></pre>
-        <p><img src="r_images/combinacion_de_multiples_graficos/image_0008.png" /></p>
+        <p><img src="r_images/combinacion_de_multiples_graficos/image_0008.jpg" /></p>
         <p>Puede organizar los gráficos anidando la función ggarange () en la posición de los objetos del gráfico. Aquí,
           primero he trazado el objeto plot4 (extendiendo todo el ancho de columna de la primera fila) y otro objeto
           ggarrange () en la segunda posición de la trama, que consta de plot1 y plot2.</p>
@@ -238,7 +238,7 @@ figure</code></pre>
   ggarrange(plot1, plot2, ncol = 2), 
   nrow = 2  # plot1 y plot2 en la segunda fila
 )</code></pre>
-        <p><img src="r_images/combinacion_de_multiples_graficos/image_0009.png" /></p>
+        <p><img src="r_images/combinacion_de_multiples_graficos/image_0009.jpg" /></p>
       </div>
       <div id="combinando-múltiples-parcelas-usando-la-biblioteca-de-patchwork" class="section level3">
         <h3>Combinando múltiples parcelas usando la biblioteca de patchwork</h3>
@@ -246,13 +246,13 @@ figure</code></pre>
           cargar la biblioteca, puede usar notaciones matemáticas para combinar múltiples gráficos. Aquí, he combinado
           plot1 y plot2 con solo un signo de suma (+).</p>
         <pre class="r"><code>plot1 + plot2</code></pre>
-        <p><img src="r_images/combinacion_de_multiples_graficos/image_0010.png" /></p>
+        <p><img src="r_images/combinacion_de_multiples_graficos/image_0010.jpg" /></p>
         <p>Digamos que desea trazar plot1, plot2 y plot3 en la fila 1 y plot4 en la fila 2. Puedes lograr esto
           proporcionando los objetos de la gráfica dentro de un corchete () separados con el operador OR (|). Puede usar
           el operador dividir (/) para indicar que plot4 debe estar en la siguiente fila.</p>
         <pre class="r"><code>(plot1 | plot2 | plot3) /
   plot4</code></pre>
-        <p><img src="r_images/combinacion_de_multiples_graficos/image_0011.png" /></p>
+        <p><img src="r_images/combinacion_de_multiples_graficos/image_0011.jpg" /></p>
       </div>
     </div>
   </div>

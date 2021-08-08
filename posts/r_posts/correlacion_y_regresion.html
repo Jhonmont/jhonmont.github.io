@@ -121,7 +121,7 @@ summary(newdata)</code></pre>
       geom_point(colour = "blue", size = 1.5) +
       scale_y_continuous(breaks = c(30:65), minor_breaks = NULL) +
       scale_x_continuous(breaks = c(10:25), minor_breaks = NULL)</code></pre>
-        <p><img src="r_images/correlacion_y_regresion/image_0001.png" /></p>
+        <p><img src="r_images/correlacion_y_regresion/image_0001.jpg" /></p>
         <ol start="2" style="list-style-type: decimal">
           <li>Diagrama de caja: para detectar cualquier observación atípica en la variable. Tener valores atípicos en su
             predictor puede afectar drásticamente las predicciones, ya que pueden afectar fácilmente la dirección /
@@ -142,7 +142,7 @@ boxplot(newdata$HEMAGLOBIN, col = "yellow", border="blue",
 boxplot(newdata$HEMATOCRIT, col = "orange", border="blue",
         main = "HEMATROCRIT boxplot",
         ylab = "percent values")</code></pre>
-        <p><img src="r_images/correlacion_y_regresion/image_0002.png" /></p>
+        <p><img src="r_images/correlacion_y_regresion/image_0002.jpg" /></p>
         <ol start="3" style="list-style-type: decimal">
           <li>Histograma: Muestra la distribución de probabilidad de los datos numéricos.</li>
         </ol>
@@ -159,7 +159,7 @@ qplot(HEMAGLOBIN, data = newdata, geom="histogram", binwidth=0.5,
              ="red") +
   geom_vline(xintercept = median(newdata$HEMAGLOBIN), show.legend=TRUE, color
              ="blue")</code></pre>
-        <p><img src="r_images/correlacion_y_regresion/image_0003.png" /></p>
+        <p><img src="r_images/correlacion_y_regresion/image_0003.jpg" /></p>
         <pre class="r"><code># Histograma de HEMATOCRIT
 qplot(HEMATOCRIT, data = newdata, geom="histogram", binwidth=1, 
       fill=I("azure4"), col=I("azure3")) +
@@ -173,7 +173,7 @@ qplot(HEMATOCRIT, data = newdata, geom="histogram", binwidth=1,
              ="red") +
   geom_vline(xintercept = median(newdata$HEMATOCRIT), show.legend=TRUE, color
              ="blue")</code></pre>
-        <p><img src="r_images/correlacion_y_regresion/image_0004.png" /></p>
+        <p><img src="r_images/correlacion_y_regresion/image_0004.jpg" /></p>
         <ol start="4" style="list-style-type: decimal">
           <li>Gráfico de densidad: para ver la distribución de la variable predictora. Idealmente, se prefiere una
             distribución cercana a la normal (una curva en forma de campana), sin estar sesgada hacia la izquierda o
@@ -189,7 +189,7 @@ plot(density(newdata$HEMAGLOBIN), main="Density: HEMAGLOBIN", ylab="Frequency",
 plot(density(newdata$HEMATOCRIT), main="Density: HEMATOCRIT", ylab="Frequency", 
      sub=paste("Skewness:", round(e1071::skewness(newdata$HEMATOCRIT), 2)))
      polygon(density(newdata$HEMATOCRIT), col="orange")</code></pre>
-        <p><img src="r_images/correlacion_y_regresion/image_0005.png" /></p>
+        <p><img src="r_images/correlacion_y_regresion/image_0005.jpg" /></p>
       </div>
       <div id="modelo-lineal-de-construcción" class="section level3">
         <h3>Modelo lineal de construcción:</h3>
@@ -225,7 +225,7 @@ qplot(HEMAGLOBIN, HEMATOCRIT, data = newdata,
       scale_y_continuous(breaks = c(30:65), minor_breaks = NULL) +
       scale_x_continuous(breaks = c(10:25), minor_breaks = NULL)</code></pre>
         <pre><code>## `geom_smooth()` using formula 'y ~ x'</code></pre>
-        <p><img src="r_images/correlacion_y_regresion/image_0006.png" /></p>
+        <p><img src="r_images/correlacion_y_regresion/image_0006.jpg" /></p>
         <p>Nota: Idealmente, la línea de regresión debería estar lo más cerca posible de todos los puntos de datos
           observados. El suavizado se establece en un nivel de confianza de 0,95 (de forma predeterminada).</p>
         <p>Una posibilidad adicional e interesante es crear una nueva variable llamada “HEMAGLOBIN_CENT”, que Centra el
@@ -244,7 +244,7 @@ qplot(HEMAGLOBIN_CENT, HEMATOCRIT, data = newdata,
       geom_point(colour = "blue", size = 1.5) +
       scale_y_continuous(breaks = c(30:65), minor_breaks = NULL) +
       scale_x_continuous(breaks = c(-2,-1.5,-1,-0.5,0,0.5,1,1.5,2,2.5,3,3.5,4), minor_breaks = NULL)</code></pre>
-        <p><img src="r_images/correlacion_y_regresion/image_0007.png" /></p>
+        <p><img src="r_images/correlacion_y_regresion/image_0007.jpg" /></p>
       </div>
       <div id="análisis-de-modelo-lineal" class="section level3">
         <h3>Análisis de modelo lineal:</h3>
@@ -406,7 +406,7 @@ main = "HEMAGLOBIN and HEMATOCRIT relationship") +
   theme(plot.title = element_text(hjust = 0.5)) +
   scale_y_continuous(breaks = c(30:65), minor_breaks = NULL) +
   scale_x_continuous(breaks = c(10:25), minor_breaks = NULL)</code></pre>
-        <p><img src="r_images/correlacion_y_regresion/image_0008.png" /></p>
+        <p><img src="r_images/correlacion_y_regresion/image_0008.jpg" /></p>
         <p>Los puntos azules representan los tres valores atípicos identificados.</p>
         <pre class="r"><code>newdata2 &lt;- subset(newdata1, OBS != 159 &amp; OBS != 166 &amp; OBS != 169,
                   select=c(HEMAGLOBIN, HEMATOCRIT))
@@ -438,7 +438,7 @@ summary(mod2)</code></pre>
         <pre class="r"><code># mostrar un diseño único para todos los gráficos
 par(mfrow = c(2,2))
 plot(mod2)</code></pre>
-        <p><img src="r_images/correlacion_y_regresion/image_0009.png" /></p>
+        <p><img src="r_images/correlacion_y_regresion/image_0009.jpg" /></p>
       </div>
       <div id="aic-y-bic" class="section level3">
         <h3>AIC y BIC</h3>
@@ -543,7 +543,7 @@ print(mape)</code></pre>
                    dots = FALSE, seed=123, legend.pos="topleft",
                    main="Cross Validation; k=5",
                    plotit=TRUE, printit=FALSE)</code></pre>
-        <p><img src="r_images/correlacion_y_regresion/image_0010.png" /></p>
+        <p><img src="r_images/correlacion_y_regresion/image_0010.jpg" /></p>
         <pre class="r"><code># El error cuadrático medio mide cómo una línea de regresión se acerca a un conjunto de puntos
 attr(kfold, 'ms')</code></pre>
         <pre><code>## [1] 0.1354198</code></pre>

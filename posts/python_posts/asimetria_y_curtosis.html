@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Asimetria y Curtosis</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+  <link rel="stylesheet" href="python_css/python_posts.css" />
+
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-MML-AM_CHTML-full,Safe"> </script>
+  <script type="text/x-mathjax-config">
+    init_mathjax = function() {
+        if (window.MathJax) {
+        // MathJax loaded
+            MathJax.Hub.Config({
+                TeX: {
+                    equationNumbers: {
+                    autoNumber: "AMS",
+                    useLabelIds: true
+                    }
+                },
+                tex2jax: {
+                    inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+                    displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+                    processEscapes: true,
+                    processEnvironments: true
+                },
+                displayAlign: 'center',
+                CommonHTML: {
+                    linebreaks: { 
+                    automatic: true 
+                    }
+                },
+                "HTML-CSS": {
+                    linebreaks: { 
+                    automatic: true 
+                    }
+                }
+            });
+        
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+        }
+    }
+    init_mathjax();
+    </script>
+  <!-- ************************ Common Code ************************ -->
+  <link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .bd-placeholder-img {
+      font-size: 1.125rem;
+      text-anchor: middle;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      user-select: none;
+    }
+
+    @media (min-width: 768px) {
+      .bd-placeholder-img-lg {
+        font-size: 3.5rem;
+      }
+    }
+  </style>
+  <link href="../assets/css/headers.css" rel="stylesheet">
+  <!-- ************************ Common Code ************************ -->
+</head>
+
+<body class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
+  <!-- ************************ Common Code ************************ -->
+  <div class="container">
+    <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+      <a href="../../index.html"
+        class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+        <svg class="bi me-2" width="40" height="32">
+          <use xlink:href="#bootstrap" />
+        </svg>
+        <span style="color: var(--jp-content-link-color);"">Volver al Inicio</span>
+  </a>
+  <ul class=" nav nav-pills">
+          <li class="nav-item"><a href="analisis_exploratorio_3.html" class="nav-link">Anterior</a></li>
+          <li class="nav-item"><a href="graficos_personalizados.html" class="nav-link">Siguiente</a></li>
+          </ul>
+    </header>
+  </div>
+  <div style="padding-left: 50px; padding-right: 100px;">
+    <!-- ************************ Common Code ************************ -->
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h2>
+          Asimetría y Curtosis en la distribución de Datos
+        </h2>
+        <p style="font-size: medium;"><strong>Publicado el: 09 de Diciembre del 2020</strong> - Jhonatan Montilla</p><br>
+        <p>
+          En este artículo, se repasarán dos conceptos importantes de la estadística descriptiva: La Asimetría y
+          la Curtosis, al concluir este artículo se obtendrán respuestas a preguntas como, ¿qué es asimetría
+          derecha e izquierda?, ¿Cómo se miden, la Asimetría y Curtosis?, su utilidad y su aplicación.
+        </p>
+        <h3>
+          La Asimetría
+        </h3>
+        <p>
+          La "asimetría" es una medida de la distribución de probabilidad de una variable aleatoria de valor real.
+        </p>
+        <h3>
+          Sesgo negativo
+        </h3>
+        <p>
+          Se considera una distribución de datos con sesgo negativo cuando la mayoría de los datos que se
+          concentran más a la derecha en una repreesentación gráfica de histograma, la cual se mostrará más
+          adelante en este artículo. Entonces, en esta distribución existe una "cola" larga en el lado izquierdo
+          de la gráfica, también se denomina, sesgado a la izquierda, o "cola a la izquierda".
+        </p>
+        <h3>
+          Sesgo positivo
+        </h3>
+        <p>
+          Se considera una distribución de datos con sesgo positivo cuando la mayoría de los datos se concentran
+          más a la izquierda del histograma, Esta distribución muestra una "cola" larga en el lado derecho, también
+          se denomina sesgado a la derecha o de "cola a la derecha".
+        </p>
+        <h3>
+          Cómo interpretar la asimetría
+        </h3>
+        <p>
+          Una regla general establece:
+        </p>
+        <ul>
+          <li>Si la asimetría está entre -0,5 y 0,5, los datos son bastante simétricos (distribución normal).</li>
+          <li>Si la asimetría está entre -1 y -0,5 (sesgo negativo) o entre 0,5 y 1 (sesgo positivo), los datos están
+            moderadamente sesgados.
+          </li>
+          <li>Si el sesgo es menor que -1 (sesgo negativo) o mayor que 1 (sesgo positivo), los datos están muy
+            sesgados.
+          </li>
+        </ul>
+        <p><em>Si los datos siguen una distribución normal, su asimetría será cero. Pero en el mundo real, no
+            encontramos ningún dato que siga perfectamente la distribución normal. Por lo tanto, para los datos del
+            mundo real, no encontramos una asimetría exacta de cero, pero puede ser cercana a cero.</em></p>
+        <p>En el siguiente ejemplo, se utilizará el conjunto de datos de la librería Seaborn, como primer paso se
+          cargarán las librerías necesarias.</p>
+
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[24]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;ggplot&#39;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">skew</span>
+<span class="kn">from</span> <span class="nn">seaborn</span> <span class="kn">import</span> <span class="n">load_dataset</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">skew</span><span class="p">,</span> <span class="n">kurtosis</span>
+<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">load_boston</span>
+</pre>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <p>Se procede con la carga del conjunto de datos y se muestran las primeras filas contenidas en el mismo.</p>
+
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[25]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">load_dataset</span><span class="p">(</span><span class="s1">&#39;tips&#39;</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="jp-Cell-outputWrapper">
+
+
+        <div class="jp-OutputArea jp-Cell-outputArea">
+
+          <div class="jp-OutputArea-child">
+
+
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[25]:</div>
+
+
+
+            <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+              data-mime-type="text/html">
+              <div>
+                <table border="1" class="dataframe">
+                  <thead>
+                    <tr style="text-align: right;">
+                      <th></th>
+                      <th>total_bill</th>
+                      <th>tip</th>
+                      <th>sex</th>
+                      <th>smoker</th>
+                      <th>day</th>
+                      <th>time</th>
+                      <th>size</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>0</th>
+                      <td>16.99</td>
+                      <td>1.01</td>
+                      <td>Female</td>
+                      <td>No</td>
+                      <td>Sun</td>
+                      <td>Dinner</td>
+                      <td>2</td>
+                    </tr>
+                    <tr>
+                      <th>1</th>
+                      <td>10.34</td>
+                      <td>1.66</td>
+                      <td>Male</td>
+                      <td>No</td>
+                      <td>Sun</td>
+                      <td>Dinner</td>
+                      <td>3</td>
+                    </tr>
+                    <tr>
+                      <th>2</th>
+                      <td>21.01</td>
+                      <td>3.50</td>
+                      <td>Male</td>
+                      <td>No</td>
+                      <td>Sun</td>
+                      <td>Dinner</td>
+                      <td>3</td>
+                    </tr>
+                    <tr>
+                      <th>3</th>
+                      <td>23.68</td>
+                      <td>3.31</td>
+                      <td>Male</td>
+                      <td>No</td>
+                      <td>Sun</td>
+                      <td>Dinner</td>
+                      <td>2</td>
+                    </tr>
+                    <tr>
+                      <th>4</th>
+                      <td>24.59</td>
+                      <td>3.61</td>
+                      <td>Female</td>
+                      <td>No</td>
+                      <td>Sun</td>
+                      <td>Dinner</td>
+                      <td>4</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[26]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;total_bill&#39;</span><span class="p">]);</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedImage jp-OutputArea-output ">
+              <img src="python_images/asimetria_y_curtosis/image_0001.jpg">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h3 id="Por-qu%C3%A9-estudiar-la-asimetr%C3%ADa">Por qu&#233; estudiar la asimetría<a class="anchor-link"
+            href="#Por-qu%C3%A9-estudiar-la-asimetr%C3%ADa">&#182;</a></h3>
+        <p>En el gráfico de ejemplo anterior, los datos de la variable <strong>total_bill</strong> están positivamente
+          sesgados, la mayoría de los registros de datos se concentran en el lado izquierdo. Por lo tanto, si se tuviese
+          que construir un modelo sobre estos datos, dicho modelo hará mejores predicciones donde
+          <strong>total_bill</strong> es menor en comparación con los valores de <strong>total_bill</strong> más altos.
+        </p>
+        <p>La asimetría es un factor que indica en cierta medida la dirección de los valores atípicos. Por lo tanto, de
+          la distribución mostrada anteriormente se podría concluir claramente que los valores atípicos se encuentran
+          presentes en el lado derecho de la distribución.</p>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[27]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">skew</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;total_bill&#39;</span><span class="p">])</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[27]:</div>
+            <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+              <pre>1.1262346334818638</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <p>Como se pudo observar, <strong>total_bill</strong> tiene un sesgo de 1,12, lo que significa que la
+          distribución de los datos se encuentran sesgados positivamente, también es notoriamente visible observar la
+          gráfica de distribución anterior.</p>
+        <h3 id="C%C3%B3mo-lidiar-con-datos-sesgados">Cómo lidiar con datos sesgados<a class="anchor-link"
+            href="#C%C3%B3mo-lidiar-con-datos-sesgados">&#182;</a></h3>
+        <p>Muchas pruebas estadísticas y modelos de aprendizaje automático dependen de supuestos de normalidad.
+          Entonces, una asimetría significativa significa que los datos no son normales y eso puede afectar sus pruebas
+          estadísticas o el poder de predicción del aprendizaje automático. En tales casos, necesitamos transformar los
+          datos para que sean normales. Algunas de las técnicas comunes utilizadas para tratar datos asimétricos:</p>
+        <ul>
+          <li>Transformación Logaritmica</li>
+          <li>Transformación Raíz Cuadrada</li>
+          <li>Transformación Exponencial</li>
+          <li>Transformación Box-Cox, etc.</li>
+        </ul>
+        <h3 id="Transformaci%C3%B3n-Logar%C3%ADtmica">Transformación Logarítmica<a class="anchor-link"
+            href="#Transformaci%C3%B3n-Logar%C3%ADtmica">&#182;</a></h3>
+        <p>Para reducir el sesgo positivo de dicha distribución se procede a realizar una transformación logarítmica de
+          los datos para hacer normal su distribución, tal como se muestra a continuación.</p>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[28]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;total_bill&#39;</span><span class="p">]));</span> <span class="c1"># transformación logarítmica de registros</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedImage jp-OutputArea-output ">
+              <img src="python_images/asimetria_y_curtosis/image_0002.jpg">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[29]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">skew</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;total_bill&#39;</span><span class="p">]))</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[29]:</div>
+            <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+              <pre>-0.1155150356541124</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <p>Después de la transformación logarítmica de la variable <strong>total_bill</strong>, la asimetría se reduce a
+          -0,12, esto significa que actualmente es muchísimo más simétrica que el caso anterior, lo que permitirá
+          obtener mejores resultados de predicción al momento de entrenar a un modelo de aprendizaje automático.</p>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h3 id="La-Curtosis.">La Curtosis.<a class="anchor-link" href="#La-Curtosis.">&#182;</a></h3>
+        <p>La "curtosis" es la longitud medida de la "cola" de la distribución de probabilidad de una variable aleatoria
+          de valor real. Generalmente se utiliza para identificar valores atípicos (valores anómalos) en un conjunto de
+          datos, debido a que se utiliza para identificar valores atípicos, los valores extremos en ambas lados de las
+          colas se utilizan para el análisis.</p>
+        <h3 id="Tipos-de-Curtosis-y-c%C3%B3mo-interpretarlos">Tipos de Curtosis y cómo interpretarlos<a
+            class="anchor-link" href="#Tipos-de-Curtosis-y-c%C3%B3mo-interpretarlos">&#182;</a></h3>
+        <p>Para los siguientes ejemplos se utilizará el conjunto de datos "boston" de la librería Seaborn con el cual se
+          mostrará cómo calcular los distintos tipos de curtosis:</p>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[30]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">boston</span> <span class="o">=</span> <span class="n">load_boston</span><span class="p">()</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[31]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">boston</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="n">boston</span><span class="p">[</span><span class="s1">&#39;feature_names&#39;</span><span class="p">])</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">boston</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[32]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">X</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[32]:</div>
+            <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+              data-mime-type="text/html">
+              <div>
+                <table border="1" class="dataframe">
+                  <thead>
+                    <tr style="text-align: right;">
+                      <th></th>
+                      <th>CRIM</th>
+                      <th>ZN</th>
+                      <th>INDUS</th>
+                      <th>CHAS</th>
+                      <th>NOX</th>
+                      <th>RM</th>
+                      <th>AGE</th>
+                      <th>DIS</th>
+                      <th>RAD</th>
+                      <th>TAX</th>
+                      <th>PTRATIO</th>
+                      <th>B</th>
+                      <th>LSTAT</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>0</th>
+                      <td>0.00632</td>
+                      <td>18.0</td>
+                      <td>2.31</td>
+                      <td>0.0</td>
+                      <td>0.538</td>
+                      <td>6.575</td>
+                      <td>65.2</td>
+                      <td>4.0900</td>
+                      <td>1.0</td>
+                      <td>296.0</td>
+                      <td>15.3</td>
+                      <td>396.90</td>
+                      <td>4.98</td>
+                    </tr>
+                    <tr>
+                      <th>1</th>
+                      <td>0.02731</td>
+                      <td>0.0</td>
+                      <td>7.07</td>
+                      <td>0.0</td>
+                      <td>0.469</td>
+                      <td>6.421</td>
+                      <td>78.9</td>
+                      <td>4.9671</td>
+                      <td>2.0</td>
+                      <td>242.0</td>
+                      <td>17.8</td>
+                      <td>396.90</td>
+                      <td>9.14</td>
+                    </tr>
+                    <tr>
+                      <th>2</th>
+                      <td>0.02729</td>
+                      <td>0.0</td>
+                      <td>7.07</td>
+                      <td>0.0</td>
+                      <td>0.469</td>
+                      <td>7.185</td>
+                      <td>61.1</td>
+                      <td>4.9671</td>
+                      <td>2.0</td>
+                      <td>242.0</td>
+                      <td>17.8</td>
+                      <td>392.83</td>
+                      <td>4.03</td>
+                    </tr>
+                    <tr>
+                      <th>3</th>
+                      <td>0.03237</td>
+                      <td>0.0</td>
+                      <td>2.18</td>
+                      <td>0.0</td>
+                      <td>0.458</td>
+                      <td>6.998</td>
+                      <td>45.8</td>
+                      <td>6.0622</td>
+                      <td>3.0</td>
+                      <td>222.0</td>
+                      <td>18.7</td>
+                      <td>394.63</td>
+                      <td>2.94</td>
+                    </tr>
+                    <tr>
+                      <th>4</th>
+                      <td>0.06905</td>
+                      <td>0.0</td>
+                      <td>2.18</td>
+                      <td>0.0</td>
+                      <td>0.458</td>
+                      <td>7.147</td>
+                      <td>54.2</td>
+                      <td>6.0622</td>
+                      <td>3.0</td>
+                      <td>222.0</td>
+                      <td>18.7</td>
+                      <td>396.90</td>
+                      <td>5.33</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <p>A continuación se muestra la distribución de la variable CRIM del conjunto de datos.</p>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[33]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="s1">&#39;CRIM&#39;</span><span class="p">]);</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedImage jp-OutputArea-output ">
+              <img src="python_images/asimetria_y_curtosis/image_0003.jpg">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[34]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">kurtosis</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="s1">&#39;CRIM&#39;</span><span class="p">])</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[34]:</div>
+            <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+              <pre>36.75278626142281</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h3 id="Leptoc%C3%BArtica-(Curtosis-%3E-3)">Leptoc&#250;rtica (Curtosis &gt; 3)<a class="anchor-link"
+            href="#Leptoc%C3%BArtica-(Curtosis-%3E-3)">&#182;</a></h3>
+        <ul>
+          <li>
+            <p>Esta distribución muestra mayor curtosis que mesocúrtica. El pico es más alto y agudo que el mesokurtico.
+              Muestra colas pesadas hacia un lado o en algunos casos a ambos lados que indican valores atípicos grandes.
+            </p>
+          </li>
+          <li>
+            <p>En el mundo de las inversiones una distribución leptocúrtica significa que es una inversión de alto
+              riesgo.</p>
+          </li>
+        </ul>
+        <p>A continuación se muestra la distribución de la variable AGE del conjunto de datos.</p>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[35]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="s1">&#39;AGE&#39;</span><span class="p">]);</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedImage jp-OutputArea-output ">
+              <img src="python_images/asimetria_y_curtosis/image_0004.jpg">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[36]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">kurtosis</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="s1">&#39;AGE&#39;</span><span class="p">])</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[36]:</div>
+            <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+              <pre>-0.97001392664039</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h3 id="Platic%C3%BArtica:-(Curtosis-%3C-3)">Platic&#250;rtica: (Curtosis &lt; 3)<a class="anchor-link"
+            href="#Platic%C3%BArtica:-(Curtosis-%3C-3)">&#182;</a></h3>
+        <ul>
+          <li>
+            <p>Esta distribución muestra una menor curtosis que la mesocúrtica. El pico es más bajo y más ancho que
+              Mesokurtic. Muestra colas planas a ambos lados que indican pequeños valores atípicos.</p>
+          </li>
+          <li>
+            <p>En el mundo de las inversiones una distribución platicúrtica significa que es una inversión de bajo
+              riesgo.</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[37]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="s1">&#39;RM&#39;</span><span class="p">]);</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedImage jp-OutputArea-output ">
+              <img src="python_images/asimetria_y_curtosis/image_0005.jpg">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[38]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">kurtosis</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="s1">&#39;RM&#39;</span><span class="p">])</span>
+</pre>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[38]:</div>
+            <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+              <pre>1.8610269725310244</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h3 id="Mesoc%C3%BArtica-(Curtosis-=-3):">Mesoc&#250;rtica (Curtosis = 3):<a class="anchor-link"
+            href="#Mesoc%C3%BArtica-(Curtosis-=-3):">&#182;</a></h3>
+        <ul>
+          <li>Esta distribución muestra una curtosis de 3 cerca de cero. La distribución de valores extremos (valores
+            atípicos) es similar a la de la distribución normal.</li>
+        </ul>
+      </div>
+    </div>
+</body>
+
+</html>

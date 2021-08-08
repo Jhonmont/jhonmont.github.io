@@ -43,8 +43,8 @@
         que permiten de manera visual realizar análisis.
 <!-- ************************ Common Code ************************ -->
         Podrá descargar el conjunto de datos a través del siguiente 
-        <a href="https://github.com/Jhonmont/all_datasets_repository" class="nav-link">
-          repositorio.
+        <a href="https://github.com/Jhonmont/all_datasets_repository" target="_blank">
+          enlace al repositorio.
         </a>
 <!-- ************************ Common Code ************************ -->
       </p>
@@ -144,7 +144,7 @@ dnd_cat</code></pre>
     <div id="frecuencia-de-dimensiones-de-variables-categórica" class="section level3">
       <h3>Frecuencia de dimensiones de variables categórica</h3>
       <pre class="r"><code>dnd_cat %&gt;% show_plot()</code></pre>
-      <p><img src="r_images/exploracion_de_datos/image_0001.png" /></p>
+      <p><img src="r_images/exploracion_de_datos/image_0001.jpg" /></p>
     </div>
     <div id="cardinalidad-de-niveles-de-las-variables" class="section level3">
       <h3>Cardinalidad de niveles de las variables</h3>
@@ -156,19 +156,19 @@ dnd_cat</code></pre>
         el parámetro de cardinalidad podríamos corregir esto, el gráfico señalará que existe una gran variación de
         valores en la variable.</p>
       <pre class="r"><code>dnd_cat %&gt;% show_plot(high_cardinality = 1)</code></pre>
-      <p><img src="r_images/exploracion_de_datos/image_0002.png" /></p>
+      <p><img src="r_images/exploracion_de_datos/image_0002.jpg" /></p>
     </div>
     <div id="porcentaje-de-valores-perdidos-nas" class="section level3">
       <h3>Porcentaje de valores perdidos (NAs)</h3>
       <pre class="r"><code>dnd_na &lt;- inspect_na(dnd)
 show_plot(dnd_na)</code></pre>
-      <p><img src="r_images/exploracion_de_datos/image_0003.png" /></p>
+      <p><img src="r_images/exploracion_de_datos/image_0003.jpg" /></p>
     </div>
     <div id="distribuciones-de-variables-numéricas" class="section level3">
       <h3>Distribuciones de variables numéricas</h3>
       <pre class="r"><code>dnd_num &lt;- inspect_num(dnd)
 show_plot(dnd_num)</code></pre>
-      <p><img src="r_images/exploracion_de_datos/image_0004.png" /></p>
+      <p><img src="r_images/exploracion_de_datos/image_0004.jpg" /></p>
     </div>
     <div id="distribuciones-de-variables-categóricas" class="section level3">
       <h3>Distribuciones de variables categóricas</h3>
@@ -176,13 +176,13 @@ show_plot(dnd_num)</code></pre>
 show_plot(dnd_imb)</code></pre>
       <pre><code>## Warning: `guides(&lt;scale&gt; = FALSE)` is deprecated. Please use `guides(&lt;scale&gt; =
 ## &quot;none&quot;)` instead.</code></pre>
-      <p><img src="r_images/exploracion_de_datos/image_0005.png" /></p>
+      <p><img src="r_images/exploracion_de_datos/image_0005.jpg" /></p>
     </div>
     <div id="correlación-de-variables-pearson" class="section level3">
       <h3>Correlación de variables (Pearson)</h3>
       <pre class="r"><code>dnd_cor &lt;- inspect_cor(dnd)
 show_plot(dnd_cor)</code></pre>
-      <p><img src="r_images/exploracion_de_datos/image_0006.png" /></p>
+      <p><img src="r_images/exploracion_de_datos/image_0006.jpg" /></p>
     </div>
   </div>
 
