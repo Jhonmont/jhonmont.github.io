@@ -1,0 +1,2362 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Función groupby() de Pandas</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+  <link rel="stylesheet" href="python_css/python_posts.css" />
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-MML-AM_CHTML-full,Safe"> </script>
+  <script type="text/x-mathjax-config">
+    init_mathjax = function() {
+        if (window.MathJax) {
+        // MathJax loaded
+            MathJax.Hub.Config({
+                TeX: {
+                    equationNumbers: {
+                    autoNumber: "AMS",
+                    useLabelIds: true
+                    }
+                },
+                tex2jax: {
+                    inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+                    displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+                    processEscapes: true,
+                    processEnvironments: true
+                },
+                displayAlign: 'center',
+                CommonHTML: {
+                    linebreaks: { 
+                    automatic: true 
+                    }
+                },
+                "HTML-CSS": {
+                    linebreaks: { 
+                    automatic: true 
+                    }
+                }
+            });
+        
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+        }
+    }
+    init_mathjax();
+    </script>
+  <!-- ************************ Common Code ************************ -->
+  <link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .bd-placeholder-img {
+      font-size: 1.125rem;
+      text-anchor: middle;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      user-select: none;
+    }
+
+    @media (min-width: 768px) {
+      .bd-placeholder-img-lg {
+        font-size: 3.5rem;
+      }
+    }
+  </style>
+  <link href="../assets/css/headers.css" rel="stylesheet">
+  <!-- ************************ Common Code ************************ -->
+</head>
+
+<body class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
+  <!-- ************************ Common Code ************************ -->
+  <div class="container">
+    <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+      <a href="../../index.html"
+        class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+        <svg class="bi me-2" width="40" height="32">
+          <use xlink:href="#bootstrap" />
+        </svg>
+        <span style="color: var(--jp-content-link-color);"">Volver al Inicio</span>
+</a>
+<ul class=" nav nav-pills">
+          <li class="nav-item"><a href="tres_funciones_pandas.html" class="nav-link">Anterior</a></li>
+          <li class="nav-item"><a href="#" class="nav-link">Siguiente</a></li>
+          </ul>
+    </header>
+  </div>
+  <div style="padding-left: 50px; padding-right: 100px;">
+    <!-- ************************ Common Code ************************ -->
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h2>Función groupby() de Pandas.</h2>
+        <p style="font-size: medium;"><strong>Publicado el: 15 de Diciembre del 2020</strong> - Jhonatan Montilla</p>
+        <h3>Una función para resumen y análisis de
+          datos.
+        </h3>
+        <p>Groupby es una función muy popular en Pandas. Es especialmente buena para resumir, transformar, filtrar y en
+          algunas ocasiones para el análisis de datos muy esenciales. En este artículo, se explicará el uso de la
+          función groupby() en detalle con un ejemplo.</p>
+        <h3>Carga de Librerías</a></h3>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[1]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h3>Carga del conjunto de datos.</h3>
+        <p>Para este artículo, se utilizará un conjunto de datos llamado "Rendimiento de estudiantes" disponible en
+          Kaggle, sin embargo para su descarga de manera más expedita puede hacer clic en el enlace a 
+   <!-- ************************ Common Code ************************ -->
+   <a href="https://github.com/Jhonmont/all_datasets_repository" target="_blank">
+    nuestro repositorio.
+  </a>
+</p>
+<!-- ************************ Common Code ************************ -->
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[3]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;students_performance.csv&#39;</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[3]:</div>
+            <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+              data-mime-type="text/html">
+              <div>
+                <table border="1" class="dataframe">
+                  <thead>
+                    <tr style="text-align: right;">
+                      <th></th>
+                      <th>gender</th>
+                      <th>race/ethnicity</th>
+                      <th>parental level of education</th>
+                      <th>lunch</th>
+                      <th>test preparation course</th>
+                      <th>math score</th>
+                      <th>reading score</th>
+                      <th>writing score</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>0</th>
+                      <td>female</td>
+                      <td>group B</td>
+                      <td>bachelor's degree</td>
+                      <td>standard</td>
+                      <td>none</td>
+                      <td>72</td>
+                      <td>72</td>
+                      <td>74</td>
+                    </tr>
+                    <tr>
+                      <th>1</th>
+                      <td>female</td>
+                      <td>group C</td>
+                      <td>some college</td>
+                      <td>standard</td>
+                      <td>completed</td>
+                      <td>69</td>
+                      <td>90</td>
+                      <td>88</td>
+                    </tr>
+                    <tr>
+                      <th>2</th>
+                      <td>female</td>
+                      <td>group B</td>
+                      <td>master's degree</td>
+                      <td>standard</td>
+                      <td>none</td>
+                      <td>90</td>
+                      <td>95</td>
+                      <td>93</td>
+                    </tr>
+                    <tr>
+                      <th>3</th>
+                      <td>male</td>
+                      <td>group A</td>
+                      <td>associate's degree</td>
+                      <td>free/reduced</td>
+                      <td>none</td>
+                      <td>47</td>
+                      <td>57</td>
+                      <td>44</td>
+                    </tr>
+                    <tr>
+                      <th>4</th>
+                      <td>male</td>
+                      <td>group C</td>
+                      <td>some college</td>
+                      <td>standard</td>
+                      <td>none</td>
+                      <td>76</td>
+                      <td>78</td>
+                      <td>75</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <ul>
+          <li>Se realizarán algunos ejercicios para ejemplificar de manera más larga lo que se puede hacer con la
+            función groupby() de Pandas. Primeraente se creará un nuevo conjunto de datos más pequeño de dos columnas,
+            las columnas son "género" y "puntuación de lectura".</li>
+        </ul>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[4]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">test</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s1">&#39;gender&#39;</span><span class="p">,</span> <span class="s1">&#39;reading score&#39;</span><span class="p">]]</span>
+<span class="n">test</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[4]:</div>
+            <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+              data-mime-type="text/html">
+              <div>
+                <table border="1" class="dataframe">
+                  <thead>
+                    <tr style="text-align: right;">
+                      <th></th>
+                      <th>gender</th>
+                      <th>reading score</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>0</th>
+                      <td>female</td>
+                      <td>72</td>
+                    </tr>
+                    <tr>
+                      <th>1</th>
+                      <td>female</td>
+                      <td>90</td>
+                    </tr>
+                    <tr>
+                      <th>2</th>
+                      <td>female</td>
+                      <td>95</td>
+                    </tr>
+                    <tr>
+                      <th>3</th>
+                      <td>male</td>
+                      <td>57</td>
+                    </tr>
+                    <tr>
+                      <th>4</th>
+                      <td>male</td>
+                      <td>78</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <ul>
+          <li>Posteriormente, se procederá a mostrar el puntaje de lectura por cada uno de los géneros, en este caso
+            para femenino.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[5]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">female</span> <span class="o">=</span> <span class="n">test</span><span class="p">[</span><span class="s1">&#39;gender&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;female&#39;</span>
+<span class="n">test</span><span class="p">[</span><span class="n">female</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[5]:</div>
+            <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+              data-mime-type="text/html">
+              <div>
+                <table border="1" class="dataframe">
+                  <thead>
+                    <tr style="text-align: right;">
+                      <th></th>
+                      <th>gender</th>
+                      <th>reading score</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>0</th>
+                      <td>female</td>
+                      <td>72</td>
+                    </tr>
+                    <tr>
+                      <th>1</th>
+                      <td>female</td>
+                      <td>90</td>
+                    </tr>
+                    <tr>
+                      <th>2</th>
+                      <td>female</td>
+                      <td>95</td>
+                    </tr>
+                    <tr>
+                      <th>5</th>
+                      <td>female</td>
+                      <td>83</td>
+                    </tr>
+                    <tr>
+                      <th>6</th>
+                      <td>female</td>
+                      <td>95</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <ul>
+          <li>De la misma manera, se muestran los datos para el género masculino</li>
+        </ul>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[6]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">male</span> <span class="o">=</span> <span class="n">test</span><span class="p">[</span><span class="s1">&#39;gender&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;male&#39;</span>
+<span class="n">test</span><span class="p">[</span><span class="n">male</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[6]:</div>
+            <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+              data-mime-type="text/html">
+              <div>
+                <table border="1" class="dataframe">
+                  <thead>
+                    <tr style="text-align: right;">
+                      <th></th>
+                      <th>gender</th>
+                      <th>reading score</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>3</th>
+                      <td>male</td>
+                      <td>57</td>
+                    </tr>
+                    <tr>
+                      <th>4</th>
+                      <td>male</td>
+                      <td>78</td>
+                    </tr>
+                    <tr>
+                      <th>7</th>
+                      <td>male</td>
+                      <td>43</td>
+                    </tr>
+                    <tr>
+                      <th>8</th>
+                      <td>male</td>
+                      <td>64</td>
+                    </tr>
+                    <tr>
+                      <th>10</th>
+                      <td>male</td>
+                      <td>54</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <ul>
+          <li>Ahora, haciendo uso de los dos conjuntos de datos de damas y caballeros anteriores, se calculará la
+            puntuación promedio de lectura para ambos géneros de manera independiente.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[8]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">fe_avg</span> <span class="o">=</span> <span class="n">test</span><span class="p">[</span><span class="n">female</span><span class="p">][</span><span class="s1">&#39;reading score&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">male_avg</span> <span class="o">=</span> <span class="n">test</span><span class="p">[</span><span class="n">male</span><span class="p">][</span><span class="s1">&#39;reading score&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Femenino: &quot;</span><span class="p">,</span> <span class="n">fe_avg</span><span class="p">,</span> <span class="s2">&quot;Masculino: &quot;</span><span class="p">,</span> <span class="n">male_avg</span><span class="p">)</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+              <pre>Femenino:  72.60810810810811 Masculino:  65.47302904564316
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <ul>
+          <li>
+            <p>La puntuación media de lectura de las damas es 72,61 y la puntuación media de lectura de los caballeros
+              es 65,47.</p>
+          </li>
+          <li>
+            <p>Ahora, se creará un DataFrame con la puntuación promedio de lectura de mujeres y hombres juntos.</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[9]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">df_reading</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;Gender&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;female&#39;</span><span class="p">,</span> <span class="s1">&#39;male&#39;</span><span class="p">],</span> <span class="s1">&#39;reading score&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">fe_avg</span><span class="p">,</span> <span class="n">male_avg</span><span class="p">]})</span>
+<span class="n">df_reading</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[9]:</div>
+            <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+              data-mime-type="text/html">
+              <div>
+                <table border="1" class="dataframe">
+                  <thead>
+                    <tr style="text-align: right;">
+                      <th></th>
+                      <th>Gender</th>
+                      <th>reading score</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>0</th>
+                      <td>female</td>
+                      <td>72.608108</td>
+                    </tr>
+                    <tr>
+                      <th>1</th>
+                      <td>male</td>
+                      <td>65.473029</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h3>¿Cómo funciona groupby()?</h3>
+        <p>La función groupby() divide el conjunto de datos según los criterios que se requieran. Ahora se mostrarán los
+          datos de la misma manera pero más eficiente en cuanto a código a través de la función groupby(), en donde se
+          dividiran los datos en función del género y se aplicará la el promedio directamente con una simple línea de
+          código:</p>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[10]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">test</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;gender&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[10]:</div>
+            <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+              data-mime-type="text/html">
+              <div>
+                <table border="1" class="dataframe">
+                  <thead>
+                    <tr style="text-align: right;">
+                      <th></th>
+                      <th>reading score</th>
+                    </tr>
+                    <tr>
+                      <th>gender</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>female</th>
+                      <td>72.608108</td>
+                    </tr>
+                    <tr>
+                      <th>male</th>
+                      <td>65.473029</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <p>Como se puede observar, a través de este pequeño fragmento de código se obtiene el mismo resultado.</p>
+        <h3>Grupos con groupby()</h3>
+        <p>Haciendo uso del conjunto de datos original "df", se realizarán varios grupos, el primero con la etnia.</p>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[11]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">race</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;race/ethnicity&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">race</span><span class="p">)</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+              <pre>&lt;pandas.core.groupby.generic.DataFrameGroupBy object at 0x00000201AA804C88&gt;
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <ul>
+          <li>Este código devuelve un objeto.</li>
+          <li>Se proce a revisar el tipo de datos contenidos en el dataset "race".</li>
+        </ul>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[12]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="nb">type</span><span class="p">(</span><span class="n">race</span><span class="p">)</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[12]:</div>
+            <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+              <pre>pandas.core.groupby.generic.DataFrameGroupBy</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <ul>
+          <li>
+            <p>Se generó un objeto DataFrameGroupBy, al llamar a grupos en este objeto (DataFrameGroupBy) devolverá los
+              índices de cada grupo.</p>
+          </li>
+          <li>
+            <p>La función groupby() divide los datos en subgrupos y ahora pueden observar los índices de cada subgrupo
+              esto muy útil, sin embargo, solo los índices no son suficientes. Necesitaremos ver los datos reales de
+              cada grupo. La función get_group() permite realizar esto.</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[13]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">race</span><span class="o">.</span><span class="n">get_group</span><span class="p">(</span><span class="s1">&#39;group B&#39;</span><span class="p">)</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[13]:</div>
+            <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+              data-mime-type="text/html">
+              <div>
+                <table border="1" class="dataframe">
+                  <thead>
+                    <tr style="text-align: right;">
+                      <th></th>
+                      <th>gender</th>
+                      <th>race/ethnicity</th>
+                      <th>parental level of education</th>
+                      <th>lunch</th>
+                      <th>test preparation course</th>
+                      <th>math score</th>
+                      <th>reading score</th>
+                      <th>writing score</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>0</th>
+                      <td>female</td>
+                      <td>group B</td>
+                      <td>bachelor's degree</td>
+                      <td>standard</td>
+                      <td>none</td>
+                      <td>72</td>
+                      <td>72</td>
+                      <td>74</td>
+                    </tr>
+                    <tr>
+                      <th>2</th>
+                      <td>female</td>
+                      <td>group B</td>
+                      <td>master's degree</td>
+                      <td>standard</td>
+                      <td>none</td>
+                      <td>90</td>
+                      <td>95</td>
+                      <td>93</td>
+                    </tr>
+                    <tr>
+                      <th>5</th>
+                      <td>female</td>
+                      <td>group B</td>
+                      <td>associate's degree</td>
+                      <td>standard</td>
+                      <td>none</td>
+                      <td>71</td>
+                      <td>83</td>
+                      <td>78</td>
+                    </tr>
+                    <tr>
+                      <th>6</th>
+                      <td>female</td>
+                      <td>group B</td>
+                      <td>some college</td>
+                      <td>standard</td>
+                      <td>completed</td>
+                      <td>88</td>
+                      <td>95</td>
+                      <td>92</td>
+                    </tr>
+                    <tr>
+                      <th>7</th>
+                      <td>male</td>
+                      <td>group B</td>
+                      <td>some college</td>
+                      <td>free/reduced</td>
+                      <td>none</td>
+                      <td>40</td>
+                      <td>43</td>
+                      <td>39</td>
+                    </tr>
+                    <tr>
+                      <th>...</th>
+                      <td>...</td>
+                      <td>...</td>
+                      <td>...</td>
+                      <td>...</td>
+                      <td>...</td>
+                      <td>...</td>
+                      <td>...</td>
+                      <td>...</td>
+                    </tr>
+                    <tr>
+                      <th>969</th>
+                      <td>female</td>
+                      <td>group B</td>
+                      <td>bachelor's degree</td>
+                      <td>standard</td>
+                      <td>none</td>
+                      <td>75</td>
+                      <td>84</td>
+                      <td>80</td>
+                    </tr>
+                    <tr>
+                      <th>976</th>
+                      <td>male</td>
+                      <td>group B</td>
+                      <td>some college</td>
+                      <td>free/reduced</td>
+                      <td>completed</td>
+                      <td>60</td>
+                      <td>62</td>
+                      <td>60</td>
+                    </tr>
+                    <tr>
+                      <th>980</th>
+                      <td>female</td>
+                      <td>group B</td>
+                      <td>high school</td>
+                      <td>free/reduced</td>
+                      <td>none</td>
+                      <td>8</td>
+                      <td>24</td>
+                      <td>23</td>
+                    </tr>
+                    <tr>
+                      <th>982</th>
+                      <td>male</td>
+                      <td>group B</td>
+                      <td>some high school</td>
+                      <td>standard</td>
+                      <td>completed</td>
+                      <td>79</td>
+                      <td>85</td>
+                      <td>86</td>
+                    </tr>
+                    <tr>
+                      <th>991</th>
+                      <td>female</td>
+                      <td>group B</td>
+                      <td>some high school</td>
+                      <td>standard</td>
+                      <td>completed</td>
+                      <td>65</td>
+                      <td>82</td>
+                      <td>78</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <p>190 rows × 8 columns</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <ul>
+          <li>¡Genial!, ¿No es así?</li>
+        </ul>
+        <h3>Tamaño de cada grupo</h3>
+        <p>A través de la función size() se podrá saber con presición la cantidad de datos contenidos por cada grupo.
+        </p>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[14]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">race</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[14]:</div>
+            <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+              <pre>race/ethnicity
+group A     89
+group B    190
+group C    319
+group D    262
+group E    140
+dtype: int64</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h3 id="Bucles-sobre-cada-grupo">Bucles sobre cada grupo<a class="anchor-link"
+            href="#Bucles-sobre-cada-grupo">&#182;</a></h3>
+        <ul>
+          <li>También se pueden recorrer los grupos a través de un bucle for, obteniendo el mismo resultado.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[15]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">race</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s1">&#39;has&#39;</span><span class="p">,</span> <span class="n">group</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;data&#39;</span><span class="p">)</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+              <pre>group A has 89 data
+group B has 190 data
+group C has 319 data
+group D has 262 data
+group E has 140 data
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h3>Agrupación por múltiples variables</h3>
+        <p>En todos los ejemplos anteriores, los datos fueron agrupados a través de una sola variable, sin emabrgo,
+          también es posible agrupar por múltiples variables. En en siguiente ejemplo se agruparán los datos "etnia" y
+          "género", esto deberá devolver el número de datos de cada etnia separados por género.</p>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[16]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;gender&#39;</span><span class="p">,</span> <span class="s1">&#39;race/ethnicity&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[16]:</div>
+            <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+              <pre>gender  race/ethnicity
+female  group A            36
+        group B           104
+        group C           180
+        group D           129
+        group E            69
+male    group A            53
+        group B            86
+        group C           139
+        group D           133
+        group E            71
+dtype: int64</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <p>En el ejemplo anterior se agrupan los datos usando la función size(). También hay otras funciones agregadas,
+          a continuación se muestra una lista de estas:</p>
+        <ul>
+          <li>suma()</li>
+          <li>significa()</li>
+          <li>Talla()</li>
+          <li>contar()</li>
+          <li>estándar()</li>
+          <li>var()</li>
+          <li>sem()</li>
+          <li>min()</li>
+          <li>mediana()</li>
+        </ul>
+        <p>A continuación se realizarán algunas pruebas con algunas de estas funciones de agregación.</p>
+        <p><strong>Uso de múltiples funciones agregadas</strong></p>
+        <p>La forma en que se puede utilizar la función groupby() en múltiples variables, es haciendo uso de múltiples
+          funciones agregadas, el siguiente ejemplo se agruparán los datos por "etnia" y se determinarán los valores
+          máximos y mínimos a través de las funciones "max" y "min".</p>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[17]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;race/ethnicity&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">])</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[17]:</div>
+            <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+              data-mime-type="text/html">
+              <div>
+                <table border="1" class="dataframe">
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <th colspan="2" halign="left">gender</th>
+                      <th colspan="2" halign="left">parental level of education</th>
+                      <th colspan="2" halign="left">lunch</th>
+                      <th colspan="2" halign="left">test preparation course</th>
+                      <th colspan="2" halign="left">math score</th>
+                      <th colspan="2" halign="left">reading score</th>
+                      <th colspan="2" halign="left">writing score</th>
+                    </tr>
+                    <tr>
+                      <th></th>
+                      <th>amax</th>
+                      <th>amin</th>
+                      <th>amax</th>
+                      <th>amin</th>
+                      <th>amax</th>
+                      <th>amin</th>
+                      <th>amax</th>
+                      <th>amin</th>
+                      <th>amax</th>
+                      <th>amin</th>
+                      <th>amax</th>
+                      <th>amin</th>
+                      <th>amax</th>
+                      <th>amin</th>
+                    </tr>
+                    <tr>
+                      <th>race/ethnicity</th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>group A</th>
+                      <td>male</td>
+                      <td>female</td>
+                      <td>some high school</td>
+                      <td>associate's degree</td>
+                      <td>standard</td>
+                      <td>free/reduced</td>
+                      <td>none</td>
+                      <td>completed</td>
+                      <td>100</td>
+                      <td>28</td>
+                      <td>100</td>
+                      <td>23</td>
+                      <td>97</td>
+                      <td>19</td>
+                    </tr>
+                    <tr>
+                      <th>group B</th>
+                      <td>male</td>
+                      <td>female</td>
+                      <td>some high school</td>
+                      <td>associate's degree</td>
+                      <td>standard</td>
+                      <td>free/reduced</td>
+                      <td>none</td>
+                      <td>completed</td>
+                      <td>97</td>
+                      <td>8</td>
+                      <td>97</td>
+                      <td>24</td>
+                      <td>96</td>
+                      <td>15</td>
+                    </tr>
+                    <tr>
+                      <th>group C</th>
+                      <td>male</td>
+                      <td>female</td>
+                      <td>some high school</td>
+                      <td>associate's degree</td>
+                      <td>standard</td>
+                      <td>free/reduced</td>
+                      <td>none</td>
+                      <td>completed</td>
+                      <td>98</td>
+                      <td>0</td>
+                      <td>100</td>
+                      <td>17</td>
+                      <td>100</td>
+                      <td>10</td>
+                    </tr>
+                    <tr>
+                      <th>group D</th>
+                      <td>male</td>
+                      <td>female</td>
+                      <td>some high school</td>
+                      <td>associate's degree</td>
+                      <td>standard</td>
+                      <td>free/reduced</td>
+                      <td>none</td>
+                      <td>completed</td>
+                      <td>100</td>
+                      <td>26</td>
+                      <td>100</td>
+                      <td>31</td>
+                      <td>100</td>
+                      <td>32</td>
+                    </tr>
+                    <tr>
+                      <th>group E</th>
+                      <td>male</td>
+                      <td>female</td>
+                      <td>some high school</td>
+                      <td>associate's degree</td>
+                      <td>standard</td>
+                      <td>free/reduced</td>
+                      <td>none</td>
+                      <td>completed</td>
+                      <td>100</td>
+                      <td>30</td>
+                      <td>100</td>
+                      <td>26</td>
+                      <td>100</td>
+                      <td>22</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <ul>
+          <li>
+            <p>La función agregada se aplicó en todas las columnas, debido a que no se especificó ninguna.</p>
+          </li>
+          <li>
+            <p>Se realizará un ejemplo creando un DataFrame de puntuación mínima y máxima de matemáticas, lectura y
+              escritura a través del siguiente código:</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[18]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;race/ethnicity&#39;</span><span class="p">)[</span><span class="s1">&#39;math score&#39;</span><span class="p">,</span> <span class="s1">&#39;reading score&#39;</span><span class="p">,</span> <span class="s1">&#39;writing score&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">agg</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">])</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[18]:</div>
+            <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+              data-mime-type="text/html">
+              <div>
+                <table border="1" class="dataframe">
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <th colspan="2" halign="left">math score</th>
+                      <th colspan="2" halign="left">reading score</th>
+                      <th colspan="2" halign="left">writing score</th>
+                    </tr>
+                    <tr>
+                      <th></th>
+                      <th>amax</th>
+                      <th>amin</th>
+                      <th>amax</th>
+                      <th>amin</th>
+                      <th>amax</th>
+                      <th>amin</th>
+                    </tr>
+                    <tr>
+                      <th>race/ethnicity</th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>group A</th>
+                      <td>100</td>
+                      <td>28</td>
+                      <td>100</td>
+                      <td>23</td>
+                      <td>97</td>
+                      <td>19</td>
+                    </tr>
+                    <tr>
+                      <th>group B</th>
+                      <td>97</td>
+                      <td>8</td>
+                      <td>97</td>
+                      <td>24</td>
+                      <td>96</td>
+                      <td>15</td>
+                    </tr>
+                    <tr>
+                      <th>group C</th>
+                      <td>98</td>
+                      <td>0</td>
+                      <td>100</td>
+                      <td>17</td>
+                      <td>100</td>
+                      <td>10</td>
+                    </tr>
+                    <tr>
+                      <th>group D</th>
+                      <td>100</td>
+                      <td>26</td>
+                      <td>100</td>
+                      <td>31</td>
+                      <td>100</td>
+                      <td>32</td>
+                    </tr>
+                    <tr>
+                      <th>group E</th>
+                      <td>100</td>
+                      <td>30</td>
+                      <td>100</td>
+                      <td>26</td>
+                      <td>100</td>
+                      <td>22</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h3 id="Agrupando-por-m%C3%BAltiples-variables-y-utilizando-m%C3%BAltiples-funciones-agregadas.">Agrupando por
+          múltiples variables y utilizando múltiples funciones agregadas.<a class="anchor-link"
+            href="#Agrupando-por-m%C3%BAltiples-variables-y-utilizando-m%C3%BAltiples-funciones-agregadas.">&#182;</a>
+        </h3>
+        <ul>
+          <li>
+            <p>Para demostrar esto, se agrupará por "etnia" y "género", además, se utilizarán dos funciones agregadas
+              "min" y "max".</p>
+          </li>
+          <li>
+            <p>Se creeará un DataFrame que contiene la puntuación máxima y mínima en matemáticas, lectura y escritura
+              para cada grupo separado por género.</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[19]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;race/ethnicity&#39;</span><span class="p">,</span> <span class="s1">&#39;gender&#39;</span><span class="p">])[</span><span class="s1">&#39;math score&#39;</span><span class="p">,</span> <span class="s1">&#39;reading score&#39;</span><span class="p">,</span> <span class="s1">&#39;writing score&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">agg</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">])</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[19]:</div>
+            <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+              data-mime-type="text/html">
+              <div>
+                <table border="1" class="dataframe">
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <th></th>
+                      <th colspan="2" halign="left">math score</th>
+                      <th colspan="2" halign="left">reading score</th>
+                      <th colspan="2" halign="left">writing score</th>
+                    </tr>
+                    <tr>
+                      <th></th>
+                      <th></th>
+                      <th>amax</th>
+                      <th>amin</th>
+                      <th>amax</th>
+                      <th>amin</th>
+                      <th>amax</th>
+                      <th>amin</th>
+                    </tr>
+                    <tr>
+                      <th>race/ethnicity</th>
+                      <th>gender</th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th rowspan="2" valign="top">group A</th>
+                      <th>female</th>
+                      <td>92</td>
+                      <td>34</td>
+                      <td>100</td>
+                      <td>43</td>
+                      <td>97</td>
+                      <td>41</td>
+                    </tr>
+                    <tr>
+                      <th>male</th>
+                      <td>100</td>
+                      <td>28</td>
+                      <td>96</td>
+                      <td>23</td>
+                      <td>92</td>
+                      <td>19</td>
+                    </tr>
+                    <tr>
+                      <th rowspan="2" valign="top">group B</th>
+                      <th>female</th>
+                      <td>97</td>
+                      <td>8</td>
+                      <td>97</td>
+                      <td>24</td>
+                      <td>96</td>
+                      <td>23</td>
+                    </tr>
+                    <tr>
+                      <th>male</th>
+                      <td>94</td>
+                      <td>30</td>
+                      <td>96</td>
+                      <td>24</td>
+                      <td>92</td>
+                      <td>15</td>
+                    </tr>
+                    <tr>
+                      <th rowspan="2" valign="top">group C</th>
+                      <th>female</th>
+                      <td>96</td>
+                      <td>0</td>
+                      <td>100</td>
+                      <td>17</td>
+                      <td>100</td>
+                      <td>10</td>
+                    </tr>
+                    <tr>
+                      <th>male</th>
+                      <td>98</td>
+                      <td>27</td>
+                      <td>100</td>
+                      <td>28</td>
+                      <td>95</td>
+                      <td>27</td>
+                    </tr>
+                    <tr>
+                      <th rowspan="2" valign="top">group D</th>
+                      <th>female</th>
+                      <td>98</td>
+                      <td>26</td>
+                      <td>100</td>
+                      <td>31</td>
+                      <td>100</td>
+                      <td>32</td>
+                    </tr>
+                    <tr>
+                      <th>male</th>
+                      <td>100</td>
+                      <td>39</td>
+                      <td>97</td>
+                      <td>34</td>
+                      <td>99</td>
+                      <td>34</td>
+                    </tr>
+                    <tr>
+                      <th rowspan="2" valign="top">group E</th>
+                      <th>female</th>
+                      <td>100</td>
+                      <td>32</td>
+                      <td>100</td>
+                      <td>34</td>
+                      <td>100</td>
+                      <td>38</td>
+                    </tr>
+                    <tr>
+                      <th>male</th>
+                      <td>100</td>
+                      <td>30</td>
+                      <td>100</td>
+                      <td>26</td>
+                      <td>100</td>
+                      <td>22</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h3>Diferentes funciones agregadas en diferentes columnas.</h3>
+        <p>Se agrupará por "etnia", máximo y promedio de la puntuación de matemáticas. La mediana y mínima en la
+          puntuación de lectura.</p>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[20]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;race/ethnicity&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">({</span><span class="s1">&#39;math score&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;max&#39;</span><span class="p">,</span> <span class="s1">&#39;mean&#39;</span><span class="p">],</span> 
+                                 <span class="s1">&#39;reading score&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;median&#39;</span><span class="p">,</span><span class="s1">&#39;min&#39;</span><span class="p">]})</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[20]:</div>
+            <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+              data-mime-type="text/html">
+              <div>
+                <table border="1" class="dataframe">
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <th colspan="2" halign="left">math score</th>
+                      <th colspan="2" halign="left">reading score</th>
+                    </tr>
+                    <tr>
+                      <th></th>
+                      <th>max</th>
+                      <th>mean</th>
+                      <th>median</th>
+                      <th>min</th>
+                    </tr>
+                    <tr>
+                      <th>race/ethnicity</th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>group A</th>
+                      <td>100</td>
+                      <td>61.629213</td>
+                      <td>64</td>
+                      <td>23</td>
+                    </tr>
+                    <tr>
+                      <th>group B</th>
+                      <td>97</td>
+                      <td>63.452632</td>
+                      <td>67</td>
+                      <td>24</td>
+                    </tr>
+                    <tr>
+                      <th>group C</th>
+                      <td>98</td>
+                      <td>64.463950</td>
+                      <td>71</td>
+                      <td>17</td>
+                    </tr>
+                    <tr>
+                      <th>group D</th>
+                      <td>100</td>
+                      <td>67.362595</td>
+                      <td>71</td>
+                      <td>31</td>
+                    </tr>
+                    <tr>
+                      <th>group E</th>
+                      <td>100</td>
+                      <td>73.821429</td>
+                      <td>74</td>
+                      <td>26</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <ul>
+          <li>¡Genial!, ¿No es así?... Sin embargo los nombres de las columnas no se muestran de manera clara, se pueden
+            cambiar estos nombres de columnas de la siguiente manera.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[21]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">math_read</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;race/ethnicity&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">({</span><span class="s1">&#39;math score&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;max&#39;</span><span class="p">,</span> <span class="s1">&#39;mean&#39;</span><span class="p">],</span> <span class="s1">&#39;reading score&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;max&#39;</span><span class="p">,</span> <span class="s1">&#39;mean&#39;</span><span class="p">]})</span>
+<span class="n">math_read</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Max Math Score&#39;</span><span class="p">,</span> <span class="s1">&#39;Average Math Score&#39;</span><span class="p">,</span> <span class="s1">&#39;Max Reading Score&#39;</span><span class="p">,</span> <span class="s1">&#39;Average Reading Score&#39;</span> <span class="p">]</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[22]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">math_read</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[22]:</div>
+            <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+              data-mime-type="text/html">
+              <div>
+                <table border="1" class="dataframe">
+                  <thead>
+                    <tr style="text-align: right;">
+                      <th></th>
+                      <th>Max Math Score</th>
+                      <th>Average Math Score</th>
+                      <th>Max Reading Score</th>
+                      <th>Average Reading Score</th>
+                    </tr>
+                    <tr>
+                      <th>race/ethnicity</th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>group A</th>
+                      <td>100</td>
+                      <td>61.629213</td>
+                      <td>100</td>
+                      <td>64.674157</td>
+                    </tr>
+                    <tr>
+                      <th>group B</th>
+                      <td>97</td>
+                      <td>63.452632</td>
+                      <td>97</td>
+                      <td>67.352632</td>
+                    </tr>
+                    <tr>
+                      <th>group C</th>
+                      <td>98</td>
+                      <td>64.463950</td>
+                      <td>100</td>
+                      <td>69.103448</td>
+                    </tr>
+                    <tr>
+                      <th>group D</th>
+                      <td>100</td>
+                      <td>67.362595</td>
+                      <td>100</td>
+                      <td>70.030534</td>
+                    </tr>
+                    <tr>
+                      <th>group E</th>
+                      <td>100</td>
+                      <td>73.821429</td>
+                      <td>100</td>
+                      <td>73.028571</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <ul>
+          <li>El mismo DataFrame, pero mucho más organizado.</li>
+        </ul>
+        <h3>Uso de funciones agregadas en columnas nominales.</h3>
+        <p>En todos los ejemplos anteriores se utilizaron las funciones agregadas en columnas numéricas, sin embargo es
+          posible hacer uso de funciones agregadas en algunas columnas nominales como "almuerzo" y "nivel de educación
+          de los padres".</p>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[23]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;race/ethnicity&#39;</span><span class="p">,</span> <span class="s1">&#39;gender&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">agg</span><span class="p">({</span><span class="s1">&#39;lunch&#39;</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="o">.</span><span class="n">mode</span><span class="p">,</span> <span class="s1">&#39;parental level of education&#39;</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="o">.</span><span class="n">mode</span><span class="p">,</span> <span class="s1">&#39;math score&#39;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">})</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[23]:</div>
+            <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+              data-mime-type="text/html">
+              <div>
+                <table border="1" class="dataframe">
+                  <thead>
+                    <tr style="text-align: right;">
+                      <th></th>
+                      <th></th>
+                      <th>lunch</th>
+                      <th>parental level of education</th>
+                      <th>math score</th>
+                    </tr>
+                    <tr>
+                      <th>race/ethnicity</th>
+                      <th>gender</th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th rowspan="2" valign="top">group A</th>
+                      <th>female</th>
+                      <td>standard</td>
+                      <td>some high school</td>
+                      <td>58.527778</td>
+                    </tr>
+                    <tr>
+                      <th>male</th>
+                      <td>standard</td>
+                      <td>some high school</td>
+                      <td>63.735849</td>
+                    </tr>
+                    <tr>
+                      <th rowspan="2" valign="top">group B</th>
+                      <th>female</th>
+                      <td>standard</td>
+                      <td>high school</td>
+                      <td>61.403846</td>
+                    </tr>
+                    <tr>
+                      <th>male</th>
+                      <td>standard</td>
+                      <td>some college</td>
+                      <td>65.930233</td>
+                    </tr>
+                    <tr>
+                      <th rowspan="2" valign="top">group C</th>
+                      <th>female</th>
+                      <td>standard</td>
+                      <td>associate's degree</td>
+                      <td>62.033333</td>
+                    </tr>
+                    <tr>
+                      <th>male</th>
+                      <td>standard</td>
+                      <td>high school</td>
+                      <td>67.611511</td>
+                    </tr>
+                    <tr>
+                      <th rowspan="2" valign="top">group D</th>
+                      <th>female</th>
+                      <td>standard</td>
+                      <td>some college</td>
+                      <td>65.248062</td>
+                    </tr>
+                    <tr>
+                      <th>male</th>
+                      <td>standard</td>
+                      <td>some college</td>
+                      <td>69.413534</td>
+                    </tr>
+                    <tr>
+                      <th rowspan="2" valign="top">group E</th>
+                      <th>female</th>
+                      <td>standard</td>
+                      <td>associate's degree</td>
+                      <td>70.811594</td>
+                    </tr>
+                    <tr>
+                      <th>male</th>
+                      <td>standard</td>
+                      <td>associate's degree</td>
+                      <td>76.746479</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <ul>
+          <li>Como se puede observar en el código anterior, la sintaxis es diferente para los datos nominales.</li>
+        </ul>
+        <h3>Aplicar una función en groupby().</h3>
+        <ul>
+          <li>A continuación se procederá a calcular cuántos niños tienen padres con niveles de educación secundaria.
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[24]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;parental level of education&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s1">&#39;high&#39;</span> <span class="ow">in</span> <span class="n">x</span><span class="p">))</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[24]:</div>
+            <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+              <pre>parental level of education
+False    625
+True     375
+dtype: int64</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <ul>
+          <li>Se procederá a dividir la columna "puntuación de matemáticas" en tres grupos, bajas, medias y altas para
+            determinar la candidad de datos contenidos en dichos grupos</li>
+        </ul>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[25]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">qcut</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;math score&#39;</span><span class="p">],</span> <span class="n">q</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;low&#39;</span><span class="p">,</span> <span class="s1">&#39;average&#39;</span><span class="p">,</span> <span class="s1">&#39;high&#39;</span><span class="p">]))</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[25]:</div>
+            <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+              <pre>math score
+low        339
+average    341
+high       320
+dtype: int64</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <ul>
+          <li>También es posible establecer los puntos de cortes, definiendo bajo, promedio y alto, de la siguiente
+            manera.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[26]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;math score&#39;</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">100</span><span class="p">]))</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[26]:</div>
+            <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+              <pre>math score
+(0, 40]       49
+(40, 70]     559
+(70, 100]    391
+dtype: int64</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h3>Transformación con groupby().</h3>
+        <p>A continuación se generará una nueva columna en el DataFrame "df" y se agregará una columna que contenga la
+          diferencia de cada puntuación de matemáticas de la puntuación matemáticas media.</p>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[27]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Distance From the Mean&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;race/ethnicity&#39;</span><span class="p">,</span> <span class="s1">&#39;gender&#39;</span><span class="p">])[</span><span class="s1">&#39;math score&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">-</span> <span class="n">x</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[27]:</div>
+            <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+              data-mime-type="text/html">
+              <div>
+                <table border="1" class="dataframe">
+                  <thead>
+                    <tr style="text-align: right;">
+                      <th></th>
+                      <th>gender</th>
+                      <th>race/ethnicity</th>
+                      <th>parental level of education</th>
+                      <th>lunch</th>
+                      <th>test preparation course</th>
+                      <th>math score</th>
+                      <th>reading score</th>
+                      <th>writing score</th>
+                      <th>Distance From the Mean</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>0</th>
+                      <td>female</td>
+                      <td>group B</td>
+                      <td>bachelor's degree</td>
+                      <td>standard</td>
+                      <td>none</td>
+                      <td>72</td>
+                      <td>72</td>
+                      <td>74</td>
+                      <td>10.596154</td>
+                    </tr>
+                    <tr>
+                      <th>1</th>
+                      <td>female</td>
+                      <td>group C</td>
+                      <td>some college</td>
+                      <td>standard</td>
+                      <td>completed</td>
+                      <td>69</td>
+                      <td>90</td>
+                      <td>88</td>
+                      <td>6.966667</td>
+                    </tr>
+                    <tr>
+                      <th>2</th>
+                      <td>female</td>
+                      <td>group B</td>
+                      <td>master's degree</td>
+                      <td>standard</td>
+                      <td>none</td>
+                      <td>90</td>
+                      <td>95</td>
+                      <td>93</td>
+                      <td>28.596154</td>
+                    </tr>
+                    <tr>
+                      <th>3</th>
+                      <td>male</td>
+                      <td>group A</td>
+                      <td>associate's degree</td>
+                      <td>free/reduced</td>
+                      <td>none</td>
+                      <td>47</td>
+                      <td>57</td>
+                      <td>44</td>
+                      <td>-16.735849</td>
+                    </tr>
+                    <tr>
+                      <th>4</th>
+                      <td>male</td>
+                      <td>group C</td>
+                      <td>some college</td>
+                      <td>standard</td>
+                      <td>none</td>
+                      <td>76</td>
+                      <td>78</td>
+                      <td>75</td>
+                      <td>8.388489</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <p>Observando el DataFrame, se puede ver que tiene una nueva columna al final llamada "Distancia de la media".
+        </p>
+        <h3>Filtros con groupby()</h3>
+        <p>Se pueden filtrar los datos en función de determinadas condiciones para que los datos sean más
+          significativos, por ejemplo se puede filtrar el grupo de "etnia" que tiene más de 100 filas de datos.</p>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[28]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">df_n</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;race/ethnicity&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">)</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <p>El código anterior establece conservar los grupos que tienen una longitud de más de 100 filas de datos, se
+          puede verificar esta longitud comparando con el DataFrame original "df" y el DataFrame filtrado "df_n".</p>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[29]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df_n</span><span class="p">))</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+              <pre>1000
+911
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <p>La longitud del DataFrame original es 1000, después de aplicar el filtro, la longitud del DataFrame se
+          convierte en 911.</p>
+        <h3>Mapeo de datos</h3>
+        <p>Se puede mapear la puntuación promedio de lectura de cada grupo y generar una nueva columna con estos datos
+        </p>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[30]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;New&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;race/ethnicity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;race/ethnicity&#39;</span><span class="p">])[</span><span class="s1">&#39;reading score&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[30]:</div>
+            <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+              data-mime-type="text/html">
+              <div>
+                <table border="1" class="dataframe">
+                  <thead>
+                    <tr style="text-align: right;">
+                      <th></th>
+                      <th>gender</th>
+                      <th>race/ethnicity</th>
+                      <th>parental level of education</th>
+                      <th>lunch</th>
+                      <th>test preparation course</th>
+                      <th>math score</th>
+                      <th>reading score</th>
+                      <th>writing score</th>
+                      <th>Distance From the Mean</th>
+                      <th>New</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>0</th>
+                      <td>female</td>
+                      <td>group B</td>
+                      <td>bachelor's degree</td>
+                      <td>standard</td>
+                      <td>none</td>
+                      <td>72</td>
+                      <td>72</td>
+                      <td>74</td>
+                      <td>10.596154</td>
+                      <td>67.352632</td>
+                    </tr>
+                    <tr>
+                      <th>1</th>
+                      <td>female</td>
+                      <td>group C</td>
+                      <td>some college</td>
+                      <td>standard</td>
+                      <td>completed</td>
+                      <td>69</td>
+                      <td>90</td>
+                      <td>88</td>
+                      <td>6.966667</td>
+                      <td>69.103448</td>
+                    </tr>
+                    <tr>
+                      <th>2</th>
+                      <td>female</td>
+                      <td>group B</td>
+                      <td>master's degree</td>
+                      <td>standard</td>
+                      <td>none</td>
+                      <td>90</td>
+                      <td>95</td>
+                      <td>93</td>
+                      <td>28.596154</td>
+                      <td>67.352632</td>
+                    </tr>
+                    <tr>
+                      <th>3</th>
+                      <td>male</td>
+                      <td>group A</td>
+                      <td>associate's degree</td>
+                      <td>free/reduced</td>
+                      <td>none</td>
+                      <td>47</td>
+                      <td>57</td>
+                      <td>44</td>
+                      <td>-16.735849</td>
+                      <td>64.674157</td>
+                    </tr>
+                    <tr>
+                      <th>4</th>
+                      <td>male</td>
+                      <td>group C</td>
+                      <td>some college</td>
+                      <td>standard</td>
+                      <td>none</td>
+                      <td>76</td>
+                      <td>78</td>
+                      <td>75</td>
+                      <td>8.388489</td>
+                      <td>69.103448</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <p>Observando el DataFrame, existe una nueva columna llamada "Nuevo" al final, que contiene la puntuación
+          promedio de lectura del grupo correspondiente.</p>
+        <h3>Visualización usando groupby().</h3>
+        <p>A continuación se realizarán varias técnicas de visualización de grupos, primeramente se realizará un
+          diagrama de barras con el nivel de educación de los padres.</p>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[31]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>
+<span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;parental level of education&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s1">&#39;bar&#39;</span><span class="p">);</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedImage jp-OutputArea-output ">
+              <img src="python_images/pandas_groupby/image_0001.jpg">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <ul>
+          <li>Para realizar un gráfico circular o comúnmente llamado diagrama de torta, se escribe en tipo "pie" en
+            lugar de "bar" en el código anterior, como se observa a continuación.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[32]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>
+<span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;parental level of education&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s1">&#39;pie&#39;</span><span class="p">);</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedImage jp-OutputArea-output ">
+              <img src="python_images/pandas_groupby/image_0002.jpg">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <ul>
+          <li>Si no escribe ningún "tipo", el gráfico será una trama lineal simple, como ejemplo se procederá a graficar
+            la puntuación promedio en matemáticas de cada grupo.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[33]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;race/ethnicity&#39;</span><span class="p">)[</span><span class="s1">&#39;math score&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">plot</span><span class="p">();</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedImage jp-OutputArea-output ">
+              <img src="python_images/pandas_groupby/image_0003.jpg">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h3>Conclusiones</h3>
+        <p>
+          En este artículo, se realizaron ejemplos que demuestran la gran utilidad de la función groupby() para:
+        </p>
+        <ul>
+          <li>Agrupar y resumir los datos de muchas maneras diferentes,</li>
+          <li>Uso de funciones agregadas,</li>
+          <li>Transformación de datos,</li>
+          <li>Filtro de datos,</li>
+          <li>Mapeo de datos y,</li>
+          <li>Visualización de datos.</li>
+        </ul>
+      </div>
+    </div>
+</body>
+
+</html>
