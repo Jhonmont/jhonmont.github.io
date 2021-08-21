@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Regresion Lineal Univariante</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+  <link rel="stylesheet" href="python_css/python_posts.css" />
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-MML-AM_CHTML-full,Safe"> </script>
+  <script type="text/x-mathjax-config">
+    init_mathjax = function() {
+        if (window.MathJax) {
+        // MathJax loaded
+            MathJax.Hub.Config({
+                TeX: {
+                    equationNumbers: {
+                    autoNumber: "AMS",
+                    useLabelIds: true
+                    }
+                },
+                tex2jax: {
+                    inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+                    displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+                    processEscapes: true,
+                    processEnvironments: true
+                },
+                displayAlign: 'center',
+                CommonHTML: {
+                    linebreaks: { 
+                    automatic: true 
+                    }
+                },
+                "HTML-CSS": {
+                    linebreaks: { 
+                    automatic: true 
+                    }
+                }
+            });
+        
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+        }
+    }
+    init_mathjax();
+    </script>
+  <!-- ************************ Common Code ************************ -->
+  <link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .bd-placeholder-img {
+      font-size: 1.125rem;
+      text-anchor: middle;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      user-select: none;
+    }
+
+    @media (min-width: 768px) {
+      .bd-placeholder-img-lg {
+        font-size: 3.5rem;
+      }
+    }
+  </style>
+  <link href="../assets/css/headers.css" rel="stylesheet">
+  <!-- ************************ Common Code ************************ -->
+</head>
+
+<body class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
+  <!-- ************************ Common Code ************************ -->
+  <div class="container">
+    <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+      <a href="../../index.html"
+        class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+        <svg class="bi me-2" width="40" height="32">
+          <use xlink:href="#bootstrap" />
+        </svg>
+        <span style="color: var(--jp-content-link-color);"">Volver al Inicio</span>
+</a>
+<ul class=" nav nav-pills">
+          <li class="nav-item"><a href="aprendizaje_automatico.html" class="nav-link">Anterior</a></li>
+          <li class="nav-item"><a href="#" class="nav-link">Siguiente</a></li>
+          </ul>
+    </header>
+  </div>
+  <div style="padding-left: 50px; padding-right: 100px;">
+    <!-- ************************ Common Code ************************ -->
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h2>Regresión Lineal Univariante.</h2>
+        <p style="font-size: medium;"><strong>Publicado el: 12 de Enero del 2021</strong> - Jhonatan Montilla</p>
+        <p>La regresión lineal univariada se basa en determinar la relación entre una variable independiente (variable
+          explicativa) y una variable dependiente. Para demostrarlo realizaremos un ejemplo donde el modelo realizará
+          predicciones en la puntuación de un estudiante de un examen, en función de cuánto tiempo estuvo estudiando
+          para tomar el examen. Optimizaremos los parámetros del modelo utilizando el método de descenso de gradiente y
+          calcularemos la pérdida con el Error Cuadrático Medio (SME).</p>
+        <p>Podrá descargar el conjunto de datos directamente desde nuestro
+          <!-- ************************ Common Code ************************ -->
+          <a href="https://github.com/Jhonmont/all_datasets_repository" target="_blank">
+            repositorio.
+          </a>
+        </p>
+        <!-- ************************ Common Code ************************ -->
+        <p>Primero se importan todas las librerías de Python necesarias y se carga el conjunto de datos.</p>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[1]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">mean_squared_error</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[2]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;student_scores.csv&#39;</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[2]:</div>
+            <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+              data-mime-type="text/html">
+              <div>
+                <table border="1" class="dataframe">
+                  <thead>
+                    <tr style="text-align: right;">
+                      <th></th>
+                      <th>Hours</th>
+                      <th>Scores</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>0</th>
+                      <td>2.5</td>
+                      <td>21</td>
+                    </tr>
+                    <tr>
+                      <th>1</th>
+                      <td>5.1</td>
+                      <td>47</td>
+                    </tr>
+                    <tr>
+                      <th>2</th>
+                      <td>3.2</td>
+                      <td>27</td>
+                    </tr>
+                    <tr>
+                      <th>3</th>
+                      <td>8.5</td>
+                      <td>75</td>
+                    </tr>
+                    <tr>
+                      <th>4</th>
+                      <td>3.5</td>
+                      <td>30</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <ul>
+          <li>
+            <p>Como puede observar, el conjunto de datos contiene dos columnas con las horas y las puntuaciones, la
+              variable "Scores" será la variable objetivo. Se requeire predecir las puntuaciones en función de las horas
+              de estudio.</p>
+          </li>
+          <li>
+            <p>Primeramente se almacenan las características y la variable objetivo en x, y respectivamente.</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[3]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Hours&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Scores&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <ul>
+          <li>La parte más importante del análisis de datos es, analizar los datos y visualizarlos. Veamos cómo se ven
+            los datos gráficamente.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[4]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedImage jp-OutputArea-output ">
+              <img src="python_images/regresion_lineal_univariante/Image_0001.jpg">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <ul>
+          <li>
+            <p>La regresión lineal univariada predice sobre la ecuación de una línea recta, es decir, y = mx + b</p>
+          </li>
+          <li>
+            <p>A partir de esta ecuación, se tiene X y se requiere calcular Y, sin embargo, no está disponible m y b, es
+              decir, el gradiente o pendiente, así como tampoco la intersección de los ejes o coeficiente. Estos se
+              conocen como parámetros del modelo ML.</p>
+          </li>
+          <li>
+            <p>Se puede calcular m y b con el método del descenso del gradiente (Gradient Descent). El descenso de
+              gradiente es un algoritmo de optimización que se utiliza para minimizar la función de costo moviéndose
+              iterativamente en la dirección del descenso más pronunciado según lo definido por el negativo del
+              gradiente.</p>
+          </li>
+          <li>
+            <p>En el aprendizaje automático, se utiliza el descenso de gradientes para actualizar los parámetros de un
+              modelo. Los parámetros se refieren a coeficientes en regresión lineal y pesos en redes neuronales.</p>
+          </li>
+          <li>
+            <p>El gradiente se puede calcular de la siguiente manera:</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[5]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="c1"># Calcula m, b a través de Gradient Descent</span>
+<span class="k">def</span> <span class="nf">gradient</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># Coeficiente e intercepción</span>
+    <span class="nb">iter</span> <span class="o">=</span> <span class="mi">1000</span> 
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> 
+    <span class="n">lr</span> <span class="o">=</span> <span class="mf">0.01</span> <span class="c1"># Tasa de aprendizaje</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">iter</span><span class="p">):</span>
+        <span class="n">y_pred</span> <span class="o">=</span> <span class="n">m</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">b</span>
+        <span class="n">dm</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="mi">2</span><span class="o">/</span><span class="n">n</span><span class="p">)</span><span class="o">*</span><span class="nb">sum</span><span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="p">(</span><span class="n">y</span><span class="o">-</span><span class="n">y_pred</span><span class="p">))</span>
+        <span class="n">db</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="mi">2</span><span class="o">/</span><span class="n">n</span><span class="p">)</span><span class="o">*</span><span class="nb">sum</span><span class="p">(</span><span class="n">y</span><span class="o">-</span><span class="n">y_pred</span><span class="p">)</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">m</span> <span class="o">-</span> <span class="n">lr</span><span class="o">*</span><span class="n">dm</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">b</span> <span class="o">-</span> <span class="n">lr</span><span class="o">*</span><span class="n">db</span>
+    <span class="k">return</span> <span class="n">m</span><span class="p">,</span><span class="n">b</span>
+<span class="n">gradient</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[5]:</div>
+            <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+              <pre>(9.778905988234964, 2.4644522714760995)</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <ul>
+          <li>
+            <p>Este método resta una pequeña porción de m y b de m y b en sí, es decir, derivadas de m (dm) y b (db).
+              Por lo tanto, cada vez que se reste una pequeña posición de los parámetros, estos parámetros se encuentran
+              en la pendiente más pronunciada.</p>
+          </li>
+          <li>
+            <p>El tamaño de estos pasos se denomina tasa de aprendizaje (lr). Podría ser 0.1, 0.01, 0.001..etc depende
+              del problema a resolver y no de las iteraciones que se tienen que hacer.</p>
+          </li>
+          <li>
+            <p>Con una alta tasa de aprendizaje el modelo puede cubrir más terreno en cada paso, sin embargo, se corre
+              el riesgo de sobrepasar el punto más bajo ya que la pendiente cambia constantemente. Con una tasa de
+              aprendizaje muy baja, el modelo se puede mover con confianza en la dirección del gradiente negativo,
+              debiso a que se recalcula con mucha frecuencia. Una tasa de aprendizaje baja es más precisa, pero calcular
+              el gradiente requiere de mucho tiempo, por lo que es posible gastar mucho tiempo llegar al fondo.</p>
+          </li>
+        </ul>
+        <p>Ahora se tienen calculadas m y b, se guardarán de la manera siguiente.</p>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[6]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">m</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">gradient</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <ul>
+          <li>Procedemos a predecir con el modelo</li>
+        </ul>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[7]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="c1"># y = mx + c</span>
+<span class="n">pred</span> <span class="o">=</span> <span class="n">m</span> <span class="o">*</span> <span class="n">X</span> <span class="o">+</span> <span class="n">c</span>
+<span class="n">pred</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[7]:</div>
+            <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+              <pre>array([26.91171724, 52.33687281, 33.75695143, 85.58515317, 36.69062323,
+       17.13281125, 92.43038736, 56.24843521, 83.62937197, 28.86749844,
+       77.76202838, 60.1599976 , 46.46952922, 34.73484203, 13.22124886,
+       89.49671557, 26.91171724, 21.04437365, 62.1157788 , 74.82835658,
+       28.86749844, 49.40320102, 39.62429503, 69.93890359, 78.73991898])</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <ul>
+          <li>
+            <p>Lo que se obtiene es la predicción de puntuación sobre la base de las características o entradas
+              suministradas (horas de estudio).</p>
+          </li>
+          <li>
+            <p>Las funciones de pérdida indican "qué tan bueno" es el modelo para hacer predicciones para un conjunto de
+              parámetros dado.</p>
+          </li>
+          <li>
+            <p>La función de costo tiene su propia curva y sus propios gradientes. La pendiente de esta curva indica
+              cómo actualizar los parámetros para hacer que el modelo sea más preciso.</p>
+          </li>
+          <li>
+            <p>El método más común para calcular la pérdida es el Error Cuadrático Medio (SME).</p>
+          </li>
+          <li>
+            <p>La librería de python Scikit-Learn tiene una función incorporada para calcular el SME, la cual veremos a
+              continuación.</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[8]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">mean_squared_error</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">pred</span><span class="p">)</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[8]:</div>
+            <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+              <pre>28.882802906830015</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h3 id="Conclusiones.">Conclusiones.<a class="anchor-link" href="#Conclusiones.">&#182;</a></h3>
+        <p>El resultado del SME es de aproximadamente 29%, según este resultado se podría concluir que el modelo actual
+          es un modelo de gama media para predecir valores con el conjunto de datos dado. Cuanto menor sea la pérdida,
+          más preciso será un modelo.</p>
+        <p>La pérdida de este modelo es significativamente baja. Sin embargo, existen otros modelos de regresión y
+          aprendizaje automático con pérdidas mucho menores a este modelo, estos serían modelos de gama alta y tienen un
+          nivel muy alto de confiabilidad.</p>
+      </div>
+    </div>
+</body>
+
+</html>
