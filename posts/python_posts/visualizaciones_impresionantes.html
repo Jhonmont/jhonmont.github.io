@@ -1,0 +1,1615 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Visualizaciones Impresionantes</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+  <link rel="stylesheet" href="python_css/python_posts.css" />
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-MML-AM_CHTML-full,Safe"> </script>
+  <script type="text/x-mathjax-config">
+    init_mathjax = function() {
+        if (window.MathJax) {
+        // MathJax loaded
+            MathJax.Hub.Config({
+                TeX: {
+                    equationNumbers: {
+                    autoNumber: "AMS",
+                    useLabelIds: true
+                    }
+                },
+                tex2jax: {
+                    inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+                    displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+                    processEscapes: true,
+                    processEnvironments: true
+                },
+                displayAlign: 'center',
+                CommonHTML: {
+                    linebreaks: { 
+                    automatic: true 
+                    }
+                },
+                "HTML-CSS": {
+                    linebreaks: { 
+                    automatic: true 
+                    }
+                }
+            });
+        
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+        }
+    }
+    init_mathjax();
+    </script>
+  <!-- ************************ Common Code ************************ -->
+  <link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .bd-placeholder-img {
+      font-size: 1.125rem;
+      text-anchor: middle;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      user-select: none;
+    }
+
+    @media (min-width: 768px) {
+      .bd-placeholder-img-lg {
+        font-size: 3.5rem;
+      }
+    }
+  </style>
+  <link href="../assets/css/headers.css" rel="stylesheet">
+  <!-- ************************ Common Code ************************ -->
+</head>
+
+<body class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
+  <!-- ************************ Common Code ************************ -->
+  <div class="container">
+    <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+      <a href="../../index.html"
+        class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+        <svg class="bi me-2" width="40" height="32">
+          <use xlink:href="#bootstrap" />
+        </svg>
+        <span style="color: var(--jp-content-link-color);"">Volver al Inicio</span>
+</a>
+<ul class=" nav nav-pills">
+          <li class="nav-item"><a href="regresion_lineal_univariante.html" class="nav-link">Anterior</a></li>
+          <li class="nav-item"><a href="#" class="nav-link">Siguiente</a></li>
+          </ul>
+    </header>
+  </div>
+  <div style="padding-left: 50px; padding-right: 100px;">
+    <!-- ************************ Common Code ************************ -->
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h2>Visualizaciones Impresionantes</h2>
+        <p style="font-size: medium;"><strong>Publicado el: 16 de Enero del 2021</strong> - Jhonatan Montilla</p>
+        <p>En este artículo les enseñaremos como generar gráficos llamativos para la representación gráfica de sus datos
+          a través de las librerías de Python: Matplotlib y Seaborn. Para este ejercicio utilizaremos un par de
+          conjuntos de datos los cuales podrá descargar directamente desde nuestro
+          <!-- ************************ Common Code ************************ -->
+          <a href="https://github.com/Jhonmont/all_datasets_repository" target="_blank">
+            repositorio.
+          </a>
+        </p>
+        <!-- ************************ Common Code ************************ -->
+        <ul>
+          <li>Carga de las librerías de Python necesarias.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[1]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">from</span> <span class="nn">bokeh.plotting</span> <span class="kn">import</span> <span class="n">figure</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span> <span class="n">show</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h2>Gráficos con librería de Python Matplotlib</h2>
+        <ul>
+          <li>Carga del conjunto de datos de Netflix.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[2]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">netflix_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;netflix_titles.csv&#39;</span><span class="p">)</span>
+<span class="n">netflix_data</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[2]:</div>
+            <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+              data-mime-type="text/html">
+              <div>
+                <table border="1" class="dataframe">
+                  <thead>
+                    <tr style="text-align: right;">
+                      <th></th>
+                      <th>show_id</th>
+                      <th>type</th>
+                      <th>title</th>
+                      <th>director</th>
+                      <th>cast</th>
+                      <th>country</th>
+                      <th>date_added</th>
+                      <th>release_year</th>
+                      <th>rating</th>
+                      <th>duration</th>
+                      <th>listed_in</th>
+                      <th>description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>0</th>
+                      <td>81145628</td>
+                      <td>Movie</td>
+                      <td>Norm of the North: King Sized Adventure</td>
+                      <td>Richard Finn, Tim Maltby</td>
+                      <td>Alan Marriott, Andrew Toth, Brian Dobson, Cole...</td>
+                      <td>United States, India, South Korea, China</td>
+                      <td>September 9, 2019</td>
+                      <td>2019</td>
+                      <td>TV-PG</td>
+                      <td>90 min</td>
+                      <td>Children &amp; Family Movies, Comedies</td>
+                      <td>Before planning an awesome wedding for his gra...</td>
+                    </tr>
+                    <tr>
+                      <th>1</th>
+                      <td>80117401</td>
+                      <td>Movie</td>
+                      <td>Jandino: Whatever it Takes</td>
+                      <td>NaN</td>
+                      <td>Jandino Asporaat</td>
+                      <td>United Kingdom</td>
+                      <td>September 9, 2016</td>
+                      <td>2016</td>
+                      <td>TV-MA</td>
+                      <td>94 min</td>
+                      <td>Stand-Up Comedy</td>
+                      <td>Jandino Asporaat riffs on the challenges of ra...</td>
+                    </tr>
+                    <tr>
+                      <th>2</th>
+                      <td>70234439</td>
+                      <td>TV Show</td>
+                      <td>Transformers Prime</td>
+                      <td>NaN</td>
+                      <td>Peter Cullen, Sumalee Montano, Frank Welker, J...</td>
+                      <td>United States</td>
+                      <td>September 8, 2018</td>
+                      <td>2013</td>
+                      <td>TV-Y7-FV</td>
+                      <td>1 Season</td>
+                      <td>Kids' TV</td>
+                      <td>With the help of three human allies, the Autob...</td>
+                    </tr>
+                    <tr>
+                      <th>3</th>
+                      <td>80058654</td>
+                      <td>TV Show</td>
+                      <td>Transformers: Robots in Disguise</td>
+                      <td>NaN</td>
+                      <td>Will Friedle, Darren Criss, Constance Zimmer, ...</td>
+                      <td>United States</td>
+                      <td>September 8, 2018</td>
+                      <td>2016</td>
+                      <td>TV-Y7</td>
+                      <td>1 Season</td>
+                      <td>Kids' TV</td>
+                      <td>When a prison ship crash unleashes hundreds of...</td>
+                    </tr>
+                    <tr>
+                      <th>4</th>
+                      <td>80125979</td>
+                      <td>Movie</td>
+                      <td>#realityhigh</td>
+                      <td>Fernando Lebrija</td>
+                      <td>Nesta Cooper, Kate Walsh, John Michael Higgins...</td>
+                      <td>United States</td>
+                      <td>September 8, 2017</td>
+                      <td>2017</td>
+                      <td>TV-14</td>
+                      <td>99 min</td>
+                      <td>Comedies</td>
+                      <td>When nerdy high schooler Dani finally attracts...</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <ul>
+          <li>Conjunto de datos agrupado por tipo y año de lanzamiento, así como también, se reemplazan los valores
+            faltantes con 0</li>
+        </ul>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[3]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">n_data</span> <span class="o">=</span> <span class="n">netflix_data</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;release_year&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">],</span> <span class="n">as_index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">show_id</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+<span class="n">n_data</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;release_year&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="s1">&#39;count&#39;</span><span class="p">]</span>
+<span class="n">n_data_pivot</span> <span class="o">=</span> <span class="n">n_data</span><span class="o">.</span><span class="n">pivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s1">&#39;release_year&#39;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s1">&#39;count&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="n">n_data_pivot</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<span class="n">n_data_pivot</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[3]:</div>
+            <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+              data-mime-type="text/html">
+              <div>
+                <table border="1" class="dataframe">
+                  <thead>
+                    <tr style="text-align: right;">
+                      <th>type</th>
+                      <th>release_year</th>
+                      <th>Movie</th>
+                      <th>TV Show</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>0</th>
+                      <td>1925</td>
+                      <td>0.0</td>
+                      <td>1.0</td>
+                    </tr>
+                    <tr>
+                      <th>1</th>
+                      <td>1942</td>
+                      <td>2.0</td>
+                      <td>0.0</td>
+                    </tr>
+                    <tr>
+                      <th>2</th>
+                      <td>1943</td>
+                      <td>3.0</td>
+                      <td>0.0</td>
+                    </tr>
+                    <tr>
+                      <th>3</th>
+                      <td>1944</td>
+                      <td>3.0</td>
+                      <td>0.0</td>
+                    </tr>
+                    <tr>
+                      <th>4</th>
+                      <td>1945</td>
+                      <td>3.0</td>
+                      <td>0.0</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h3>Gráfico de líneas con leyenda y notas.</h3>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[4]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">n_data_pivot</span><span class="o">.</span><span class="n">release_year</span><span class="p">,</span> <span class="n">n_data_pivot</span><span class="o">.</span><span class="n">Movie</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s2">&quot;Películas&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">n_data_pivot</span><span class="o">.</span><span class="n">release_year</span><span class="p">,</span> <span class="n">n_data_pivot</span><span class="p">[</span><span class="s1">&#39;TV Show&#39;</span><span class="p">],</span> <span class="n">label</span> <span class="o">=</span> <span class="s2">&quot;Series&quot;</span><span class="p">)</span> 
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Cantidad de Películas y Series&quot;</span><span class="p">)</span> 
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Año de Lanzamiento&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Tendencias en Visualización de Películas y Series&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">1950</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;Las películas más vistas se lanzaron después del 2000 y las series de televisión después del 2010&quot;</span><span class="p">,</span> <span class="n">fontsize</span> <span class="o">=</span> <span class="mi">12</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">(</span><span class="mf">18.5</span><span class="p">,</span> <span class="mf">10.5</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedImage jp-OutputArea-output ">
+              <img src="python_images/visualizaciones_impresionantes/image_0001.jpg">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <ul>
+          <li>Conjunto de datos agrupado por tipo y año en que agregó a la lista, así como también, se reemplazan los
+            valores faltantes con 0</li>
+        </ul>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[5]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">netflix_data</span><span class="p">[</span><span class="s1">&#39;year_added&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">netflix_data</span><span class="p">[</span><span class="s1">&#39;date_added&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">slice</span><span class="p">(</span><span class="n">start</span><span class="o">=-</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">n_data_added</span> <span class="o">=</span> <span class="n">netflix_data</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;year_added&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">],</span> <span class="n">as_index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">show_id</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+<span class="n">n_data_added</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;year_added&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="s1">&#39;count&#39;</span><span class="p">]</span>
+<span class="n">n_data_added</span> <span class="o">=</span> <span class="n">n_data_added</span><span class="o">.</span><span class="n">pivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s1">&#39;year_added&#39;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s1">&#39;count&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="n">n_data_added</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<span class="n">n_data_added</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[5]:</div>
+            <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+              data-mime-type="text/html">
+              <div>
+                <table border="1" class="dataframe">
+                  <thead>
+                    <tr style="text-align: right;">
+                      <th>type</th>
+                      <th>year_added</th>
+                      <th>Movie</th>
+                      <th>TV Show</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>0</th>
+                      <td>2008</td>
+                      <td>1.0</td>
+                      <td>1.0</td>
+                    </tr>
+                    <tr>
+                      <th>1</th>
+                      <td>2009</td>
+                      <td>2.0</td>
+                      <td>0.0</td>
+                    </tr>
+                    <tr>
+                      <th>2</th>
+                      <td>2010</td>
+                      <td>1.0</td>
+                      <td>0.0</td>
+                    </tr>
+                    <tr>
+                      <th>3</th>
+                      <td>2011</td>
+                      <td>13.0</td>
+                      <td>0.0</td>
+                    </tr>
+                    <tr>
+                      <th>4</th>
+                      <td>2012</td>
+                      <td>4.0</td>
+                      <td>3.0</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h3>Gráfico de barras verticales con leyenda y etiquetas.</h3>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[6]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">labels</span> <span class="o">=</span> <span class="n">n_data_added</span><span class="p">[</span><span class="s1">&#39;year_added&#39;</span><span class="p">]</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">))</span>  <span class="c1"># Ubicación de las etiquetas</span>
+<span class="n">width</span> <span class="o">=</span> <span class="mf">0.35</span>  <span class="c1"># Ancho de las barras</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">Movies_rects</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">width</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">n_data_added</span><span class="p">[</span><span class="s1">&#39;Movie&#39;</span><span class="p">],</span> <span class="n">width</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Películas&#39;</span><span class="p">)</span> <span class="c1"># Agrega color aquí</span>
+<span class="n">TVshows_rects</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">width</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">n_data_added</span><span class="p">[</span><span class="s1">&#39;TV Show&#39;</span><span class="p">],</span> <span class="n">width</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Series&#39;</span><span class="p">)</span>
+<span class="c1"># Agrega texto para etiquetas, título, configure el tamaño del gráfico.</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Año en que agregó a Netflix&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Cantidad de Películas o Series de Tv&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Cantidad de Películas y Series de Televisión agregadas al catálogo de Netflix&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">(</span><span class="mf">18.5</span><span class="p">,</span> <span class="mf">10.5</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;font.size&#39;</span><span class="p">:</span> <span class="mi">15</span><span class="p">})</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+ <span class="c1"># Función para generar las etiquetas en la parte superior de las barras.</span> 
+<span class="k">def</span> <span class="nf">gen_label</span><span class="p">(</span><span class="n">rects</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">rect</span> <span class="ow">in</span> <span class="n">rects</span><span class="p">:</span>
+        <span class="n">height</span> <span class="o">=</span> <span class="n">rect</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">height</span><span class="p">),</span>
+                    <span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="n">rect</span><span class="o">.</span><span class="n">get_x</span><span class="p">()</span> <span class="o">+</span> <span class="n">rect</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">height</span><span class="p">),</span>
+                    <span class="n">xytext</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>  <span class="c1"># Desplazamiento vertical de 3 puntos</span>
+                    <span class="n">textcoords</span><span class="o">=</span><span class="s2">&quot;offset points&quot;</span><span class="p">,</span>
+                    <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;bottom&#39;</span><span class="p">)</span>
+<span class="n">gen_label</span><span class="p">(</span><span class="n">Movies_rects</span><span class="p">)</span>
+<span class="n">gen_label</span><span class="p">(</span><span class="n">TVshows_rects</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedImage jp-OutputArea-output ">
+              <img src="python_images/visualizaciones_impresionantes/image_0002.jpg">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h3>Gráfico de barras horizontales con leyenda.</h3>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[7]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">Year</span> <span class="o">=</span> <span class="n">n_data_added</span><span class="p">[</span><span class="s1">&#39;year_added&#39;</span><span class="p">],</span>
+                       <span class="n">Movie</span> <span class="o">=</span> <span class="n">n_data_added</span><span class="p">[</span><span class="s1">&#39;Movie&#39;</span><span class="p">],</span> <span class="n">TVshow</span><span class="o">=</span><span class="n">n_data_added</span><span class="p">[</span><span class="s1">&#39;TV Show&#39;</span><span class="p">]))</span> 
+<span class="n">ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+<span class="n">width</span> <span class="o">=</span> <span class="mf">0.4</span>
+<span class="n">fig1</span><span class="p">,</span> <span class="n">ax1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">barh</span><span class="p">(</span><span class="n">ind</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">Movie</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Películas&quot;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">barh</span><span class="p">(</span><span class="n">ind</span> <span class="o">+</span> <span class="n">width</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">TVshow</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Series&quot;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">yticks</span><span class="o">=</span><span class="n">ind</span> <span class="o">+</span> <span class="n">width</span><span class="p">,</span> <span class="n">yticklabels</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">Year</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="n">width</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)])</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Año en que agregó a Netflix&quot;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Cantidad de Películas o Series de Tv&quot;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Cantidad de Películas y Series de Televisión </span><span class="se">\n</span><span class="s2">agregadas al catálogo de Netflix&quot;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">fig1</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedImage jp-OutputArea-output ">
+              <img src="python_images/visualizaciones_impresionantes/image_0003.jpg">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h3>Gráfico de barras apiladas con leyenda.</h3>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[8]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">Year</span> <span class="o">=</span> <span class="n">n_data_added</span><span class="p">[</span><span class="s1">&#39;year_added&#39;</span><span class="p">],</span>
+                       <span class="n">Movie</span> <span class="o">=</span> <span class="n">n_data_added</span><span class="p">[</span><span class="s1">&#39;Movie&#39;</span><span class="p">],</span> <span class="n">TVshow</span><span class="o">=</span><span class="n">n_data_added</span><span class="p">[</span><span class="s1">&#39;TV Show&#39;</span><span class="p">]))</span> 
+<span class="n">ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+<span class="n">width</span> <span class="o">=</span> <span class="mf">0.4</span>
+<span class="n">fig1</span><span class="p">,</span> <span class="n">ax1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">barh</span><span class="p">(</span><span class="n">ind</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">Movie</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Películas&quot;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">barh</span><span class="p">(</span><span class="n">ind</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">TVshow</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Series&quot;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">yticks</span><span class="o">=</span><span class="n">ind</span> <span class="o">+</span> <span class="n">width</span><span class="p">,</span> <span class="n">yticklabels</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">Year</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="n">width</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)])</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Año en que agregó a Netflix&quot;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Cantidad de Películas o Series de Tv&quot;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Cantidad de Películas y Series de Televisión </span><span class="se">\n</span><span class="s2">agregadas al catálogo de Netflix&quot;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">fig1</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedImage jp-OutputArea-output ">
+              <img src="python_images/visualizaciones_impresionantes/image_0004.jpg">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <ul>
+          <li>Para el próximo caso será necesario agregar en el conjunto de datos una columna con los números del total
+            de películas y series de televisión juntos.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[9]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">n_data_added</span><span class="p">[</span><span class="s1">&#39;Total&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">n_data_added</span><span class="p">[</span><span class="s1">&#39;Movie&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">n_data_added</span><span class="p">[</span><span class="s1">&#39;TV Show&#39;</span><span class="p">]</span>
+<span class="n">n_data_added_flt</span> <span class="o">=</span> <span class="n">n_data_added</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">:]</span> <span class="c1"># Para seleccionar solo las últimas filas</span>
+<span class="n">n_data_added_flt</span> <span class="o">=</span> <span class="n">n_data_added_flt</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1"># Para restablecer el índice</span>
+<span class="n">n_data_added_flt</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[9]:</div>
+            <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+              data-mime-type="text/html">
+              <div>
+                <table border="1" class="dataframe">
+                  <thead>
+                    <tr style="text-align: right;">
+                      <th>type</th>
+                      <th>year_added</th>
+                      <th>Movie</th>
+                      <th>TV Show</th>
+                      <th>Total</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>0</th>
+                      <td>2017</td>
+                      <td>913.0</td>
+                      <td>387.0</td>
+                      <td>1300.0</td>
+                    </tr>
+                    <tr>
+                      <th>1</th>
+                      <td>2018</td>
+                      <td>1290.0</td>
+                      <td>492.0</td>
+                      <td>1782.0</td>
+                    </tr>
+                    <tr>
+                      <th>2</th>
+                      <td>2019</td>
+                      <td>1546.0</td>
+                      <td>803.0</td>
+                      <td>2349.0</td>
+                    </tr>
+                    <tr>
+                      <th>3</th>
+                      <td>2020</td>
+                      <td>147.0</td>
+                      <td>37.0</td>
+                      <td>184.0</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h3 id="Gr%C3%A1fico-Circular-tipo-Torta-con-etiquetas-porcentuales.">Gráfico Circular tipo Torta con etiquetas
+          porcentuales.<a class="anchor-link"
+            href="#Gr%C3%A1fico-Circular-tipo-Torta-con-etiquetas-porcentuales.">&#182;</a></h3>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[10]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">labels</span> <span class="o">=</span> <span class="n">n_data_added_flt</span><span class="p">[</span><span class="s1">&#39;year_added&#39;</span><span class="p">]</span>
+<span class="n">sizes</span> <span class="o">=</span> <span class="n">n_data_added_flt</span><span class="p">[</span><span class="s1">&#39;Total&#39;</span><span class="p">]</span>
+<span class="n">explode</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># Separa la segunda rebanada (año 2018)</span>
+<span class="n">fig2</span><span class="p">,</span> <span class="n">ax2</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">pie</span><span class="p">(</span><span class="n">sizes</span><span class="p">,</span> <span class="n">explode</span><span class="o">=</span><span class="n">explode</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">autopct</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%1.1f%%</span><span class="s1">&#39;</span><span class="p">,</span>
+        <span class="n">shadow</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">startangle</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>  <span class="c1"># Relación de aspecto garantiza que la torta se dibuje como un círculo.</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedImage jp-OutputArea-output ">
+              <img src="python_images/visualizaciones_impresionantes/image_0005.jpg">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h3>Gráfico Circular tipo Anillo con etiquetas porcentuales</h3>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[11]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">labels</span> <span class="o">=</span> <span class="n">n_data_added_flt</span><span class="p">[</span><span class="s1">&#39;year_added&#39;</span><span class="p">]</span>
+<span class="n">sizes</span> <span class="o">=</span> <span class="n">n_data_added_flt</span><span class="p">[</span><span class="s1">&#39;Total&#39;</span><span class="p">]</span>
+<span class="n">explode</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>  <span class="c1"># Separa todas las rebanadas</span>
+<span class="n">fig2</span><span class="p">,</span> <span class="n">ax2</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">pie</span><span class="p">(</span><span class="n">sizes</span><span class="p">,</span> <span class="n">explode</span><span class="o">=</span><span class="n">explode</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">autopct</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%1.1f%%</span><span class="s1">&#39;</span><span class="p">,</span>
+        <span class="n">shadow</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">startangle</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span> <span class="n">pctdistance</span><span class="o">=</span><span class="mf">0.85</span><span class="p">)</span> <span class="c1"># Ajusta la ubicación de la fuente</span>
+<span class="c1"># Dibuja un círculo y convierte el gráfico circular un gráfico de anillos</span>
+<span class="n">centre_circle</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Circle</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span><span class="mf">0.70</span><span class="p">,</span><span class="n">fc</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">)</span>
+<span class="n">fig2</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span>
+<span class="n">fig2</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">add_artist</span><span class="p">(</span><span class="n">centre_circle</span><span class="p">)</span>
+<span class="c1"># Relación de aspecto igual garantiza que la torta se dibuja como un círculo</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>  
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedImage jp-OutputArea-output ">
+              <img src="python_images/visualizaciones_impresionantes/image_0006.jpg">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h2>Gráficos con librería de Python Seaborn</h2>
+        <ul>
+          <li>Carga del segundo conjunto de datos, Registro de Ataques Cardíacos.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[12]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">heart_failure_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;heart_failure_clinical_records_dataset.csv&#39;</span><span class="p">)</span>
+<span class="n">heart_failure_data</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[12]:</div>
+            <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+              data-mime-type="text/html">
+              <div>
+                <table border="1" class="dataframe">
+                  <thead>
+                    <tr style="text-align: right;">
+                      <th></th>
+                      <th>age</th>
+                      <th>anaemia</th>
+                      <th>creatinine_phosphokinase</th>
+                      <th>diabetes</th>
+                      <th>ejection_fraction</th>
+                      <th>high_blood_pressure</th>
+                      <th>platelets</th>
+                      <th>serum_creatinine</th>
+                      <th>serum_sodium</th>
+                      <th>sex</th>
+                      <th>smoking</th>
+                      <th>time</th>
+                      <th>death_event</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>0</th>
+                      <td>75.0</td>
+                      <td>0</td>
+                      <td>582</td>
+                      <td>0</td>
+                      <td>20</td>
+                      <td>1</td>
+                      <td>265000.00</td>
+                      <td>1.9</td>
+                      <td>130</td>
+                      <td>1</td>
+                      <td>0</td>
+                      <td>4</td>
+                      <td>1</td>
+                    </tr>
+                    <tr>
+                      <th>1</th>
+                      <td>55.0</td>
+                      <td>0</td>
+                      <td>7861</td>
+                      <td>0</td>
+                      <td>38</td>
+                      <td>0</td>
+                      <td>263358.03</td>
+                      <td>1.1</td>
+                      <td>136</td>
+                      <td>1</td>
+                      <td>0</td>
+                      <td>6</td>
+                      <td>1</td>
+                    </tr>
+                    <tr>
+                      <th>2</th>
+                      <td>65.0</td>
+                      <td>0</td>
+                      <td>146</td>
+                      <td>0</td>
+                      <td>20</td>
+                      <td>0</td>
+                      <td>162000.00</td>
+                      <td>1.3</td>
+                      <td>129</td>
+                      <td>1</td>
+                      <td>1</td>
+                      <td>7</td>
+                      <td>1</td>
+                    </tr>
+                    <tr>
+                      <th>3</th>
+                      <td>50.0</td>
+                      <td>1</td>
+                      <td>111</td>
+                      <td>0</td>
+                      <td>20</td>
+                      <td>0</td>
+                      <td>210000.00</td>
+                      <td>1.9</td>
+                      <td>137</td>
+                      <td>1</td>
+                      <td>0</td>
+                      <td>7</td>
+                      <td>1</td>
+                    </tr>
+                    <tr>
+                      <th>4</th>
+                      <td>65.0</td>
+                      <td>1</td>
+                      <td>160</td>
+                      <td>1</td>
+                      <td>20</td>
+                      <td>0</td>
+                      <td>327000.00</td>
+                      <td>2.7</td>
+                      <td>116</td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td>8</td>
+                      <td>1</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <ul>
+          <li>Se agrupan los datos por edad y cantidad de decesos.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[13]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">agg_data</span> <span class="o">=</span> <span class="n">heart_failure_data</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;age&#39;</span><span class="p">,</span> <span class="s1">&#39;death_event&#39;</span><span class="p">],</span> <span class="n">as_index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">ejection_fraction</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+<span class="n">agg_data</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Age&#39;</span><span class="p">,</span> <span class="s1">&#39;death_event&#39;</span><span class="p">,</span> <span class="s1">&#39;Count&#39;</span><span class="p">]</span>
+<span class="n">agg_data</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[13]:</div>
+            <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+              data-mime-type="text/html">
+              <div>
+                <table border="1" class="dataframe">
+                  <thead>
+                    <tr style="text-align: right;">
+                      <th></th>
+                      <th>Age</th>
+                      <th>death_event</th>
+                      <th>Count</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>0</th>
+                      <td>40.0</td>
+                      <td>0</td>
+                      <td>7</td>
+                    </tr>
+                    <tr>
+                      <th>1</th>
+                      <td>41.0</td>
+                      <td>0</td>
+                      <td>1</td>
+                    </tr>
+                    <tr>
+                      <th>2</th>
+                      <td>42.0</td>
+                      <td>0</td>
+                      <td>6</td>
+                    </tr>
+                    <tr>
+                      <th>3</th>
+                      <td>42.0</td>
+                      <td>1</td>
+                      <td>1</td>
+                    </tr>
+                    <tr>
+                      <th>4</th>
+                      <td>43.0</td>
+                      <td>0</td>
+                      <td>1</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h3>Gráfico de líneas con leyenda</h3>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[14]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">relplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;Age&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;Count&quot;</span><span class="p">,</span> 
+            <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;death_event&quot;</span> <span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="mi">16</span><span class="o">/</span><span class="mi">9</span><span class="p">,</span>
+            <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;line&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">agg_data</span><span class="p">);</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedImage jp-OutputArea-output ">
+              <img src="python_images/visualizaciones_impresionantes/image_0007.jpg">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h3>Gráfico de Dispersión con leyenda tipo 1</h3>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[15]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">relplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;serum_creatinine&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;ejection_fraction&quot;</span><span class="p">,</span> 
+            <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;death_event&quot;</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;scatter&quot;</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">heart_failure_data</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="mi">16</span><span class="o">/</span><span class="mi">9</span><span class="p">);</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedImage jp-OutputArea-output ">
+              <img src="python_images/visualizaciones_impresionantes/image_0008.jpg">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h3>Gráfico de Dispersión con leyenda tipo 2</h3>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[16]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">relplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;serum_creatinine&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;ejection_fraction&quot;</span><span class="p">,</span> 
+            <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;death_event&quot;</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;scatter&quot;</span><span class="p">,</span>
+            <span class="n">style</span><span class="o">=</span><span class="s2">&quot;smoking&quot;</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">heart_failure_data</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="mi">16</span><span class="o">/</span><span class="mi">9</span><span class="p">);</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedImage jp-OutputArea-output ">
+              <img src="python_images/visualizaciones_impresionantes/image_0009.jpg">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <ul>
+          <li>Se prepara el conjunto de datos para el siguiente caso, gráfico de mapa de calor.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[17]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">agg_data2</span> <span class="o">=</span> <span class="n">heart_failure_data</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;age&#39;</span><span class="p">,</span> <span class="s1">&#39;ejection_fraction&#39;</span><span class="p">],</span> <span class="n">as_index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">death_event</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="n">agg_data2</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Age&#39;</span><span class="p">,</span> <span class="s1">&#39;ejection_fraction&#39;</span><span class="p">,</span> <span class="s1">&#39;Deaths&#39;</span><span class="p">]</span>
+<span class="n">agg_data2_p</span> <span class="o">=</span> <span class="n">agg_data2</span><span class="o">.</span><span class="n">pivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s1">&#39;Age&#39;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="s1">&#39;ejection_fraction&#39;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s1">&#39;Deaths&#39;</span><span class="p">)</span>
+<span class="n">agg_data2_p</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">agg_data2_p</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[17]:</div>
+            <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+              data-mime-type="text/html">
+              <div>
+                <table border="1" class="dataframe">
+                  <thead>
+                    <tr style="text-align: right;">
+                      <th>ejection_fraction</th>
+                      <th>14</th>
+                      <th>15</th>
+                      <th>17</th>
+                      <th>20</th>
+                      <th>25</th>
+                      <th>30</th>
+                      <th>35</th>
+                      <th>38</th>
+                      <th>40</th>
+                      <th>45</th>
+                      <th>50</th>
+                      <th>55</th>
+                      <th>60</th>
+                      <th>62</th>
+                      <th>65</th>
+                      <th>70</th>
+                      <th>80</th>
+                    </tr>
+                    <tr>
+                      <th>Age</th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>40.0</th>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                    </tr>
+                    <tr>
+                      <th>41.0</th>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                    </tr>
+                    <tr>
+                      <th>42.0</th>
+                      <td>0.0</td>
+                      <td>1.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                    </tr>
+                    <tr>
+                      <th>43.0</th>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                    </tr>
+                    <tr>
+                      <th>44.0</th>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                    </tr>
+                    <tr>
+                      <th>45.0</th>
+                      <td>1.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>1.0</td>
+                      <td>1.0</td>
+                      <td>2.0</td>
+                      <td>1.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                    </tr>
+                    <tr>
+                      <th>46.0</th>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>1.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                    </tr>
+                    <tr>
+                      <th>47.0</th>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                    </tr>
+                    <tr>
+                      <th>48.0</th>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>1.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>1.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                    </tr>
+                    <tr>
+                      <th>49.0</th>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>1.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                      <td>0.0</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h3>Gráfico tipo Mapa de Calor</h3>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[18]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">15</span><span class="p">))</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">agg_data2_p</span><span class="p">,</span> <span class="n">annot</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedImage jp-OutputArea-output ">
+              <img src="python_images/visualizaciones_impresionantes/image_0010.jpg">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <ul>
+          <li>Se prepara una muestra del conjunto de datos para el siguiente caso.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[19]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">subset</span> <span class="o">=</span> <span class="n">heart_failure_data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]]</span>
+<span class="n">subset</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[19]:</div>
+            <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+              data-mime-type="text/html">
+              <div>
+                <table border="1" class="dataframe">
+                  <thead>
+                    <tr style="text-align: right;">
+                      <th></th>
+                      <th>age</th>
+                      <th>anaemia</th>
+                      <th>creatinine_phosphokinase</th>
+                      <th>diabetes</th>
+                      <th>ejection_fraction</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>0</th>
+                      <td>75.0</td>
+                      <td>0</td>
+                      <td>582</td>
+                      <td>0</td>
+                      <td>20</td>
+                    </tr>
+                    <tr>
+                      <th>1</th>
+                      <td>55.0</td>
+                      <td>0</td>
+                      <td>7861</td>
+                      <td>0</td>
+                      <td>38</td>
+                    </tr>
+                    <tr>
+                      <th>2</th>
+                      <td>65.0</td>
+                      <td>0</td>
+                      <td>146</td>
+                      <td>0</td>
+                      <td>20</td>
+                    </tr>
+                    <tr>
+                      <th>3</th>
+                      <td>50.0</td>
+                      <td>1</td>
+                      <td>111</td>
+                      <td>0</td>
+                      <td>20</td>
+                    </tr>
+                    <tr>
+                      <th>4</th>
+                      <td>65.0</td>
+                      <td>1</td>
+                      <td>160</td>
+                      <td>1</td>
+                      <td>20</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h3>Gráficos Mixtos de Parcelas (Histogramas y Dispersión)</h3>
+        <ul>
+          <li>Este tipo de gráficos es ideal para visualizar gráficamente la distribución de los datos y sus
+            correlaciones de variables de un conjunto de datos.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[20]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">pairplot</span><span class="p">(</span><span class="n">subset</span><span class="p">);</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedImage jp-OutputArea-output ">
+              <img src="python_images/visualizaciones_impresionantes/image_0011.jpg">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h3>Gráfico de Dispersión Dinámico</h3>
+        <ul>
+          <li>Este tipo de gráficos es ideal para visualizar dinámicamente la distribución de los datos
+            a través del uso de controles.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">figure</span><span class="p">(</span><span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Edad vs Cantidad de Rechazos&quot;</span><span class="p">)</span>
+<span class="n">p</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">axis_label</span> <span class="o">=</span> <span class="s2">&quot;Edad&quot;</span>
+<span class="n">p</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">axis_label</span> <span class="o">=</span> <span class="s2">&quot;Cantidad de Rechazos&quot;</span>
+<span class="n">p</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="n">agg_data2</span><span class="p">[</span><span class="s2">&quot;Age&quot;</span><span class="p">],</span> <span class="n">agg_data2</span><span class="p">[</span><span class="s2">&quot;ejection_fraction&quot;</span><span class="p">],</span>
+         <span class="n">fill_alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">output_file</span><span class="p">(</span><span class="s2">&quot;test.html&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Example&quot;</span><span class="p">)</span>
+<span class="n">show</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <ul>
+          <li>Para visualizar el gráfico generado con el código anterior hacer clic
+            <a href="visualizaciones_impresionantes_test.html" target="_blank">
+              Aquí.
+            </a>
+          </li>
+        </ul>
+        <p>Esperamos que esta publicación sea un aporte para realizar representaciones gráficas más llamativas de sus
+          datos, en caso de que quieran profundizar más en cada una de las librerías de gráficos utilizadas en este
+          artículo les invitamos a revisar la documentación disponible en la web para cada una de estas.</p>
+        <ul>
+          <li><a href="https://matplotlib.org">https://matplotlib.org</a></li>
+          <li><a href="https://seaborn.pydata.org">https://seaborn.pydata.org</a></li>
+        </ul>
+      </div>
+    </div>
+</body>
+
+</html>
