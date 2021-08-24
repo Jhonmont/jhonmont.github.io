@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Valores Atipicos Multivariados</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+  <link rel="stylesheet" href="python_css/python_posts.css" />
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-MML-AM_CHTML-full,Safe"> </script>
+  <!-- MathJax configuration -->
+  <script type="text/x-mathjax-config">
+    init_mathjax = function() {
+        if (window.MathJax) {
+        // MathJax loaded
+            MathJax.Hub.Config({
+                TeX: {
+                    equationNumbers: {
+                    autoNumber: "AMS",
+                    useLabelIds: true
+                    }
+                },
+                tex2jax: {
+                    inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+                    displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+                    processEscapes: true,
+                    processEnvironments: true
+                },
+                displayAlign: 'center',
+                CommonHTML: {
+                    linebreaks: { 
+                    automatic: true 
+                    }
+                },
+                "HTML-CSS": {
+                    linebreaks: { 
+                    automatic: true 
+                    }
+                }
+            });
+        
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+        }
+    }
+    init_mathjax();
+    </script>
+  <!-- ************************ Common Code ************************ -->
+  <link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .bd-placeholder-img {
+      font-size: 1.125rem;
+      text-anchor: middle;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      user-select: none;
+    }
+
+    @media (min-width: 768px) {
+      .bd-placeholder-img-lg {
+        font-size: 3.5rem;
+      }
+    }
+  </style>
+  <link href="../assets/css/headers.css" rel="stylesheet">
+  <!-- ************************ Common Code ************************ -->
+</head>
+
+<body class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
+  <!-- ************************ Common Code ************************ -->
+  <div class="container">
+    <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+      <a href="../../index.html"
+        class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+        <svg class="bi me-2" width="40" height="32">
+          <use xlink:href="#bootstrap" />
+        </svg>
+        <span style="color: var(--jp-content-link-color);"">Volver al Inicio</span>
+</a>
+<ul class=" nav nav-pills">
+          <li class="nav-item"><a href="visualizaciones_impresionantes.html" class="nav-link">Anterior</a></li>
+          <li class="nav-item"><a href="#" class="nav-link">Siguiente</a></li>
+          </ul>
+    </header>
+  </div>
+  <div style="padding-left: 50px; padding-right: 100px;">
+    <!-- ************************ Common Code ************************ -->
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h2>
+          Detección de Valores Atípicos Multivariados.
+        </h2>
+        <p style="font-size: medium;"><strong>Publicado el: 20 de Enero del 2021</strong> - Jhonatan Montilla</p>
+        <p>
+          La detección de valores atípicos en datos multivariados a menudo puede ser uno de los desafíos de la
+          fase de preprocesamiento de datos, existen varias métricas, puntuaciones y técnicas para detectar
+          valores atípicos.</p>
+        <p>
+          La distancia euclidiana, es una de las métricas de distancia más conocidas para identificar valores
+          atípicos en función de su distancia al punto central, también existe el método de la puntuación Z para
+          definir valores atípicos para una única variable numérica, en algunos casos, también se pueden preferir
+          los algoritmos de agrupación en clústeres.</p>
+        <p>
+          Todos estos métodos consideran valores atípicos desde diferentes perspectivas, los valores atípicos que se
+          encuentran basados en un método pueden no ser encontrados por los demás como valores atípicos, por
+          lo tanto, estos métodos y métricas deben elegirse considerando la distribución de las variables.
+        </p>
+        <p>
+          Sin embargo, esto resalta las necesidades del uso de diferentes métricas. En este artículo, discutiremos
+          la métrica de la distancia, llamada Distancia de Mahalanobis para detectar valores atípicos en datos
+          multivariados.</p>
+        <h3>
+          Distancia de Mahalanobis.
+        </h3>
+        <p>
+          La distancia de Mahalanobis (MD) es una métrica de distancia efectiva que encuentra la distancia entre
+          un punto y la distribución de los datos, funciona con bastante eficacia en datos multivariados porque
+          utiliza una matriz de covarianza para encontrar la distancia entre los puntos de datos y el centro de
+          la distribución,esto significa que MD detecta valores atípicos basados en el patrón de distribución de
+          puntos de datos, a diferencia de la distancia euclidiana.
+        </p>
+        <p>
+          La razón principal de esta diferencia es la matriz de covarianza porque la covarianza indica cómo las
+          variables varían juntas, el uso de la covarianza mientras se calcula la distancia entre el centro y los
+          puntos en el espacio n-dimensional permite encontrar el límite del umbral real basado en la variación.
+        </p>
+        <p>Existe un método para Mahalanobis Distance en la biblioteca "Scipy", se puede acceder a este método
+          desde scipy.spatial.distance.mahalanobis, sin embargo, en lugar de usar este método en los siguientes
+          ejemplos, crearemos nuestro propio método para calcular la Distancia de Mahalanobis.
+        </p>
+        <p>Se utilizará un conjunto de datos para detectar valores atípicos en las variables "Ozono" y "Temp".
+          Puede descargar el conjunto de datos directamente desde nuestro repositorio haciendo
+          <!-- ************************ Common Code ************************ -->
+          <a href="https://github.com/Jhonmont/all_datasets_repository" target="_blank">
+            clic aquí.
+          </a>
+        </p>
+        <!-- ************************ Common Code ************************ -->
+        <ul>
+          <li>Se cargan las librerías y el conjunto de datos.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[1]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">chi2</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">patches</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[2]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">df</span><span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;airquality.csv&#39;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="n">decimal</span><span class="o">=</span><span class="s1">&#39;.&#39;</span> <span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[2]:</div>
+            <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+              data-mime-type="text/html">
+              <div>
+                <table border="1" class="dataframe">
+                  <thead>
+                    <tr style="text-align: right;">
+                      <th></th>
+                      <th>Ozone</th>
+                      <th>Solar.R</th>
+                      <th>Wind</th>
+                      <th>Temp</th>
+                      <th>Month</th>
+                      <th>Day</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>0</th>
+                      <td>41.0</td>
+                      <td>190.0</td>
+                      <td>7.4</td>
+                      <td>67</td>
+                      <td>5</td>
+                      <td>1</td>
+                    </tr>
+                    <tr>
+                      <th>1</th>
+                      <td>36.0</td>
+                      <td>118.0</td>
+                      <td>8.0</td>
+                      <td>72</td>
+                      <td>5</td>
+                      <td>2</td>
+                    </tr>
+                    <tr>
+                      <th>2</th>
+                      <td>12.0</td>
+                      <td>149.0</td>
+                      <td>12.6</td>
+                      <td>74</td>
+                      <td>5</td>
+                      <td>3</td>
+                    </tr>
+                    <tr>
+                      <th>3</th>
+                      <td>18.0</td>
+                      <td>313.0</td>
+                      <td>11.5</td>
+                      <td>62</td>
+                      <td>5</td>
+                      <td>4</td>
+                    </tr>
+                    <tr>
+                      <th>4</th>
+                      <td>NaN</td>
+                      <td>NaN</td>
+                      <td>14.3</td>
+                      <td>56</td>
+                      <td>5</td>
+                      <td>5</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[3]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s1">&#39;Ozone&#39;</span><span class="p">,</span> <span class="s1">&#39;Temp&#39;</span><span class="p">]]</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <ul>
+          <li>Será necesario obtener los valores para calcular la distancia entre el centro y el punto, por lo tanto,
+            estos son el punto central y la matriz de covarianza entre las variables "Ozono" y "Temp".</li>
+        </ul>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[4]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="c1"># Crea la matriz de covarianza</span>
+<span class="n">covariance</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cov</span><span class="p">(</span><span class="n">df</span> <span class="p">,</span> <span class="n">rowvar</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="c1"># Calcula la potencia de la matriz de covarianza de -1</span>
+<span class="n">covariance_pm1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">matrix_power</span><span class="p">(</span><span class="n">covariance</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="c1"># Calcula el punto central</span>
+<span class="n">centerpoint</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">df</span> <span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <ul>
+          <li>
+            <p>Ahora procederemos a encontrar la distancia entre el punto central y cada observación (punto) en el
+              conjunto de datos. También será necesario encontrar un valor de corte de la distribución Chi-Cuadrado, la
+              razón por la que se utiliza Chi-Cuadrado es para obtener el valor de corte, debido a que la Distancia de
+              Mahalanobis devuelve la distancia al cuadrado (D²).</p>
+          </li>
+          <li>
+            <p>También de debe tomar el valor del cuantil como 0,95 mientras se encuentra el punto de corte debido a que
+              los puntos fuera de 0,95 (de dos colas) se considerarán un valor atípico, menos cuantil significa menos
+              valor de corte, también será necesario obtener un valor de grado de libertad para Chi-Cuadrado, este es
+              igual al número de variables del conjunto de datos, (2).</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[5]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="c1"># Calcula las distancias entre el punto central Y</span>
+<span class="n">distances</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+      <span class="n">p1</span> <span class="o">=</span> <span class="n">val</span>
+      <span class="n">p2</span> <span class="o">=</span> <span class="n">centerpoint</span>
+      <span class="n">distance</span> <span class="o">=</span> <span class="p">(</span><span class="n">p1</span><span class="o">-</span><span class="n">p2</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">covariance_pm1</span><span class="p">)</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">p1</span><span class="o">-</span><span class="n">p2</span><span class="p">)</span>
+      <span class="n">distances</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">distance</span><span class="p">)</span>
+<span class="n">distances</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">distances</span><span class="p">)</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[6]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="c1"># Calcula el valor de corte (umbral) de la distribución de chi-cuadrado para detectar valores atípicos</span>
+<span class="n">cutoff</span> <span class="o">=</span> <span class="n">chi2</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[7]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="c1"># Índice de valores atípicos</span>
+<span class="n">outlierIndexes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">distances</span> <span class="o">&gt;</span> <span class="n">cutoff</span> <span class="p">)</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[8]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--- Índice de valores atípicos ----</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">outlierIndexes</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">--- Observaciones encontradas como atípicas -----</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">[</span> <span class="n">distances</span> <span class="o">&gt;</span> <span class="n">cutoff</span> <span class="p">,</span> <span class="p">:])</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+              <pre>--- Índice de valores atípicos ----
+
+(array([24, 35, 67, 81], dtype=int64),)
+
+--- Observaciones encontradas como atípicas -----
+
+[[115.  79.]
+ [135.  84.]
+ [122.  89.]
+ [168.  81.]]
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[9]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="c1"># Calcula las dimensiones de la elipse</span>
+<span class="n">pearson</span> <span class="o">=</span> <span class="n">covariance</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">covariance</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">covariance</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">ell_radius_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">pearson</span><span class="p">)</span>
+<span class="n">ell_radius_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">pearson</span><span class="p">)</span>
+<span class="n">lambda_</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eig</span><span class="p">(</span><span class="n">covariance</span><span class="p">)</span>
+<span class="n">lambda_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">lambda_</span><span class="p">)</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[10]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="c1"># Calcula el relleno de la elipse</span>
+<span class="n">ellipse</span> <span class="o">=</span> <span class="n">patches</span><span class="o">.</span><span class="n">Ellipse</span><span class="p">(</span><span class="n">xy</span> <span class="o">=</span> <span class="p">(</span><span class="n">centerpoint</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                                <span class="n">centerpoint</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+                          <span class="n">width</span> <span class="o">=</span> <span class="n">lambda_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">cutoff</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span>
+                          <span class="n">height</span> <span class="o">=</span> <span class="n">lambda_</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">cutoff</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span>
+                          <span class="n">angle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])),</span>
+                          <span class="n">edgecolor</span> <span class="o">=</span> <span class="s1">&#39;#fab1a0&#39;</span><span class="p">)</span>
+<span class="n">ellipse</span><span class="o">.</span><span class="n">set_facecolor</span><span class="p">(</span><span class="s1">&#39;#0984e3&#39;</span><span class="p">)</span>
+<span class="n">ellipse</span><span class="o">.</span><span class="n">set_alpha</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">add_artist</span><span class="p">(</span><span class="n">ellipse</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">df</span><span class="p">[:</span> <span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span> <span class="p">:</span> <span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedImage jp-OutputArea-output ">
+              <img src="python_images/valores_atipicos_multivariados/Image_0001.jpg">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <ul>
+          <li>
+            <p>
+              Se pueden observar varios puntos fuera de la elipse, esto significa que dichos valores son un valores
+              atípicos, la elipse representa el área que envuelve los valores no atípicos según la Distancia de
+              Mahalanobis.
+            </p>
+          </li>
+          <li>
+            <p>En este artículo hemos aplicado la ecuación de distancia de Mahalanobis en Python desde cero, es
+              importante elegir una métrica de distancia basada en cómo se dispersaron los datos en un espacio de n
+              dimensiones, existe otra métrica de distancia llamada Distancia de Cocción, que profundizaremos en un
+              posterior artículo, esperamos que este les haya sido de ayuda.
+            </p>
+          </li>
+        </ul>
+      </div>
+    </div>
+</body>
+
+</html>
