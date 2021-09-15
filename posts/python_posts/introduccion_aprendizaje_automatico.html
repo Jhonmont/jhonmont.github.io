@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Introducción al Aprendizaje Automatico</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+  <link rel="stylesheet" href="python_css/python_posts.css" />
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-MML-AM_CHTML-full,Safe"> </script>
+  <script type="text/x-mathjax-config">
+    init_mathjax = function() {
+        if (window.MathJax) {
+        // MathJax loaded
+            MathJax.Hub.Config({
+                TeX: {
+                    equationNumbers: {
+                    autoNumber: "AMS",
+                    useLabelIds: true
+                    }
+                },
+                tex2jax: {
+                    inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+                    displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+                    processEscapes: true,
+                    processEnvironments: true
+                },
+                displayAlign: 'center',
+                CommonHTML: {
+                    linebreaks: { 
+                    automatic: true 
+                    }
+                },
+                "HTML-CSS": {
+                    linebreaks: { 
+                    automatic: true 
+                    }
+                }
+            });
+        
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+        }
+    }
+    init_mathjax();
+    </script>
+  <!-- ************************ Common Code ************************ -->
+  <link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .bd-placeholder-img {
+      font-size: 1.125rem;
+      text-anchor: middle;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      user-select: none;
+    }
+
+    @media (min-width: 768px) {
+      .bd-placeholder-img-lg {
+        font-size: 3.5rem;
+      }
+    }
+  </style>
+  <link href="../assets/css/headers.css" rel="stylesheet">
+  <!-- ************************ Common Code ************************ -->
+</head>
+
+<body class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
+  <!-- ************************ Common Code ************************ -->
+  <div class="container">
+    <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+      <a href="../../index.html"
+        class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+        <svg class="bi me-2" width="40" height="32">
+          <use xlink:href="#bootstrap" />
+        </svg>
+        <span style="color: var(--jp-content-link-color);">Volver al Inicio</span>
+      </a>
+      <ul class=" nav nav-pills">
+        <li class="nav-item"><a href="evaluacion_de_regresion_lineal.html" class="nav-link">Anterior</a></li>
+        <li class="nav-item"><a href="funcionamiento_aprendizaje_automatico.html" class="nav-link">Siguiente</a></li>
+      </ul>
+    </header>
+  </div>
+  <div style="padding-left: 50px; padding-right: 100px;">
+    <!-- ************************ Common Code ************************ -->
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h2>Introducción a Aprendizaje Automático (Machine Learning)</h3>
+          <p>
+            <strong>
+              ¿Cómo funciona un modelo?.
+            </strong>
+          </p>
+          <p>Utilizaremos el siguiente caso de ejemplo. Un familiar ha ganado millones de dólares especulando
+            con bienes raíces. Se ha ofrecido a convertirse en socio comercial con nosotros debido a nuestro
+            interés en la ciencia de datos. Él proporcionará el dinero y nosotros proporcionaremos modelos
+            que predicen cuánto valen las distintas casas. Nosotros le preguntamos cómo predijo los valores
+            inmobiliarios en el pasado. él nos responde que es solo intuición. Pero más preguntas revelan
+            que ha identificado patrones de precios de casas que ha visto en el pasado, y usa esos patrones
+            para hacer predicciones para nuevas casas que está considerando. El aprendizaje automático funciona
+            de manera similar.
+          </p>
+          <p>Comenzaremos con un modelo llamado Árbol de decisiones. Hay modelos más sofisticados que brindan
+            predicciones más precisas. Pero los árboles de decisión son fáciles de entender y son el bloque de
+            construcción básico para algunos de los mejores modelos en ciencia de datos. Comenzaremos con el
+            árbol de decisiones más simple posible en donde el modelo divide las casas en solo dos categorías.
+            El precio previsto para cualquier casa considerada es el precio promedio histórico de las casas de
+            la misma categoría.
+          </p>
+          <p>
+            Usamos datos para decidir cómo dividir las casas en dos grupos y luego nuevamente para determinar
+            el precio previsto en cada grupo. Este paso de capturar patrones a partir de datos se denomina ajuste
+            o entrenamiento del modelo. Los datos utilizados para ajustar el modelo se denominan datos de
+            entrenamiento. Los detalles de cómo se ajusta el modelo (por ejemplo, cómo dividir los datos) son
+            lo suficientemente complejos como para guardarlos para más adelante. Una vez que se ha ajustado el
+            modelo, puede aplicarlo a nuevos datos para predecir los precios de viviendas adicionales.
+          </p>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[1]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">sklearn.tree</span> <span class="kn">import</span> <span class="n">DecisionTreeRegressor</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">mean_absolute_error</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestRegressor</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <p>
+          Como ejemplo, veremos los datos sobre los precios de las viviendas en Melbourne, Australia.
+          En los ejercicios prácticos, aplicará los mismos procesos a un nuevo conjunto de datos, que
+          tiene precios de viviendas en Iowa. Los datos de ejemplo (Melbourne) se encuentran en nuestro
+          repositorio el cual podrá descargar haciendo
+          <!-- ************************ Common Code ************************ -->
+          <a href="https://github.com/Jhonmont/all_datasets_repository" target="_blank">
+            clic aquí.
+          </a> Cargamos y exploramos los datos con los siguientes comandos:
+        </p>
+        <!-- ************************ Common Code ************************ -->
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[2]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">melbourne_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;melb_data.csv&#39;</span><span class="p">)</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[3]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="nb">round</span><span class="p">(</span><span class="n">melbourne_data</span><span class="o">.</span><span class="n">describe</span><span class="p">(),</span><span class="mi">2</span><span class="p">)</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[3]:</div>
+            <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+              data-mime-type="text/html">
+              <div>
+                <table border="1" class="dataframe">
+                  <thead>
+                    <tr style="text-align: right;">
+                      <th></th>
+                      <th>Unnamed: 0</th>
+                      <th>Rooms</th>
+                      <th>Price</th>
+                      <th>Distance</th>
+                      <th>Postcode</th>
+                      <th>Bedroom2</th>
+                      <th>Bathroom</th>
+                      <th>Car</th>
+                      <th>Landsize</th>
+                      <th>BuildingArea</th>
+                      <th>YearBuilt</th>
+                      <th>Lattitude</th>
+                      <th>Longtitude</th>
+                      <th>Propertycount</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>count</th>
+                      <td>18396.00</td>
+                      <td>18396.00</td>
+                      <td>18396.00</td>
+                      <td>18395.00</td>
+                      <td>18395.00</td>
+                      <td>14927.00</td>
+                      <td>14925.00</td>
+                      <td>14820.00</td>
+                      <td>13603.00</td>
+                      <td>7762.00</td>
+                      <td>8958.00</td>
+                      <td>15064.00</td>
+                      <td>15064.00</td>
+                      <td>18395.00</td>
+                    </tr>
+                    <tr>
+                      <th>mean</th>
+                      <td>11826.79</td>
+                      <td>2.94</td>
+                      <td>1056697.46</td>
+                      <td>10.39</td>
+                      <td>3107.14</td>
+                      <td>2.91</td>
+                      <td>1.54</td>
+                      <td>1.62</td>
+                      <td>558.12</td>
+                      <td>151.22</td>
+                      <td>1965.88</td>
+                      <td>-37.81</td>
+                      <td>145.00</td>
+                      <td>7517.98</td>
+                    </tr>
+                    <tr>
+                      <th>std</th>
+                      <td>6800.71</td>
+                      <td>0.96</td>
+                      <td>641921.67</td>
+                      <td>6.01</td>
+                      <td>95.00</td>
+                      <td>0.96</td>
+                      <td>0.69</td>
+                      <td>0.96</td>
+                      <td>3987.33</td>
+                      <td>519.19</td>
+                      <td>37.01</td>
+                      <td>0.08</td>
+                      <td>0.11</td>
+                      <td>4488.42</td>
+                    </tr>
+                    <tr>
+                      <th>min</th>
+                      <td>1.00</td>
+                      <td>1.00</td>
+                      <td>85000.00</td>
+                      <td>0.00</td>
+                      <td>3000.00</td>
+                      <td>0.00</td>
+                      <td>0.00</td>
+                      <td>0.00</td>
+                      <td>0.00</td>
+                      <td>0.00</td>
+                      <td>1196.00</td>
+                      <td>-38.18</td>
+                      <td>144.43</td>
+                      <td>249.00</td>
+                    </tr>
+                    <tr>
+                      <th>25%</th>
+                      <td>5936.75</td>
+                      <td>2.00</td>
+                      <td>633000.00</td>
+                      <td>6.30</td>
+                      <td>3046.00</td>
+                      <td>2.00</td>
+                      <td>1.00</td>
+                      <td>1.00</td>
+                      <td>176.50</td>
+                      <td>93.00</td>
+                      <td>1950.00</td>
+                      <td>-37.86</td>
+                      <td>144.93</td>
+                      <td>4294.00</td>
+                    </tr>
+                    <tr>
+                      <th>50%</th>
+                      <td>11820.50</td>
+                      <td>3.00</td>
+                      <td>880000.00</td>
+                      <td>9.70</td>
+                      <td>3085.00</td>
+                      <td>3.00</td>
+                      <td>1.00</td>
+                      <td>2.00</td>
+                      <td>440.00</td>
+                      <td>126.00</td>
+                      <td>1970.00</td>
+                      <td>-37.80</td>
+                      <td>145.00</td>
+                      <td>6567.00</td>
+                    </tr>
+                    <tr>
+                      <th>75%</th>
+                      <td>17734.25</td>
+                      <td>3.00</td>
+                      <td>1302000.00</td>
+                      <td>13.30</td>
+                      <td>3149.00</td>
+                      <td>3.00</td>
+                      <td>2.00</td>
+                      <td>2.00</td>
+                      <td>651.00</td>
+                      <td>174.00</td>
+                      <td>2000.00</td>
+                      <td>-37.76</td>
+                      <td>145.06</td>
+                      <td>10331.00</td>
+                    </tr>
+                    <tr>
+                      <th>max</th>
+                      <td>23546.00</td>
+                      <td>12.00</td>
+                      <td>9000000.00</td>
+                      <td>48.10</td>
+                      <td>3978.00</td>
+                      <td>20.00</td>
+                      <td>8.00</td>
+                      <td>10.00</td>
+                      <td>433014.00</td>
+                      <td>44515.00</td>
+                      <td>2018.00</td>
+                      <td>-37.41</td>
+                      <td>145.53</td>
+                      <td>21650.00</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h3>
+          Interpretación de la descripción de datos
+        </h3>
+        <p>
+          Los resultados muestran 8 números para cada columna en su conjunto de datos original. El
+          primer número, el recuento, muestra cuántas filas tienen valores que no faltan. Los valores
+          perdidos surgen por muchas razones. Por ejemplo, el tamaño del segundo dormitorio no se recopilará
+          al inspeccionar una casa de 1 dormitorio. Volveremos al tema de los datos faltantes. El segundo
+          valor es la media, que es la media. Debajo de eso, std es la desviación estándar, que mide qué
+          tan distribuidos numéricamente están los valores.
+        </p>
+        <p>
+          Para interpretar los valores mínimo, 25%, 50%, 75% y máximo, imagine ordenar cada columna de
+          menor a mayor valor. El primer valor (el más pequeño) es el mínimo. Si recorre un cuarto de la
+          lista, encontrará un número que es mayor que el 25% de los valores y menor que el 75% de los
+          valores. Ese es el valor del 25% (pronunciado "percentil 25"). Los percentiles 50 y 75 se definen de
+          forma análoga, y el máximo es el número más grande.
+        </p>
+        <h3>Seleccionar datos para modelar</h3>
+        <p>
+          Un conjunto de datos puede tener demasiadas variables para entenderlo, o incluso para imprimirlo
+          bien. ¿Cómo puede reducir esta abrumadora cantidad de datos a algo que pueda entender?.
+          Comenzaremos eligiendo algunas variables usando nuestra intuición. Los cursos posteriores
+          le mostrarán técnicas estadísticas para priorizar automáticamente las variables. Para elegir
+          variables / columnas, necesitaremos ver una lista de todas las columnas del conjunto de datos.
+          Eso se hace con la propiedad de columnas del DataFrame.
+        </p>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[4]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">melbourne_data</span><span class="o">.</span><span class="n">columns</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[4]:</div>
+            <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+              <pre>Index([&#39;Unnamed: 0&#39;, &#39;Suburb&#39;, &#39;Address&#39;, &#39;Rooms&#39;, &#39;Type&#39;, &#39;Price&#39;, &#39;Method&#39;,
+       &#39;SellerG&#39;, &#39;Date&#39;, &#39;Distance&#39;, &#39;Postcode&#39;, &#39;Bedroom2&#39;, &#39;Bathroom&#39;,
+       &#39;Car&#39;, &#39;Landsize&#39;, &#39;BuildingArea&#39;, &#39;YearBuilt&#39;, &#39;CouncilArea&#39;,
+       &#39;Lattitude&#39;, &#39;Longtitude&#39;, &#39;Regionname&#39;, &#39;Propertycount&#39;],
+      dtype=&#39;object&#39;)</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h3>
+          Se eliminan los valores faltantes
+        </h3>
+        <ul>
+          <li>Atención, para este caso práctico se eliminarán los valores faltantes del conjunto de datos sin realizar
+            un análisis de impacto que esto puede tener, existen varios métodos para tratar con este tipo de datos con
+            la imputación de valores a través de la media o la moda estadística.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[5]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">melbourne_data</span> <span class="o">=</span> <span class="n">melbourne_data</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">axis</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <p>
+          Hay muchas maneras de seleccionar un subconjunto de sus datos. Nos centraremos en dos enfoques
+          por ahora.
+        </p>
+        <ol>
+          <li>Notación de puntos, que usamos para seleccionar el "objetivo de predicción"</li>
+          <li>Seleccionar con una lista de columnas, que usamos para seleccionar las "características"</li>
+        </ol>
+        <h3>
+          Selección del objetivo de predicción
+        </h3>
+        <p>Puede extraer una variable con notación de puntos. Esta única columna se almacena en una
+          serie, que en general es como un DataFrame con una única columna de datos. Usaremos la
+          notación de puntos para seleccionar la columna que queremos predecir, que se llama objetivo
+          de predicción. Por convención, el objetivo de predicción se llama y. Entonces, el código que
+          necesitamos para guardar los precios de la vivienda en los datos de Melbourne es
+        </p>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[6]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">y</span> <span class="o">=</span> <span class="n">melbourne_data</span><span class="o">.</span><span class="n">Price</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h3>
+          Elección de "Características"
+        </h3>
+        <p>
+          Las columnas que se ingresan en nuestro modelo (y luego se usan para hacer predicciones) se llaman
+          "características". En nuestro caso, esas serían las columnas utilizadas para determinar el precio
+          de la vivienda. A veces, utilizará todas las columnas excepto el destino como características.
+          Otras veces, estará mejor con menos funciones. Por ahora, crearemos un modelo con solo algunas
+          características. Más adelante verá cómo iterar y comparar modelos creados con diferentes características.
+          Seleccionamos múltiples características proporcionando una lista de nombres de columnas entre corchetes.
+          Cada elemento de esa lista debe ser una cadena (con comillas).
+        </p>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[7]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">melbourne_features</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Rooms&#39;</span><span class="p">,</span> <span class="s1">&#39;Bathroom&#39;</span><span class="p">,</span> <span class="s1">&#39;Landsize&#39;</span><span class="p">,</span> <span class="s1">&#39;Lattitude&#39;</span><span class="p">,</span> <span class="s1">&#39;Longtitude&#39;</span><span class="p">]</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <ul>
+          <li>
+            Por convención, estos datos se denominan X.
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[8]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">melbourne_data</span><span class="p">[</span><span class="n">melbourne_features</span><span class="p">]</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <ul>
+          <li>
+            Repasemos rápidamente los datos que usaremos para predecir los precios de la vivienda utilizando
+            el método describe y el método head, que muestra las primeras filas.
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[9]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="nb">round</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">describe</span><span class="p">(),</span><span class="mi">2</span><span class="p">)</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[9]:</div>
+            <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+              data-mime-type="text/html">
+              <div>
+                <table border="1" class="dataframe">
+                  <thead>
+                    <tr style="text-align: right;">
+                      <th></th>
+                      <th>Rooms</th>
+                      <th>Bathroom</th>
+                      <th>Landsize</th>
+                      <th>Lattitude</th>
+                      <th>Longtitude</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>count</th>
+                      <td>6196.00</td>
+                      <td>6196.00</td>
+                      <td>6196.00</td>
+                      <td>6196.00</td>
+                      <td>6196.00</td>
+                    </tr>
+                    <tr>
+                      <th>mean</th>
+                      <td>2.93</td>
+                      <td>1.58</td>
+                      <td>471.01</td>
+                      <td>-37.81</td>
+                      <td>144.99</td>
+                    </tr>
+                    <tr>
+                      <th>std</th>
+                      <td>0.97</td>
+                      <td>0.71</td>
+                      <td>897.45</td>
+                      <td>0.08</td>
+                      <td>0.10</td>
+                    </tr>
+                    <tr>
+                      <th>min</th>
+                      <td>1.00</td>
+                      <td>1.00</td>
+                      <td>0.00</td>
+                      <td>-38.16</td>
+                      <td>144.54</td>
+                    </tr>
+                    <tr>
+                      <th>25%</th>
+                      <td>2.00</td>
+                      <td>1.00</td>
+                      <td>152.00</td>
+                      <td>-37.86</td>
+                      <td>144.93</td>
+                    </tr>
+                    <tr>
+                      <th>50%</th>
+                      <td>3.00</td>
+                      <td>1.00</td>
+                      <td>373.00</td>
+                      <td>-37.80</td>
+                      <td>145.00</td>
+                    </tr>
+                    <tr>
+                      <th>75%</th>
+                      <td>4.00</td>
+                      <td>2.00</td>
+                      <td>628.00</td>
+                      <td>-37.76</td>
+                      <td>145.05</td>
+                    </tr>
+                    <tr>
+                      <th>max</th>
+                      <td>8.00</td>
+                      <td>8.00</td>
+                      <td>37000.00</td>
+                      <td>-37.46</td>
+                      <td>145.53</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[10]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="nb">round</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">head</span><span class="p">(),</span><span class="mi">2</span><span class="p">)</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[10]:</div>
+            <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+              data-mime-type="text/html">
+              <div>
+                <table border="1" class="dataframe">
+                  <thead>
+                    <tr style="text-align: right;">
+                      <th></th>
+                      <th>Rooms</th>
+                      <th>Bathroom</th>
+                      <th>Landsize</th>
+                      <th>Lattitude</th>
+                      <th>Longtitude</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>1</th>
+                      <td>2</td>
+                      <td>1.0</td>
+                      <td>156.0</td>
+                      <td>-37.81</td>
+                      <td>144.99</td>
+                    </tr>
+                    <tr>
+                      <th>2</th>
+                      <td>3</td>
+                      <td>2.0</td>
+                      <td>134.0</td>
+                      <td>-37.81</td>
+                      <td>144.99</td>
+                    </tr>
+                    <tr>
+                      <th>4</th>
+                      <td>4</td>
+                      <td>1.0</td>
+                      <td>120.0</td>
+                      <td>-37.81</td>
+                      <td>144.99</td>
+                    </tr>
+                    <tr>
+                      <th>6</th>
+                      <td>3</td>
+                      <td>2.0</td>
+                      <td>245.0</td>
+                      <td>-37.80</td>
+                      <td>145.00</td>
+                    </tr>
+                    <tr>
+                      <th>7</th>
+                      <td>2</td>
+                      <td>1.0</td>
+                      <td>256.0</td>
+                      <td>-37.81</td>
+                      <td>145.00</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <ul>
+          <li>
+            La verificación visual de sus datos con estos comandos es una parte importante del trabajo
+            de un científico de datos. Con frecuencia encontrará sorpresas en el conjunto de datos que
+            merecen una inspección más detallada.
+          </li>
+        </ul>
+        <h3>
+          Construyendo el modelo de &#193;rbol de Decisión.
+        </h3>
+        <p>
+          Utilizará la biblioteca scikit-learn para crear sus modelos. Al codificar, esta biblioteca se
+          escribe como sklearn, como verá en el código de muestra. Scikit-learn es fácilmente la biblioteca
+          más popular para modelar los tipos de datos que normalmente se almacenan en DataFrames.
+        </p>
+        <p>
+          Los pasos para construir y usar un modelo son:
+        </p>
+        <ul>
+          <li><strong>Definir:</strong> ¿Qué tipo de modelo será?, ¿Un árbol de decisión?, ¿Algún otro tipo de modelo?.
+            También se especifican algunos otros parámetros del tipo de modelo.</li>
+          <li><strong>Ajustar:</strong> Captura patrones a partir de los datos proporcionados. Este es el corazón del
+            modelaje.</li>
+          <li><strong>Predecir:</strong> Justo lo que parece ser en la realidad.</li>
+          <li><strong>Evaluar:</strong> Determinar qué tan precisas son las predicciones del modelo.</li>
+        </ul>
+        <p>
+          A continuación, se muestra un ejemplo de cómo definir un modelo de árbol de decisión con scikit-learn
+          y ajustarlo con las características y la variable de destino.
+        </p>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[11]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">melbourne_model</span> <span class="o">=</span> <span class="n">DecisionTreeRegressor</span><span class="p">(</span><span class="n">random_state</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="c1"># Define el modelo.</span>
+<span class="n">melbourne_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="c1"># Ajusta el modelo</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[11]:</div>
+            <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+              <pre>DecisionTreeRegressor(random_state=1)</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <ul>
+          <li>
+            <p>
+              Muchos modelos de aprendizaje automático permiten cierta aleatoriedad en el entrenamiento
+              de modelos. Especificar un número para <em>random_state</em> asegura que obtendrá los mismos
+              resultados en cada ejecución. Esto se considera una buena práctica. Utiliza cualquier número,
+              y la calidad del modelo no dependerá significativamente del valor exacto que elija.
+            </p>
+          </li>
+          <li>
+            <p>
+              Ahora tenemos un modelo ajustado que podemos usar para hacer predicciones. En la práctica, querrá
+              hacer predicciones para las casas nuevas que saldrán al mercado en lugar de las casas para las que
+              ya tenemos precios. Pero haremos predicciones para las primeras filas de los datos de entrenamiento
+              para ver cómo funciona la función de predicción.
+            </p>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[12]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Haciendo predicciones para las siguientes 5 casas:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">head</span><span class="p">(),</span><span class="mi">2</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Las predicciones son:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">melbourne_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">head</span><span class="p">()))</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+              <pre>Haciendo predicciones para las siguientes 5 casas:
+
+   Rooms  Bathroom  Landsize  Lattitude  Longtitude
+1      2       1.0     156.0     -37.81      144.99
+2      3       2.0     134.0     -37.81      144.99
+4      4       1.0     120.0     -37.81      144.99
+6      3       2.0     245.0     -37.80      145.00
+7      2       1.0     256.0     -37.81      145.00
+
+Las predicciones son:
+
+[1035000. 1465000. 1600000. 1876000. 1636000.]
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h3>¿Qué tan bueno es el modelo?.</h3>
+        <p>
+          En esta sección aprenderemos a usar la validación del modelo para medir la calidad del modelo construido
+          anteriormente. Medir la calidad de los modelos es la clave para mejorarlos de forma iterativa.
+          Seguramente querrá evaluar casi todos los modelos que haya construido. En la mayoría de las aplicaciones
+          (aunque no en todas), la medida relevante de la calidad del modelo es la precisión predictiva. En otras
+          palabras, saber si las predicciones del modelo se acercarán a lo que realmente sucede. Mucha gente comete
+          un gran error al medir la precisión predictiva. Hacen predicciones con sus datos de entrenamiento y
+          comparan esas predicciones con los valores objetivo en los datos de entrenamiento.
+        </p>
+        <p>
+          Hay un problema con este enfoque por lo que será necesario resolverlo en un momento, sin embargo,
+          es necesario primero pensar en cómo lo haríamos primero. Primero tendríamos que resumir la calidad
+          del modelo de una manera comprensible. Si compara los valores de las casas pronosticados y reales
+          para 10,000 casas, probablemente encontrará una combinación de predicciones buenas y malas. No
+          tendría sentido mirar a través de una lista de 10,000 valores predichos y reales. Necesitamos
+          resumir esto en una sola métrica. Hay muchas métricas para resumir la calidad del modelo, pero
+          comenzaremos con una llamada Error absoluto medio (también llamado MAE). Analicemos esta métrica
+          comenzando con la última palabra, error.
+        </p>
+        <ul>
+          <li>error = actual − predicted</li>
+        </ul>
+        <p>Entonces, si una casa cuesta 150.000USD y predice que costará 100.000USD, el error es 50.000USD. Con la
+          métrica MAE, tomamos el valor absoluto de cada error. Esto convierte cada error en un número positivo. Luego
+          tomamos el promedio de esos errores absolutos. Ésta es nuestra medida de la calidad del modelo.</p>
+        <h3>
+          Error Absoluto Medio (MAE)
+        </h3>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[13]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">predicted_home_prices</span> <span class="o">=</span> <span class="n">melbourne_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;MAE: &#39;</span><span class="p">,</span><span class="nb">round</span><span class="p">(</span><span class="n">mean_absolute_error</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">predicted_home_prices</span><span class="p">),</span><span class="mi">2</span><span class="p">))</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+              <pre>MAE:  1115.75
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h3>
+          Puntuaciones "en la muestra"
+        </h3>
+        <p>
+          La medida que acabamos de calcular puede denominarse puntuación "dentro de la muestra". Usamos
+          una sola "muestra" de casas tanto para construir el modelo como para evaluarlo. He aquí por qué
+          esto es malo. Imagínese que, en el gran mercado inmobiliario, el color de la puerta no está
+          relacionado con el precio de la vivienda. Sin embargo, en la muestra de datos que usó para
+          construir el modelo, todas las casas con puertas verdes eran muy caras. El trabajo del modelo
+          es encontrar patrones que predigan los precios de las viviendas, por lo que verá este patrón y
+          siempre predecirá precios altos para las casas con puertas verdes. Dado que este patrón se derivó
+          de los datos de entrenamiento, el modelo parecerá preciso en los datos de entrenamiento. Pero si
+          este patrón no se cumple cuando el modelo ve nuevos datos, el modelo sería muy inexacto cuando se
+          usa en la práctica. Dado que el valor práctico de los modelos proviene de hacer predicciones sobre
+          nuevos datos, medimos el rendimiento en datos que no se utilizaron para construir el modelo.
+          La forma más sencilla de hacer esto es excluir algunos datos del proceso de construcción del modelo
+          y luego usarlos para probar la precisión del modelo en datos que no ha visto antes. Estos datos se
+          denominan datos de validación.
+        </p>
+        <p>
+          La biblioteca scikit-learn tiene una función <em>train_test_split</em> para dividir los datos
+          en dos partes. Usaremos algunos de esos datos como datos de entrenamiento para ajustar el modelo,
+          y usaremos los otros datos como datos de validación para calcular <em>mean_absolute_error</em>.
+        </p>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[14]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">train_X</span><span class="p">,</span> <span class="n">val_X</span><span class="p">,</span> <span class="n">train_y</span><span class="p">,</span> <span class="n">val_y</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">random_state</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[15]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">melbourne_model</span> <span class="o">=</span> <span class="n">DecisionTreeRegressor</span><span class="p">()</span> <span class="c1"># Define el modelo</span>
+<span class="n">melbourne_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_X</span><span class="p">,</span> <span class="n">train_y</span><span class="p">)</span> <span class="c1"># Ajusta el modelo</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[15]:</div>
+            <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+              <pre>DecisionTreeRegressor()</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[16]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">val_predictions</span> <span class="o">=</span> <span class="n">melbourne_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">val_X</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">mean_absolute_error</span><span class="p">(</span><span class="n">val_y</span><span class="p">,</span> <span class="n">val_predictions</span><span class="p">),</span><span class="mi">2</span><span class="p">))</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+              <pre>275754.89
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <ul>
+          <li>
+            El error absoluto medio de los datos de la muestra fue de unos 1.100 dólares. Fuera de muestra
+            son más de 250.000 dólares. Ésta es la diferencia entre un modelo que es casi exactamente correcto
+            y uno que no se puede utilizar para la mayoría de los propósitos prácticos. Como punto de referencia,
+            el valor promedio de la vivienda en los datos de validación es de 1,1 millones de dólares. Entonces,
+            el error en los nuevos datos es aproximadamente una cuarta parte del valor promedio de una vivienda.
+            Hay muchas maneras de mejorar este modelo, como experimentar para encontrar mejores características
+            o diferentes tipos de modelos.
+          </li>
+        </ul>
+        <h2>
+          Ajuste insuficiente y sobreajuste (Underfiting & Overfiting)
+        </h2>
+        <p>
+          En la práctica, no es raro que un árbol tenga 10 divisiones entre el nivel superior (todas las casas)
+          y una hoja. A medida que el árbol se hace más profundo, el conjunto de datos se corta en hojas con
+          menos casas. Si un árbol solo tiene 1 división, divide los datos en 2 grupos. Si cada grupo se vuelve
+          a dividir, obtendríamos 4 grupos de casas. Dividir cada uno de ellos de nuevo crearía 8 grupos. Si
+          seguimos duplicando el número de grupos agregando más divisiones en cada nivel, tendremos 210 grupos
+          de casas para cuando lleguemos al décimo nivel. Eso es 1024 hojas. Cuando dividimos las casas entre
+          muchas hojas, también tenemos menos casas en cada hoja. Las hojas con muy pocas casas harán predicciones
+          que se acercan bastante a los valores reales de esas casas, pero pueden hacer predicciones muy poco
+          fiables para nuevos datos (porque cada predicción se basa solo en unas pocas casas). Este es un fenómeno
+          llamado sobreajuste, donde un modelo coincide con los datos de entrenamiento casi a la perfección, pero
+          lo hace mal en la validación y otros datos nuevos. Por otro lado, si hacemos que nuestro árbol sea muy
+          poco profundo, no divide las casas en grupos muy distintos.
+        </p>
+        <p>
+          En un extremo, si un árbol divide las casas en solo 2 o 4, cada grupo todavía tiene una amplia variedad
+          de casas. Las predicciones resultantes pueden estar lejanas para la mayoría de las casas, incluso en
+          los datos de entrenamiento (y también serán malas en la validación por la misma razón). Cuando un modelo
+          no logra capturar distinciones y patrones importantes en los datos, por lo que tiene un rendimiento
+          deficiente incluso en los datos de entrenamiento, eso se denomina ajuste insificiente. Dado que nos
+          preocupamos por la precisión de los datos nuevos, que estimamos a partir de nuestros datos de validación,
+          queremos encontrar el punto óptimo entre el ajuste insuficiente y el sobreajuste.
+        </p>
+        <p>
+          Existen algunas alternativas para controlar la profundidad del árbol, y muchas permiten que algunas
+          rutas a través del árbol tengan mayor profundidad que otras rutas. Pero el argumento
+          <em>max_leaf_nodes</em> proporciona una forma muy sensata de controlar el sobreajuste frente al
+          desajuste. Cuantas más hojas permitamos que haga el modelo, más nos movemos del área de ajuste
+          inferior en el gráfico anterior al área de ajuste superior. Podemos usar una función de utilidad
+          para ayudar a comparar las puntuaciones MAE de diferentes valores para max_leaf_nodes:
+        </p>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[17]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="k">def</span> <span class="nf">get_mae</span><span class="p">(</span><span class="n">max_leaf_nodes</span><span class="p">,</span> <span class="n">train_X</span><span class="p">,</span> <span class="n">val_X</span><span class="p">,</span> <span class="n">train_y</span><span class="p">,</span> <span class="n">val_y</span><span class="p">):</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">DecisionTreeRegressor</span><span class="p">(</span><span class="n">max_leaf_nodes</span><span class="o">=</span><span class="n">max_leaf_nodes</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_X</span><span class="p">,</span> <span class="n">train_y</span><span class="p">)</span>
+    <span class="n">preds_val</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">val_X</span><span class="p">)</span>
+    <span class="n">mae</span> <span class="o">=</span> <span class="n">mean_absolute_error</span><span class="p">(</span><span class="n">val_y</span><span class="p">,</span> <span class="n">preds_val</span><span class="p">)</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">mae</span><span class="p">)</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <ul>
+          <li>
+            Los datos se cargan en train_X, val_X, train_y y val_y usando el código que ya ha visto (y
+            que ya ha escrito).
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[18]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="k">for</span> <span class="n">max_leaf_nodes</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">5000</span><span class="p">]:</span>
+    <span class="n">my_mae</span> <span class="o">=</span> <span class="n">get_mae</span><span class="p">(</span><span class="n">max_leaf_nodes</span><span class="p">,</span> <span class="n">train_X</span><span class="p">,</span> <span class="n">val_X</span><span class="p">,</span> <span class="n">train_y</span><span class="p">,</span> <span class="n">val_y</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Max leaf nodes: </span><span class="si">%d</span><span class="s2">  </span><span class="se">\t\t</span><span class="s2"> Mean Absolute Error:  </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="n">max_leaf_nodes</span><span class="p">,</span> <span class="n">my_mae</span><span class="p">))</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+              <pre>Max leaf nodes: 5  		 Mean Absolute Error:  385696
+Max leaf nodes: 50  		 Mean Absolute Error:  279794
+Max leaf nodes: 500  		 Mean Absolute Error:  261718
+Max leaf nodes: 5000  		 Mean Absolute Error:  271996
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <ul>
+          <li>De las opciones enumeradas, 500 es el número óptimo de hojas.</li>
+        </ul>
+        <h3 id="Conclusiones-de-secci%C3%B3n-de-Underfiting-&-Overfiting">Conclusiones de sección de Underfiting &
+          Overfiting<a class="anchor-link" href="#Conclusiones-de-secci%C3%B3n-de-Underfiting-&-Overfiting">&#182;</a>
+        </h3>
+        <p>Aquí está la conclusión: los modelos pueden sufrir de:</p>
+        <ul>
+          <li>
+            Sobreajuste (Overfiting): Captura de patrones espurios que no se repetirán en el futuro, lo
+            que lleva a predicciones menos precisas, o
+          </li>
+          <li>
+            Ajuste insuficiente (Underfiting): No poder capturar patrones relevantes, lo que nuevamente conduce
+            a predicciones menos precisas.
+          </li>
+        </ul>
+        <p>
+          Usamos datos de validación, que no se usan en el entrenamiento de modelos, para medir la precisión
+          de un modelo candidato. Esto nos permite probar muchos modelos candidatos y mantener el mejor.
+        </p>
+        <h3>
+          Bosques Aleatórios (Random Forests)
+        </h3>
+        <p>
+          Los árboles de decisión nos dejan con una decisión difícil. Un árbol profundo con muchas hojas
+          se sobreajustará porque cada predicción proviene de datos históricos de solo las pocas casas
+          en su hoja. Pero un árbol poco profundo con pocas hojas tendrá un desempeño deficiente porque
+          no logra capturar tantas distinciones en los datos brutos. Incluso las técnicas de modelado más
+          sofisticadas de la actualidad se enfrentan a esta tensión entre ajuste insificiente y sobreajuste.
+          Sin embargo, muchos modelos tienen ideas inteligentes que pueden conducir a un mejor rendimiento.
+          El bosque aleatorio utiliza muchos árboles y hace una predicción promediando las predicciones de
+          cada árbol componente. Por lo general, tiene una precisión predictiva mucho mejor que un árbol de
+          decisión único y funciona bien con los parámetros predeterminados.
+        </p>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[19]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">forest_model</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">(</span><span class="n">random_state</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="c1"># Crea el modelo</span>
+<span class="n">forest_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_X</span><span class="p">,</span> <span class="n">train_y</span><span class="p">)</span> <span class="c1"># Ajusta el modelo</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[19]:</div>
+            <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+              <pre>RandomForestRegressor(random_state=1)</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[20]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">melb_preds</span> <span class="o">=</span> <span class="n">forest_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">val_X</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">mean_absolute_error</span><span class="p">(</span><span class="n">val_y</span><span class="p">,</span> <span class="n">melb_preds</span><span class="p">),</span><span class="mi">2</span><span class="p">))</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+              <pre>207190.69
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h3>Conclusiones de los Bosques Aleatórios</h3>
+        <p>
+          Es probable que haya espacio para una mejora adicional, pero esta es una gran mejora con respecto
+          al error del mejor árbol de decisión de 250.000. Hay parámetros que le permiten cambiar el
+          rendimiento del bosque aleatorio tanto como cambiamos la profundidad máxima del árbol de decisión
+          único. Pero una de las mejores características de los modelos de Random Forest es que, por lo general,
+          funcionan de manera razonable incluso sin este ajuste.
+        </p>
+      </div>
+    </div>
+</body>
+
+</html>

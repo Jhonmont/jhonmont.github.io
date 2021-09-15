@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+     <meta charset="utf-8" />
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+     <title>EDA con Técnicas de Visualización</title>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+     <link rel="stylesheet" href="python_css/python_posts.css" />
+     <script
+          src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-MML-AM_CHTML-full,Safe"> </script>
+     <script type="text/x-mathjax-config">
+    init_mathjax = function() {
+        if (window.MathJax) {
+        // MathJax loaded
+            MathJax.Hub.Config({
+                TeX: {
+                    equationNumbers: {
+                    autoNumber: "AMS",
+                    useLabelIds: true
+                    }
+                },
+                tex2jax: {
+                    inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+                    displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+                    processEscapes: true,
+                    processEnvironments: true
+                },
+                displayAlign: 'center',
+                CommonHTML: {
+                    linebreaks: { 
+                    automatic: true 
+                    }
+                },
+                "HTML-CSS": {
+                    linebreaks: { 
+                    automatic: true 
+                    }
+                }
+            });
+        
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+        }
+    }
+    init_mathjax();
+    </script>
+     <!-- ************************ Common Code ************************ -->
+     <link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
+     <style>
+          .bd-placeholder-img {
+               font-size: 1.125rem;
+               text-anchor: middle;
+               -webkit-user-select: none;
+               -moz-user-select: none;
+               user-select: none;
+          }
+
+          @media (min-width: 768px) {
+               .bd-placeholder-img-lg {
+                    font-size: 3.5rem;
+               }
+          }
+     </style>
+     <link href="../assets/css/headers.css" rel="stylesheet">
+     <!-- ************************ Common Code ************************ -->
+</head>
+
+<body class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
+     <!-- ************************ Common Code ************************ -->
+     <div class="container">
+          <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+               <a href="../../index.html"
+                    class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+                    <svg class="bi me-2" width="40" height="32">
+                         <use xlink:href="#bootstrap" />
+                    </svg>
+                    <span style="color: var(--jp-content-link-color);">Volver al Inicio</span>
+               </a>
+               <ul class=" nav nav-pills">
+                    <li class="nav-item"><a href="valores_atipicos_multivariados.html" class="nav-link">Anterior</a>
+                    </li>
+                    <li class="nav-item"><a href="evaluacion_de_regresion_lineal.html" class="nav-link">Siguiente</a></li>
+               </ul>
+          </header>
+     </div>
+     <div style="padding-left: 50px; padding-right: 100px;">
+          <!-- ************************ Common Code ************************ -->
+          <div class="jp-Cell-inputWrapper">
+               <div class="jp-InputPrompt jp-InputArea-prompt">
+               </div>
+               <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+                    <h2>
+                         Análisis Exploratorio de Datos (EDA) con Técnicas de Visualización
+                    </h2>
+                    <p>En este artículo mostraremos el proceso Exploratory Data Analysis (EDA) con técnicas de
+                         visualización
+                         para analizar si una muestra de agua con cierto contenido es potable o no. Este proceso se
+                         implementa en el lenguaje de programación Python. Puede descargar el conjunto de datos haciendo
+                         <!-- ************************ Common Code ************************ -->
+                         <a href="https://github.com/Jhonmont/all_datasets_repository" target="_blank">
+                              clic aquí.
+                         </a>
+                    </p>
+                    <!-- ************************ Common Code ************************ -->
+                    <h3>
+                         Importar Módulos
+                    </h3>
+               </div>
+          </div>
+          <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+               <div class="jp-Cell-inputWrapper">
+                    <div class="jp-InputArea jp-Cell-inputArea">
+                         <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[1]:</div>
+                         <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+                              <div class="CodeMirror cm-s-jupyter">
+                                   <div class=" highlight hl-ipython3">
+                                        <pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">matplotlib.patches</span> <span class="kn">import</span> <span class="n">Rectangle</span>
+<span class="kn">import</span> <span class="nn">plotly.express</span> <span class="k">as</span> <span class="nn">px</span>
+<span class="kn">import</span> <span class="nn">plotly.graph_objects</span> <span class="k">as</span> <span class="nn">go</span>
+<span class="kn">from</span> <span class="nn">plotly.subplots</span> <span class="kn">import</span> <span class="n">make_subplots</span>
+<span class="kn">import</span> <span class="nn">missingno</span> <span class="k">as</span> <span class="nn">msno</span>
+<span class="kn">from</span> <span class="nn">warnings</span> <span class="kn">import</span> <span class="n">filterwarnings</span>
+</pre>
+                                   </div>
+                              </div>
+                         </div>
+                    </div>
+               </div>
+          </div>
+          <div class="jp-Cell-inputWrapper">
+               <div class="jp-InputPrompt jp-InputArea-prompt">
+               </div>
+               <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+                    <h3>
+                         Configuración de Paleta de Colores
+                    </h3>
+               </div>
+          </div>
+          <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+               <div class="jp-Cell-inputWrapper">
+                    <div class="jp-InputArea jp-Cell-inputArea">
+                         <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[2]:</div>
+                         <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+                              <div class="CodeMirror cm-s-jupyter">
+                                   <div class=" highlight hl-ipython3">
+                                        <pre><span></span><span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;#06344d&#39;</span><span class="p">,</span><span class="s1">&#39;#00b2ff&#39;</span><span class="p">]</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">palette</span><span class="o">=</span><span class="n">colors</span><span class="p">,</span> <span class="n">font</span><span class="o">=</span><span class="s1">&#39;Serif&#39;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="n">rc</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;axes.facecolor&#39;</span><span class="p">:</span><span class="s1">&#39;#f1f1f1&#39;</span><span class="p">,</span> <span class="s1">&#39;figure.facecolor&#39;</span><span class="p">:</span><span class="s1">&#39;#f1f1f1&#39;</span><span class="p">})</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">palplot</span><span class="p">(</span><span class="n">colors</span><span class="p">)</span>
+</pre>
+                                   </div>
+                              </div>
+                         </div>
+                    </div>
+               </div>
+               <div class="jp-Cell-outputWrapper">
+                    <div class="jp-OutputArea jp-Cell-outputArea">
+                         <div class="jp-OutputArea-child">
+                              <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+                              <div class="jp-RenderedImage jp-OutputArea-output ">
+                                   <img src="python_images/eda_con_tecnicas_de_visualizacion/image_0001.jpg">
+                              </div>
+                         </div>
+                    </div>
+               </div>
+          </div>
+          <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+               <div class="jp-Cell-inputWrapper">
+                    <div class="jp-InputArea jp-Cell-inputArea">
+                         <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[3]:</div>
+                         <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+                              <div class="CodeMirror cm-s-jupyter">
+                                   <div class=" highlight hl-ipython3">
+                                        <pre><span></span><span class="n">colors_blue</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;#06344d&quot;</span><span class="p">,</span> <span class="s2">&quot;#1E90FF&quot;</span><span class="p">,</span> <span class="s1">&#39;#00b2ff&#39;</span><span class="p">,</span> <span class="s1">&#39;#51C4D3&#39;</span><span class="p">,</span> <span class="s1">&#39;#B4DBE9&#39;</span><span class="p">]</span>
+<span class="n">colors_dark</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;#1F1F1F&quot;</span><span class="p">,</span> <span class="s2">&quot;#313131&quot;</span><span class="p">,</span> <span class="s1">&#39;#636363&#39;</span><span class="p">,</span> <span class="s1">&#39;#AEAEAE&#39;</span><span class="p">,</span> <span class="s1">&#39;#DADADA&#39;</span><span class="p">]</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">palplot</span><span class="p">(</span><span class="n">colors_blue</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">palplot</span><span class="p">(</span><span class="n">colors_dark</span><span class="p">)</span>
+</pre>
+                                   </div>
+                              </div>
+                         </div>
+                    </div>
+               </div>
+               <div class="jp-Cell-outputWrapper">
+                    <div class="jp-OutputArea jp-Cell-outputArea">
+                         <div class="jp-OutputArea-child">
+                              <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+                              <div class="jp-RenderedImage jp-OutputArea-output ">
+                                   <img src="python_images/eda_con_tecnicas_de_visualizacion/image_0002.jpg">
+                              </div>
+                         </div>
+                         <div class="jp-OutputArea-child">
+                              <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+                              <div class="jp-RenderedImage jp-OutputArea-output ">
+                                   <img src="python_images/eda_con_tecnicas_de_visualizacion/image_0003.jpg">
+                              </div>
+                         </div>
+                    </div>
+               </div>
+          </div>
+          <div class="jp-Cell-inputWrapper">
+               <div class="jp-InputPrompt jp-InputArea-prompt">
+               </div>
+               <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+                    <h3>
+                         Carga del Conjunto de Datos
+                    </h3>
+               </div>
+          </div>
+          <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+               <div class="jp-Cell-inputWrapper">
+                    <div class="jp-InputArea jp-Cell-inputArea">
+                         <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[4]:</div>
+                         <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+                              <div class="CodeMirror cm-s-jupyter">
+                                   <div class=" highlight hl-ipython3">
+                                        <pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;water_potability.csv&quot;</span><span class="p">)</span>
+<span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre>
+                                   </div>
+                              </div>
+                         </div>
+                    </div>
+               </div>
+               <div class="jp-Cell-outputWrapper">
+                    <div class="jp-OutputArea jp-Cell-outputArea">
+                         <div class="jp-OutputArea-child">
+                              <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[4]:</div>
+                              <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+                                   data-mime-type="text/html">
+                                   <div>
+                                        <table border="1" class="dataframe">
+                                             <thead>
+                                                  <tr style="text-align: right;">
+                                                       <th></th>
+                                                       <th>ph</th>
+                                                       <th>Hardness</th>
+                                                       <th>Solids</th>
+                                                       <th>Chloramines</th>
+                                                       <th>Sulfate</th>
+                                                       <th>Conductivity</th>
+                                                       <th>Organic_carbon</th>
+                                                       <th>Trihalomethanes</th>
+                                                       <th>Turbidity</th>
+                                                       <th>Potability</th>
+                                                  </tr>
+                                             </thead>
+                                             <tbody>
+                                                  <tr>
+                                                       <th>0</th>
+                                                       <td>NaN</td>
+                                                       <td>204.890455</td>
+                                                       <td>20791.318981</td>
+                                                       <td>7.300212</td>
+                                                       <td>368.516441</td>
+                                                       <td>564.308654</td>
+                                                       <td>10.379783</td>
+                                                       <td>86.990970</td>
+                                                       <td>2.963135</td>
+                                                       <td>0</td>
+                                                  </tr>
+                                                  <tr>
+                                                       <th>1</th>
+                                                       <td>3.716080</td>
+                                                       <td>129.422921</td>
+                                                       <td>18630.057858</td>
+                                                       <td>6.635246</td>
+                                                       <td>NaN</td>
+                                                       <td>592.885359</td>
+                                                       <td>15.180013</td>
+                                                       <td>56.329076</td>
+                                                       <td>4.500656</td>
+                                                       <td>0</td>
+                                                  </tr>
+                                                  <tr>
+                                                       <th>2</th>
+                                                       <td>8.099124</td>
+                                                       <td>224.236259</td>
+                                                       <td>19909.541732</td>
+                                                       <td>9.275884</td>
+                                                       <td>NaN</td>
+                                                       <td>418.606213</td>
+                                                       <td>16.868637</td>
+                                                       <td>66.420093</td>
+                                                       <td>3.055934</td>
+                                                       <td>0</td>
+                                                  </tr>
+                                                  <tr>
+                                                       <th>3</th>
+                                                       <td>8.316766</td>
+                                                       <td>214.373394</td>
+                                                       <td>22018.417441</td>
+                                                       <td>8.059332</td>
+                                                       <td>356.886136</td>
+                                                       <td>363.266516</td>
+                                                       <td>18.436524</td>
+                                                       <td>100.341674</td>
+                                                       <td>4.628771</td>
+                                                       <td>0</td>
+                                                  </tr>
+                                                  <tr>
+                                                       <th>4</th>
+                                                       <td>9.092223</td>
+                                                       <td>181.101509</td>
+                                                       <td>17978.986339</td>
+                                                       <td>6.546600</td>
+                                                       <td>310.135738</td>
+                                                       <td>398.410813</td>
+                                                       <td>11.558279</td>
+                                                       <td>31.997993</td>
+                                                       <td>4.075075</td>
+                                                       <td>0</td>
+                                                  </tr>
+                                             </tbody>
+                                        </table>
+                                   </div>
+                              </div>
+                         </div>
+                    </div>
+               </div>
+          </div>
+          <div class="jp-Cell-inputWrapper">
+               <div class="jp-InputPrompt jp-InputArea-prompt">
+               </div>
+               <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+                    <p>En la tabla se puede ver que la columna de Potabilidad es una Etiqueta (variable a predecir) y
+                         las otras columnas son Características (variable a predecir). La columna de Potabilidad tiene
+                         dos valores, a saber, 0 (no potable) y 1 (potable). Por lo tanto, las columnas de
+                         características se convierten en parámetros para determinar si la muestra de agua es potable
+                         (1) o no potable (0). Al observar el conjunto de datos, este es un tipo de tarea de aprendizaje
+                         supervisado en forma de predicción de categoría.</p>
+                    <h3>
+                         Tipo de Datos
+                    </h3>
+               </div>
+          </div>
+          <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+               <div class="jp-Cell-inputWrapper">
+                    <div class="jp-InputArea jp-Cell-inputArea">
+                         <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[5]:</div>
+                         <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+                              <div class="CodeMirror cm-s-jupyter">
+                                   <div class=" highlight hl-ipython3">
+                                        <pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+</pre>
+                                   </div>
+                              </div>
+                         </div>
+                    </div>
+               </div>
+               <div class="jp-Cell-outputWrapper">
+                    <div class="jp-OutputArea jp-Cell-outputArea">
+                         <div class="jp-OutputArea-child">
+                              <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+                              <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+                                   <pre>&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
+RangeIndex: 3276 entries, 0 to 3275
+Data columns (total 10 columns):
+ #   Column           Non-Null Count  Dtype  
+---  ------           --------------  -----  
+ 0   ph               2785 non-null   float64
+ 1   Hardness         3276 non-null   float64
+ 2   Solids           3276 non-null   float64
+ 3   Chloramines      3276 non-null   float64
+ 4   Sulfate          2495 non-null   float64
+ 5   Conductivity     3276 non-null   float64
+ 6   Organic_carbon   3276 non-null   float64
+ 7   Trihalomethanes  3114 non-null   float64
+ 8   Turbidity        3276 non-null   float64
+ 9   Potability       3276 non-null   int64  
+dtypes: float64(9), int64(1)
+memory usage: 256.1 KB
+</pre>
+                              </div>
+                         </div>
+                    </div>
+               </div>
+          </div>
+          <div class="jp-Cell-inputWrapper">
+               <div class="jp-InputPrompt jp-InputArea-prompt">
+               </div>
+               <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+                    <p>Los datos constan de 3276 filas y 10 columnas. Además, el tipo de datos de la variable
+                         Potabilidad es entero. Cambiaremos el tipo de datos de dicha variable a categórica.</p>
+               </div>
+          </div>
+          <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+               <div class="jp-Cell-inputWrapper">
+                    <div class="jp-InputArea jp-Cell-inputArea">
+                         <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[6]:</div>
+                         <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+                              <div class="CodeMirror cm-s-jupyter">
+                                   <div class=" highlight hl-ipython3">
+                                        <pre><span></span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Potability&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;Potability&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;category&#39;</span><span class="p">)</span>
+<span class="n">data</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+</pre>
+                                   </div>
+                              </div>
+                         </div>
+                    </div>
+               </div>
+               <div class="jp-Cell-outputWrapper">
+                    <div class="jp-OutputArea jp-Cell-outputArea">
+                         <div class="jp-OutputArea-child">
+                              <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+                              <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+                                   <pre>&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
+RangeIndex: 3276 entries, 0 to 3275
+Data columns (total 10 columns):
+ #   Column           Non-Null Count  Dtype   
+---  ------           --------------  -----   
+ 0   ph               2785 non-null   float64 
+ 1   Hardness         3276 non-null   float64 
+ 2   Solids           3276 non-null   float64 
+ 3   Chloramines      3276 non-null   float64 
+ 4   Sulfate          2495 non-null   float64 
+ 5   Conductivity     3276 non-null   float64 
+ 6   Organic_carbon   3276 non-null   float64 
+ 7   Trihalomethanes  3114 non-null   float64 
+ 8   Turbidity        3276 non-null   float64 
+ 9   Potability       3276 non-null   category
+dtypes: category(1), float64(9)
+memory usage: 233.8 KB
+</pre>
+                              </div>
+                         </div>
+                    </div>
+               </div>
+          </div>
+          <div class="jp-Cell-inputWrapper">
+               <div class="jp-InputPrompt jp-InputArea-prompt">
+               </div>
+               <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+                    <p>Ahora, el tipo de datos de la variable Potabilidad son categorías.</p>
+                    <p>Además, a partir de la información sobre el método <code>.info()</code> anterior, se muestra que
+                         hay varias columnas (pH, sulfato y trihalometanos) que tienen menos filas que el conjunto de
+                         datos (&lt;3276). Esto significa que hay valores de datos vacíos en estas columnas. Se procede
+                         a verificar la cantidad de valores pérdidos a través de una visualización gráfica.</p>
+                    <h3>
+                         Comprobación de Valores Perdidos
+                    </h3>
+               </div>
+          </div>
+          <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+               <div class="jp-Cell-inputWrapper">
+                    <div class="jp-InputArea jp-Cell-inputArea">
+                         <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[7]:</div>
+                         <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+                              <div class="CodeMirror cm-s-jupyter">
+                                   <div class=" highlight hl-ipython3">
+                                        <pre><span></span><span class="n">nan_scratch</span> <span class="o">=</span> <span class="n">msno</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">])</span>
+<span class="n">nan_scratch</span><span class="p">;</span>
+</pre>
+                                   </div>
+                              </div>
+                         </div>
+                    </div>
+               </div>
+               <div class="jp-Cell-outputWrapper">
+                    <div class="jp-OutputArea jp-Cell-outputArea">
+                         <div class="jp-OutputArea-child">
+                              <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+                              <div class="jp-RenderedImage jp-OutputArea-output ">
+                                   <img src="python_images/eda_con_tecnicas_de_visualizacion/image_0004.jpg">
+                              </div>
+                         </div>
+                    </div>
+               </div>
+          </div>
+          <div class="jp-Cell-inputWrapper">
+               <div class="jp-InputPrompt jp-InputArea-prompt">
+               </div>
+               <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+                    <ul>
+                         <li>De la matriz anterior, la columna Sulfato indica el NaN más significativo (valores
+                              perdidos). Visualizaremos gráficamente la cuantificación de estos a través de un mapa de
+                              calor.</li>
+                    </ul>
+               </div>
+          </div>
+          <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+               <div class="jp-Cell-inputWrapper">
+                    <div class="jp-InputArea jp-Cell-inputArea">
+                         <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[8]:</div>
+                         <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+                              <div class="CodeMirror cm-s-jupyter">
+                                   <div class=" highlight hl-ipython3">
+                                        <pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Valores faltantes por columna</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">nan_data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">ascending</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">nan_data</span><span class="p">,</span> <span class="n">annot</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">fmt</span> <span class="o">=</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="n">cmap</span> <span class="o">=</span> <span class="n">colors_blue</span><span class="p">);</span>
+</pre>
+                                   </div>
+                              </div>
+                         </div>
+                    </div>
+               </div>
+               <div class="jp-Cell-outputWrapper">
+                    <div class="jp-OutputArea jp-Cell-outputArea">
+                         <div class="jp-OutputArea-child">
+                              <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+                              <div class="jp-RenderedImage jp-OutputArea-output ">
+                                   <img src="python_images/eda_con_tecnicas_de_visualizacion/image_0005.jpg">
+                              </div>
+                         </div>
+                    </div>
+               </div>
+          </div>
+          <div class="jp-Cell-inputWrapper">
+               <div class="jp-InputPrompt jp-InputArea-prompt">
+               </div>
+               <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+                    <p>La variable Potabilidad como Etiqueta no tiene un valores perdidos, por lo que no será necesario
+                         imputarla. Ahora veamos la comparación de la cantidad de muestras de agua en el conjunto de
+                         datos que son seguras y no seguras para beber.</p>
+                    <h3>
+                         Comparación de Potabilidad del Agua
+                    </h3>
+               </div>
+          </div>
+          <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+               <div class="jp-Cell-inputWrapper">
+                    <div class="jp-InputArea jp-Cell-inputArea">
+                         <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[9]:</div>
+                         <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+                              <div class="CodeMirror cm-s-jupyter">
+                                   <div class=" highlight hl-ipython3">
+                                        <pre><span></span><span class="n">df</span><span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Potability&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">())</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">pie</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="n">values</span> <span class="o">=</span> <span class="s1">&#39;Potability&#39;</span><span class="p">,</span>
+             <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Not Potable&#39;</span><span class="p">,</span><span class="s1">&#39;Potable&#39;</span><span class="p">],</span>
+             <span class="n">hole</span> <span class="o">=</span> <span class="mf">0.4</span><span class="p">,</span>
+             <span class="n">opacity</span> <span class="o">=</span> <span class="mf">0.9</span><span class="p">,</span>
+             <span class="n">color_discrete_sequence</span> <span class="o">=</span> <span class="p">[</span><span class="n">colors</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">colors</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span>
+             <span class="n">labels</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;label&#39;</span><span class="p">:</span><span class="s1">&#39;Potability&#39;</span><span class="p">,</span><span class="s1">&#39;Potability&#39;</span><span class="p">:</span><span class="s1">&#39;No. Of Samples&#39;</span><span class="p">})</span>
+             
+<span class="n">fig</span><span class="o">.</span><span class="n">add_annotation</span><span class="p">(</span><span class="n">text</span> <span class="o">=</span> <span class="s1">&#39;Water&lt;br&gt;Potabiliy&#39;</span><span class="p">,</span>
+                   <span class="n">x</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
+                   <span class="n">y</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
+                   <span class="n">showarrow</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                   <span class="n">font_size</span> <span class="o">=</span> <span class="mi">14</span><span class="p">,</span>
+                   <span class="n">opacity</span> <span class="o">=</span> <span class="mf">0.7</span><span class="p">,</span>
+                   <span class="n">font_family</span> <span class="o">=</span> <span class="s1">&#39;Gravitas One&#39;</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span><span class="n">font_family</span> <span class="o">=</span> <span class="s1">&#39;Gravitas One&#39;</span><span class="p">,</span>
+                  <span class="n">title</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">text</span> <span class="o">=</span> <span class="s1">&#39;Comparación de muestras potables y no potables&#39;</span><span class="p">,</span>
+                               <span class="n">x</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
+                               <span class="n">y</span> <span class="o">=</span> <span class="mf">0.98</span><span class="p">,</span>
+                               <span class="n">font</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">color</span> <span class="o">=</span> <span class="n">colors_blue</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                                           <span class="n">size</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)),</span>
+                  <span class="n">legend</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="mf">0.37</span><span class="p">,</span>
+                                <span class="n">y</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.05</span><span class="p">,</span>
+                                <span class="n">orientation</span> <span class="o">=</span> <span class="s1">&#39;h&#39;</span><span class="p">,</span>
+                                <span class="n">traceorder</span> <span class="o">=</span> <span class="s1">&#39;reversed&#39;</span><span class="p">),</span>
+                  <span class="n">hoverlabel</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">bgcolor</span> <span class="o">=</span> <span class="s1">&#39;white&#39;</span><span class="p">))</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">update_traces</span><span class="p">(</span><span class="n">textposition</span> <span class="o">=</span> <span class="s1">&#39;outside&#39;</span><span class="p">,</span> <span class="n">textinfo</span> <span class="o">=</span> <span class="s1">&#39;percent+label&#39;</span><span class="p">)</span>
+
+<span class="c1"># Gráfico #</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">countplot</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Potability&#39;</span><span class="p">],</span> <span class="n">order</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;Potability&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ax</span><span class="o">.</span><span class="n">patches</span><span class="p">:</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">get_x</span><span class="p">()</span> <span class="o">+</span> <span class="n">i</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">/</span> <span class="mi">7</span><span class="p">,</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">,</span>
+            <span class="n">ha</span> <span class="o">=</span> <span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span> <span class="n">weight</span> <span class="o">=</span> <span class="s1">&#39;bold&#39;</span><span class="p">,</span> <span class="n">rotation</span> <span class="o">=</span> <span class="mi">90</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;white&#39;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">ax</span><span class="o">.</span><span class="n">patches</span><span class="p">:</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="nb">format</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">get_height</span><span class="p">(),</span> <span class="s1">&#39;.0f&#39;</span><span class="p">),</span>
+                    <span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">get_x</span><span class="p">()</span> <span class="o">+</span> <span class="n">p</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">get_height</span><span class="p">()),</span>
+                    <span class="n">ha</span> <span class="o">=</span> <span class="s1">&#39;center&#39;</span><span class="p">,</span>
+                    <span class="n">va</span> <span class="o">=</span> <span class="s1">&#39;center&#39;</span><span class="p">,</span>
+                    <span class="n">xytext</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+                    <span class="n">textcoords</span> <span class="o">=</span> <span class="s1">&#39;offset points&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Comparación de muestras potables y no potables </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span>
+          <span class="n">size</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span>
+          <span class="n">weight</span> <span class="o">=</span> <span class="s1">&#39;bold&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Agua no segura para consumo humano&quot;</span><span class="p">,</span>
+             <span class="n">xytext</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">1790</span><span class="p">),</span>
+             <span class="n">xy</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.2</span><span class="p">,</span><span class="mi">1250</span><span class="p">),</span>
+             <span class="n">arrowprops</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">arrowstyle</span> <span class="o">=</span> <span class="s2">&quot;-&gt;&quot;</span><span class="p">,</span>
+                               <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;blue&#39;</span><span class="p">,</span>
+                               <span class="n">connectionstyle</span> <span class="o">=</span> <span class="s2">&quot;angle3, angleA = 0, angleB = 90&quot;</span><span class="p">),</span>
+             <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;black&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Agua potable para consumo humano&quot;</span><span class="p">,</span>
+             <span class="n">xytext</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.8</span><span class="p">,</span><span class="mi">1600</span><span class="p">),</span>
+             <span class="n">xy</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.2</span><span class="p">,</span><span class="mi">1000</span><span class="p">),</span>
+             <span class="n">arrowprops</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">arrowstyle</span> <span class="o">=</span> <span class="s2">&quot;-&gt;&quot;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;blue&#39;</span><span class="p">,</span>
+                               <span class="n">connectionstyle</span> <span class="o">=</span> <span class="s2">&quot;angle3,angleA=0,angleB=90&quot;</span><span class="p">),</span>
+             <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;black&#39;</span><span class="p">)</span>
+
+<span class="n">sns</span><span class="o">.</span><span class="n">despine</span><span class="p">(</span><span class="n">right</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="n">top</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="n">left</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">setp</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">();</span>
+</pre>
+                                   </div>
+                              </div>
+                         </div>
+                    </div>
+               </div>
+               <div class="jp-Cell-outputWrapper">
+                    <div class="jp-OutputArea jp-Cell-outputArea">
+                         <div class="jp-OutputArea-child">
+                              <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+                         </div>
+                         <div class="jp-OutputArea-child">
+                              <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+                              <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+                              </div>
+                         </div>
+                         <div class="jp-OutputArea-child">
+                              <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+                              <div class="jp-RenderedImage jp-OutputArea-output ">
+                                   <img src="python_images/eda_con_tecnicas_de_visualizacion/image_0006.jpg">
+                              </div>
+                         </div>
+                    </div>
+               </div>
+          </div>
+          <div class="jp-Cell-inputWrapper">
+               <div class="jp-InputPrompt jp-InputArea-prompt">
+               </div>
+               <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+                    <p>Se puede observar que la cantidad de agua que es segura (1) para beber es menor que la que no es
+                         segura (0).</p>
+                    <ul>
+                         <li>0: 61%</li>
+                         <li>1: 39%</li>
+                    </ul>
+                    <h3>
+                         Correlación de Variables
+                    </h3>
+               </div>
+          </div>
+          <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+               <div class="jp-Cell-inputWrapper">
+                    <div class="jp-InputArea jp-Cell-inputArea">
+                         <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[10]:</div>
+                         <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+                              <div class="CodeMirror cm-s-jupyter">
+                                   <div class=" highlight hl-ipython3">
+                                        <pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span><span class="mi">12</span><span class="p">))</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">corr</span><span class="p">(),</span> <span class="n">annot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cmap</span> <span class="o">=</span> <span class="n">colors_blue</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Correlación de Variables</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">);</span>
+</pre>
+                                   </div>
+                              </div>
+                         </div>
+                    </div>
+               </div>
+               <div class="jp-Cell-outputWrapper">
+                    <div class="jp-OutputArea jp-Cell-outputArea">
+                         <div class="jp-OutputArea-child">
+                              <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+                              <div class="jp-RenderedImage jp-OutputArea-output ">
+                                   <img src="python_images/eda_con_tecnicas_de_visualizacion/image_0007.jpg">
+                              </div>
+                         </div>
+                    </div>
+               </div>
+          </div>
+          <div class="jp-Cell-inputWrapper">
+               <div class="jp-InputPrompt jp-InputArea-prompt">
+               </div>
+               <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+                    <p>Valores negativos significan una correlación negativa, por ejemplo, cuando el valor de otra
+                         columna es más alto, hace que esa columna tenga un valor más bajo. La mayoría de las variables
+                         tienen una correlación muy baja con respecto a las otras, excepto las variables de pH y Dureza.
+                         Esto se debe a varios factores, uno de los cuales es el valor del rango de datos en cada
+                         variable que es significativamente diferente. Entonces se necesita un proceso de normalización.
+                    </p>
+                    <h3>
+                         Comprobación de la Distribución de Datos
+                    </h3>
+                    <p>Las características que afectan si el agua es apta para el consumo tienen límites que han sido
+                         estandarizados por la OMS. Limitemos cada función según la información de Google.</p>
+               </div>
+          </div>
+          <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+               <div class="jp-Cell-inputWrapper">
+                    <div class="jp-InputArea jp-Cell-inputArea">
+                         <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[11]:</div>
+                         <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+                              <div class="CodeMirror cm-s-jupyter">
+                                   <div class=" highlight hl-ipython3">
+                                        <pre><span></span><span class="c1"># crea un límite de aprobación para cada función en función de los datos disponibles en la búsqueda de Google</span>
+<span class="n">col</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">9</span><span class="p">]</span><span class="o">.</span><span class="n">to_list</span><span class="p">()</span>
+<span class="n">min_val</span> <span class="o">=</span> <span class="p">[</span><span class="mf">6.5</span><span class="p">,</span><span class="mi">60</span><span class="p">,</span><span class="mi">500</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">200</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">max_val</span> <span class="o">=</span> <span class="p">[</span><span class="mf">8.5</span><span class="p">,</span><span class="mi">120</span><span class="p">,</span><span class="mi">1000</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">250</span><span class="p">,</span><span class="mi">400</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">80</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span>
+<span class="n">limit</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">min_val</span><span class="p">,</span> <span class="n">max_val</span><span class="p">],</span> <span class="n">columns</span> <span class="o">=</span> <span class="n">col</span><span class="p">)</span>
+</pre>
+                                   </div>
+                              </div>
+                         </div>
+                    </div>
+               </div>
+          </div>
+          <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+               <div class="jp-Cell-inputWrapper">
+                    <div class="jp-InputArea jp-Cell-inputArea">
+                         <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[12]:</div>
+                         <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+                              <div class="CodeMirror cm-s-jupyter">
+                                   <div class=" highlight hl-ipython3">
+                                        <pre><span></span><span class="n">int_cols</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">exclude</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;category&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">to_list</span><span class="p">()</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+                       <span class="n">ncols</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+                       <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">15</span><span class="p">),</span>
+                       <span class="n">constrained_layout</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;Distribución de características por clase de Potabilidad y límite aprobado&quot;</span><span class="p">,</span>
+             <span class="n">size</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
+             <span class="n">weight</span> <span class="o">=</span> <span class="s1">&#39;bold&#39;</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">int_cols</span><span class="p">):</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">kdeplot</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">,</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">i</span><span class="p">,</span>
+                <span class="n">hue</span> <span class="o">=</span> <span class="s1">&#39;Potability&#39;</span><span class="p">,</span>
+                <span class="n">ax</span> <span class="o">=</span> <span class="n">ax</span><span class="p">[</span><span class="n">x</span><span class="p">],</span>
+                <span class="n">fill</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="n">multiple</span> <span class="o">=</span> <span class="s1">&#39;stack&#39;</span><span class="p">,</span>
+                <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span> 
+                <span class="n">linewidth</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">l</span><span class="p">,</span><span class="n">k</span> <span class="o">=</span> <span class="n">limit</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="n">x</span><span class="p">]</span>
+    <span class="n">ax</span><span class="p">[</span><span class="n">x</span><span class="p">]</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">Rectangle</span><span class="p">(</span><span class="n">xy</span> <span class="o">=</span> <span class="p">(</span><span class="n">l</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span>
+                              <span class="n">width</span> <span class="o">=</span> <span class="n">k</span> <span class="o">-</span> <span class="n">l</span><span class="p">,</span>
+                              <span class="n">height</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+                              <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">,</span><span class="s1">&#39;right&#39;</span><span class="p">,</span><span class="s1">&#39;top&#39;</span><span class="p">,</span><span class="s1">&#39;bottom&#39;</span><span class="p">]:</span>
+        <span class="n">ax</span><span class="p">[</span><span class="n">x</span><span class="p">]</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="n">s</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+</pre>
+                                   </div>
+                              </div>
+                         </div>
+                    </div>
+               </div>
+               <div class="jp-Cell-outputWrapper">
+                    <div class="jp-OutputArea jp-Cell-outputArea">
+                         <div class="jp-OutputArea-child">
+                              <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+                              <div class="jp-RenderedImage jp-OutputArea-output ">
+                                   <img src="python_images/eda_con_tecnicas_de_visualizacion/image_0008.jpg">
+                              </div>
+                         </div>
+                    </div>
+               </div>
+          </div>
+          <div class="jp-Cell-inputWrapper">
+               <div class="jp-InputPrompt jp-InputArea-prompt">
+               </div>
+               <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+                    <ul>
+                         <li>Se puede observar que la distribución de la muestra de agua que no es potable es mayor que
+                              la de la potable en las columnas de Trihalometanos, Conductividad y Turbidez. En la
+                              columna de sólidos casi nada. Veamos con más detalle.</li>
+                    </ul>
+               </div>
+          </div>
+          <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+               <div class="jp-Cell-inputWrapper">
+                    <div class="jp-InputArea jp-Cell-inputArea">
+                         <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[13]:</div>
+                         <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+                              <div class="CodeMirror cm-s-jupyter">
+                                   <div class=" highlight hl-ipython3">
+                                        <pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="n">x</span> <span class="o">=</span> <span class="s1">&#39;ph&#39;</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;ph&#39;</span><span class="p">]),</span> <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;Potability&#39;</span><span class="p">,</span> <span class="n">template</span> <span class="o">=</span> <span class="s1">&#39;plotly_white&#39;</span><span class="p">,</span>
+                   <span class="n">marginal</span> <span class="o">=</span> <span class="s1">&#39;box&#39;</span><span class="p">,</span> <span class="n">opacity</span> <span class="o">=</span> <span class="mf">0.7</span><span class="p">,</span> <span class="n">nbins</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">color_discrete_sequence</span> <span class="o">=</span> <span class="p">[</span><span class="n">colors</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">colors</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span>
+                   <span class="n">barmode</span> <span class="o">=</span> <span class="s1">&#39;group&#39;</span><span class="p">,</span> <span class="n">histfunc</span> <span class="o">=</span> <span class="s1">&#39;count&#39;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">add_vline</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="mf">6.5</span><span class="p">,</span> <span class="n">line_width</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">line_color</span> <span class="o">=</span> <span class="n">colors_dark</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line_dash</span> <span class="o">=</span> <span class="s1">&#39;dot&#39;</span><span class="p">,</span> <span class="n">opacity</span> <span class="o">=</span> <span class="mf">0.7</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">add_vline</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="mf">8.5</span><span class="p">,</span> <span class="n">line_width</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">line_color</span> <span class="o">=</span> <span class="n">colors_dark</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line_dash</span> <span class="o">=</span> <span class="s1">&#39;dot&#39;</span><span class="p">,</span> <span class="n">opacity</span> <span class="o">=</span> <span class="mf">0.7</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">add_annotation</span><span class="p">(</span><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&lt; 6.5 es demasiado ácido para beber &lt;br&gt; (no potable según el estándar de la OMS)&quot;</span><span class="p">,</span>
+                   <span class="n">x</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">70</span><span class="p">,</span> <span class="n">showarrow</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">font_size</span> <span class="o">=</span> <span class="mi">15</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">add_annotation</span><span class="p">(</span><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&gt; 8.5 es demasiado básico para beber &lt;br&gt; (no potable según el estándar de la OMS)&quot;</span><span class="p">,</span>
+                   <span class="n">x</span> <span class="o">=</span> <span class="mi">11</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">70</span><span class="p">,</span> <span class="n">showarrow</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">font_size</span> <span class="o">=</span> <span class="mi">15</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span><span class="n">font_family</span> <span class="o">=</span> <span class="s1">&#39;Gravitas One&#39;</span><span class="p">,</span> <span class="n">title</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Distribución de pH&quot;</span><span class="p">,</span>
+                               <span class="n">x</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mf">0.95</span><span class="p">,</span> <span class="n">font</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">color</span> <span class="o">=</span> <span class="n">colors_blue</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)),</span>
+                  <span class="n">xaxis_title_text</span> <span class="o">=</span> <span class="s2">&quot;Nivel de pH&quot;</span><span class="p">,</span> <span class="n">yaxis_title_text</span> <span class="o">=</span> <span class="s1">&#39;Cantidad&#39;</span><span class="p">,</span>
+                  <span class="n">legend</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mf">0.96</span><span class="p">,</span> <span class="n">bordercolor</span> <span class="o">=</span> <span class="n">colors_dark</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">borderwidth</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+                                <span class="n">tracegroupgap</span> <span class="o">=</span> <span class="mi">5</span><span class="p">),</span> <span class="n">bargap</span> <span class="o">=</span> <span class="mf">0.3</span><span class="p">,)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">();</span>
+</pre>
+                                   </div>
+                              </div>
+                         </div>
+                    </div>
+               </div>
+               <div class="jp-Cell-outputWrapper">
+                    <div class="jp-OutputArea jp-Cell-outputArea">
+                         <div class="jp-OutputArea-child">
+                              <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+                              <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output "
+                                   data-mime-type="text/html">
+                              </div>
+                         </div>
+                         <div class="jp-OutputArea-child">
+                              <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+                              <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output "
+                                   data-mime-type="text/html">
+                                   <div class="jp-RenderedImage jp-OutputArea-output ">
+                                        <img src="python_images/eda_con_tecnicas_de_visualizacion/image_0009.jpg">
+                                   </div>
+                              </div>
+                         </div>
+                    </div>
+               </div>
+          </div>
+          <div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+               <div class="jp-Cell-inputWrapper">
+                    <div class="jp-InputArea jp-Cell-inputArea">
+                         <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[14]:</div>
+                         <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+                              <div class="CodeMirror cm-s-jupyter">
+                                   <div class=" highlight hl-ipython3">
+                                        <pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="n">x</span> <span class="o">=</span> <span class="s1">&#39;Hardness&#39;</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Hardness&#39;</span><span class="p">]),</span> <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;Potability&#39;</span><span class="p">,</span> <span class="n">template</span> <span class="o">=</span> <span class="s1">&#39;plotly_white&#39;</span><span class="p">,</span>
+                   <span class="n">marginal</span> <span class="o">=</span> <span class="s1">&#39;box&#39;</span><span class="p">,</span> <span class="n">opacity</span> <span class="o">=</span> <span class="mf">0.7</span><span class="p">,</span> <span class="n">nbins</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">color_discrete_sequence</span> <span class="o">=</span> <span class="p">[</span><span class="n">colors</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">colors</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span>
+                   <span class="n">barmode</span> <span class="o">=</span> <span class="s1">&#39;group&#39;</span><span class="p">,</span> <span class="n">histfunc</span> <span class="o">=</span> <span class="s1">&#39;count&#39;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">add_vline</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="mi">120</span><span class="p">,</span> <span class="n">line_width</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">line_color</span> <span class="o">=</span> <span class="n">colors_dark</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line_dash</span> <span class="o">=</span> <span class="s1">&#39;dot&#39;</span><span class="p">,</span> <span class="n">opacity</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">add_vline</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="mi">180</span><span class="p">,</span> <span class="n">line_width</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">line_color</span> <span class="o">=</span> <span class="n">colors_dark</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line_dash</span> <span class="o">=</span> <span class="s1">&#39;dot&#39;</span><span class="p">,</span> <span class="n">opacity</span> <span class="o">=</span> <span class="mf">0.7</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">add_vline</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="mi">60</span><span class="p">,</span> <span class="n">line_width</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">line_color</span> <span class="o">=</span> <span class="n">colors_dark</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line_dash</span> <span class="o">=</span> <span class="s1">&#39;dot&#39;</span><span class="p">,</span> <span class="n">opacity</span> <span class="o">=</span> <span class="mf">0.7</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">add_annotation</span><span class="p">(</span><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&lt; 60 mg / L &lt;br&gt; se considera &lt;br&gt; suave&quot;</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">130</span><span class="p">,</span> <span class="n">showarrow</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">font_size</span> <span class="o">=</span> <span class="mi">12</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">add_annotation</span><span class="p">(</span><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Entre 60 - 120 &lt;br&gt; (mg / L) es moderadamente duro&quot;</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">85</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">130</span><span class="p">,</span> <span class="n">showarrow</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">font_size</span> <span class="o">=</span> <span class="mi">12</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">add_annotation</span><span class="p">(</span><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Entre 120 - 180 (mg / L) &lt;br&gt; se considera duro&quot;</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">150</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">130</span><span class="p">,</span> <span class="n">showarrow</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">font_size</span> <span class="o">=</span> <span class="mi">12</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">add_annotation</span><span class="p">(</span><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&gt; 180 mg / L se considera muy duro&quot;</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">230</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">130</span><span class="p">,</span> <span class="n">showarrow</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">font_size</span> <span class="o">=</span> <span class="mi">12</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span><span class="n">font_family</span> <span class="o">=</span> <span class="s1">&#39;Gravitas One&#39;</span><span class="p">,</span> <span class="n">title</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Distribución de dureza&quot;</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="mf">0.53</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mf">0.95</span><span class="p">,</span>
+                                                             <span class="n">font</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">color</span> <span class="o">=</span> <span class="n">colors_dark</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)),</span>
+                  <span class="n">xaxis_title_text</span> <span class="o">=</span> <span class="s1">&#39;Dureza (mg/L)&#39;</span><span class="p">,</span> <span class="n">yaxis_title_text</span> <span class="o">=</span> <span class="s1">&#39;Cantidad&#39;</span><span class="p">,</span> <span class="n">legend</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+                                <span class="n">y</span> <span class="o">=</span> <span class="mf">0.96</span><span class="p">,</span> <span class="n">bordercolor</span> <span class="o">=</span> <span class="n">colors_dark</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">borderwidth</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+                                <span class="n">tracegroupgap</span> <span class="o">=</span> <span class="mi">5</span><span class="p">),</span> <span class="n">bargap</span> <span class="o">=</span> <span class="mf">0.3</span><span class="p">,)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">();</span>
+</pre>
+                                   </div>
+
+                              </div>
+                         </div>
+                    </div>
+               </div>
+               <div class="jp-Cell-outputWrapper">
+                    <div class="jp-OutputArea jp-Cell-outputArea">
+                         <div class="jp-OutputArea-child">
+                              <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+                              <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output "
+                                   data-mime-type="text/html">
+                                   <div class="jp-RenderedImage jp-OutputArea-output ">
+                                        <img src="python_images/eda_con_tecnicas_de_visualizacion/image_0010.jpg">
+                                   </div>
+                              </div>
+                         </div>
+                    </div>
+               </div>
+          </div>
+          <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+               <div class="jp-Cell-inputWrapper">
+                    <div class="jp-InputArea jp-Cell-inputArea">
+                         <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[15]:</div>
+                         <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+                              <div class="CodeMirror cm-s-jupyter">
+                                   <div class=" highlight hl-ipython3">
+                                        <pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="s1">&#39;Solids&#39;</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Solids&#39;</span><span class="p">]),</span> <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;Potability&#39;</span><span class="p">,</span> <span class="n">template</span> <span class="o">=</span> <span class="s1">&#39;plotly_white&#39;</span><span class="p">,</span>
+                   <span class="n">marginal</span> <span class="o">=</span> <span class="s1">&#39;box&#39;</span><span class="p">,</span> <span class="n">opacity</span> <span class="o">=</span> <span class="mf">0.7</span><span class="p">,</span> <span class="n">nbins</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">color_discrete_sequence</span> <span class="o">=</span> <span class="p">[</span><span class="n">colors</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">colors</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span>
+                   <span class="n">barmode</span> <span class="o">=</span> <span class="s1">&#39;group&#39;</span><span class="p">,</span> <span class="n">histfunc</span> <span class="o">=</span> <span class="s1">&#39;count&#39;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span><span class="n">font_family</span> <span class="o">=</span> <span class="s1">&#39;Gravitas One&#39;</span><span class="p">,</span> <span class="n">title</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Distribución total de sólidos disueltos&quot;</span><span class="p">,</span>
+                               <span class="n">x</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mf">0.95</span><span class="p">,</span> <span class="n">font</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">color</span> <span class="o">=</span> <span class="n">colors_dark</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)),</span>
+                  <span class="n">xaxis_title_text</span> <span class="o">=</span> <span class="s2">&quot;Sólidos disueltos (ppm)&quot;</span><span class="p">,</span> <span class="n">yaxis_title_text</span> <span class="o">=</span> <span class="s1">&#39;Cantidad&#39;</span><span class="p">,</span> <span class="n">legend</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+                                <span class="n">y</span> <span class="o">=</span> <span class="mf">0.96</span><span class="p">,</span> <span class="n">bordercolor</span> <span class="o">=</span> <span class="n">colors_dark</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">borderwidth</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">tracegroupgap</span> <span class="o">=</span> <span class="mi">5</span><span class="p">),</span>
+                  <span class="n">bargap</span> <span class="o">=</span> <span class="mf">0.3</span><span class="p">,)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">();</span>
+</pre>
+                                   </div>
+                              </div>
+                         </div>
+                    </div>
+               </div>
+               <div class="jp-Cell-outputWrapper">
+                    <div class="jp-OutputArea jp-Cell-outputArea">
+                         <div class="jp-OutputArea-child">
+                              <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+                              <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output "
+                                   data-mime-type="text/html">
+                                   <div class="jp-RenderedImage jp-OutputArea-output ">
+                                        <img src="python_images/eda_con_tecnicas_de_visualizacion/image_0011.jpg">
+                                   </div>
+                              </div>
+                         </div>
+                    </div>
+               </div>
+          </div>
+          <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+               <div class="jp-Cell-inputWrapper">
+                    <div class="jp-InputArea jp-Cell-inputArea">
+                         <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[16]:</div>
+                         <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+                              <div class="CodeMirror cm-s-jupyter">
+                                   <div class=" highlight hl-ipython3">
+                                        <pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="s1">&#39;Chloramines&#39;</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Chloramines&#39;</span><span class="p">]),</span> <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;Potability&#39;</span><span class="p">,</span> <span class="n">template</span> <span class="o">=</span> <span class="s1">&#39;plotly_white&#39;</span><span class="p">,</span>
+                   <span class="n">marginal</span> <span class="o">=</span> <span class="s1">&#39;box&#39;</span><span class="p">,</span> <span class="n">opacity</span> <span class="o">=</span> <span class="mf">0.7</span><span class="p">,</span> <span class="n">nbins</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">color_discrete_sequence</span> <span class="o">=</span> <span class="p">[</span><span class="n">colors</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">colors</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span>
+                   <span class="n">barmode</span> <span class="o">=</span> <span class="s1">&#39;group&#39;</span><span class="p">,</span> <span class="n">histfunc</span> <span class="o">=</span> <span class="s1">&#39;count&#39;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">add_vline</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="n">line_width</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">line_color</span> <span class="o">=</span> <span class="n">colors_dark</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line_dash</span> <span class="o">=</span> <span class="s1">&#39;dot&#39;</span><span class="p">,</span> <span class="n">opacity</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">add_annotation</span><span class="p">(</span><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&lt; 4 ppm se considera &lt;br&gt; seguro para beber&quot;</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="mf">1.8</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">90</span><span class="p">,</span> <span class="n">showarrow</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">font_size</span> <span class="o">=</span> <span class="mi">13</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span><span class="n">font_family</span> <span class="o">=</span> <span class="s1">&#39;Gravitas One&#39;</span><span class="p">,</span> <span class="n">title</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Distribución de cloraminas&quot;</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="mf">0.53</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mf">0.95</span><span class="p">,</span>
+                                                             <span class="n">font</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">color</span> <span class="o">=</span> <span class="n">colors_dark</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)),</span>
+                  <span class="n">xaxis_title_text</span> <span class="o">=</span> <span class="s2">&quot;Cloraminas (ppm)&quot;</span><span class="p">,</span> <span class="n">yaxis_title_text</span> <span class="o">=</span> <span class="s1">&#39;Cantidad&#39;</span><span class="p">,</span> <span class="n">legend</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+                                <span class="n">y</span> <span class="o">=</span> <span class="mf">0.96</span><span class="p">,</span> <span class="n">bordercolor</span> <span class="o">=</span> <span class="n">colors_dark</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">borderwidth</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+                                <span class="n">tracegroupgap</span> <span class="o">=</span><span class="mi">5</span> <span class="p">),</span> <span class="n">bargap</span> <span class="o">=</span> <span class="mf">0.3</span><span class="p">,)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">();</span>
+</pre>
+                                   </div>
+                              </div>
+                         </div>
+                    </div>
+               </div>
+               <div class="jp-Cell-outputWrapper">
+                    <div class="jp-OutputArea jp-Cell-outputArea">
+                         <div class="jp-OutputArea-child">
+                              <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+                              <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output "
+                                   data-mime-type="text/html">
+                                   <div class="jp-RenderedImage jp-OutputArea-output ">
+                                        <img src="python_images/eda_con_tecnicas_de_visualizacion/image_0012.jpg">
+                                   </div>
+                              </div>
+                         </div>
+                    </div>
+               </div>
+          </div>
+          <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+               <div class="jp-Cell-inputWrapper">
+                    <div class="jp-InputArea jp-Cell-inputArea">
+                         <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[17]:</div>
+                         <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+                              <div class="CodeMirror cm-s-jupyter">
+                                   <div class=" highlight hl-ipython3">
+                                        <pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="s1">&#39;Sulfate&#39;</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Sulfate&#39;</span><span class="p">]),</span> <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;Potability&#39;</span><span class="p">,</span> <span class="n">template</span> <span class="o">=</span> <span class="s1">&#39;plotly_white&#39;</span><span class="p">,</span>
+                   <span class="n">marginal</span> <span class="o">=</span> <span class="s1">&#39;box&#39;</span><span class="p">,</span> <span class="n">opacity</span> <span class="o">=</span> <span class="mf">0.7</span><span class="p">,</span> <span class="n">nbins</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">color_discrete_sequence</span> <span class="o">=</span> <span class="p">[</span><span class="n">colors</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">colors</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span>
+                   <span class="n">barmode</span> <span class="o">=</span> <span class="s1">&#39;group&#39;</span><span class="p">,</span> <span class="n">histfunc</span> <span class="o">=</span> <span class="s1">&#39;count&#39;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">add_vline</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="mi">250</span><span class="p">,</span> <span class="n">line_width</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">line_color</span> <span class="o">=</span> <span class="n">colors_dark</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line_dash</span> <span class="o">=</span> <span class="s1">&#39;dot&#39;</span><span class="p">,</span> <span class="n">opacity</span> <span class="o">=</span> <span class="mf">0.7</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">add_annotation</span><span class="p">(</span><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&lt; 250 mg / L se considera seguro para beber&quot;</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">175</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">90</span><span class="p">,</span> <span class="n">showarrow</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">font_size</span> <span class="o">=</span> <span class="mi">13</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span><span class="n">font_family</span> <span class="o">=</span> <span class="s1">&#39;Gravitas One&#39;</span><span class="p">,</span> <span class="n">title</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Distribución de sulfato&quot;</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="mf">0.53</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mf">0.95</span><span class="p">,</span>
+                                                             <span class="n">font</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">color</span> <span class="o">=</span> <span class="n">colors_dark</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)),</span>
+                  <span class="n">xaxis_title_text</span> <span class="o">=</span> <span class="s2">&quot;Sulfato (mg / L)&quot;</span><span class="p">,</span> <span class="n">yaxis_title_text</span> <span class="o">=</span> <span class="s1">&#39;Cantidad&#39;</span><span class="p">,</span> <span class="n">legend</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+                                <span class="n">y</span> <span class="o">=</span> <span class="mf">0.96</span><span class="p">,</span> <span class="n">bordercolor</span> <span class="o">=</span> <span class="n">colors_dark</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">borderwidth</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">tracegroupgap</span> <span class="o">=</span> <span class="mi">5</span><span class="p">),</span>
+                  <span class="n">bargap</span> <span class="o">=</span> <span class="mf">0.3</span><span class="p">,)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">();</span>
+</pre>
+                                   </div>
+                              </div>
+                         </div>
+                    </div>
+               </div>
+               <div class="jp-Cell-outputWrapper">
+                    <div class="jp-OutputArea jp-Cell-outputArea">
+                         <div class="jp-OutputArea-child">
+                              <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+                              <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output "
+                                   data-mime-type="text/html">
+                                   <div class="jp-RenderedImage jp-OutputArea-output ">
+                                        <img src="python_images/eda_con_tecnicas_de_visualizacion/image_0013.jpg">
+                                   </div>
+                              </div>
+                         </div>
+                    </div>
+               </div>
+          </div>
+          <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+               <div class="jp-Cell-inputWrapper">
+                    <div class="jp-InputArea jp-Cell-inputArea">
+                         <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[18]:</div>
+                         <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+                              <div class="CodeMirror cm-s-jupyter">
+                                   <div class=" highlight hl-ipython3">
+                                        <pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="s1">&#39;Conductivity&#39;</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Conductivity&#39;</span><span class="p">]),</span> <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;Potability&#39;</span><span class="p">,</span> <span class="n">template</span> <span class="o">=</span> <span class="s1">&#39;plotly_white&#39;</span><span class="p">,</span>
+                   <span class="n">marginal</span> <span class="o">=</span> <span class="s1">&#39;box&#39;</span><span class="p">,</span> <span class="n">opacity</span> <span class="o">=</span> <span class="mf">0.7</span><span class="p">,</span> <span class="n">nbins</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">color_discrete_sequence</span> <span class="o">=</span> <span class="p">[</span><span class="n">colors</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">colors</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span>
+                   <span class="n">barmode</span> <span class="o">=</span> <span class="s1">&#39;group&#39;</span><span class="p">,</span> <span class="n">histfunc</span> <span class="o">=</span> <span class="s1">&#39;count&#39;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">add_vline</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="mi">400</span><span class="p">,</span> <span class="n">line_width</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">line_color</span> <span class="o">=</span> <span class="n">colors_dark</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line_dash</span> <span class="o">=</span> <span class="s1">&#39;dot&#39;</span><span class="p">,</span> <span class="n">opacity</span> <span class="o">=</span> <span class="mf">0.7</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">add_annotation</span><span class="p">(</span><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;El rango de conductividad &lt;br&gt; es seguro (0 - 400)&quot;</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">310</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">90</span><span class="p">,</span> <span class="n">showarrow</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">font_size</span> <span class="o">=</span> <span class="mi">13</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span><span class="n">font_family</span> <span class="o">=</span> <span class="s1">&#39;Gravitas One&#39;</span><span class="p">,</span> <span class="n">title</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Distribución de conductividad&quot;</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mf">0.95</span><span class="p">,</span>
+                                                             <span class="n">font</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">color</span> <span class="o">=</span> <span class="n">colors_dark</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)),</span>
+                  <span class="n">xaxis_title_text</span> <span class="o">=</span> <span class="s2">&quot;Conductividad (μS / cm)&quot;</span><span class="p">,</span> <span class="n">yaxis_title_text</span> <span class="o">=</span> <span class="s1">&#39;Cantidad&#39;</span><span class="p">,</span> <span class="n">legend</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+                                <span class="n">y</span> <span class="o">=</span> <span class="mf">0.96</span><span class="p">,</span> <span class="n">bordercolor</span> <span class="o">=</span> <span class="n">colors_dark</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">borderwidth</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+                                <span class="n">tracegroupgap</span> <span class="o">=</span> <span class="mi">5</span><span class="p">),</span> <span class="n">bargap</span> <span class="o">=</span> <span class="mf">0.3</span><span class="p">,)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">();</span>
+</pre>
+                                   </div>
+                              </div>
+                         </div>
+                    </div>
+               </div>
+               <div class="jp-Cell-outputWrapper">
+                    <div class="jp-OutputArea jp-Cell-outputArea">
+                         <div class="jp-OutputArea-child">
+                              <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+                              <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output "
+                                   data-mime-type="text/html">
+                                   <div class="jp-RenderedImage jp-OutputArea-output ">
+                                        <img src="python_images/eda_con_tecnicas_de_visualizacion/image_0014.jpg">
+                                   </div>
+                              </div>
+                         </div>
+                    </div>
+               </div>
+          </div>
+          <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+               <div class="jp-Cell-inputWrapper">
+                    <div class="jp-InputArea jp-Cell-inputArea">
+                         <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[19]:</div>
+                         <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+                              <div class="CodeMirror cm-s-jupyter">
+                                   <div class=" highlight hl-ipython3">
+                                        <pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="s1">&#39;Organic_carbon&#39;</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Organic_carbon&#39;</span><span class="p">]),</span> <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;Potability&#39;</span><span class="p">,</span> <span class="n">template</span> <span class="o">=</span> <span class="s1">&#39;plotly_white&#39;</span><span class="p">,</span>
+                   <span class="n">marginal</span> <span class="o">=</span> <span class="s1">&#39;box&#39;</span><span class="p">,</span> <span class="n">opacity</span> <span class="o">=</span> <span class="mf">0.7</span><span class="p">,</span> <span class="n">nbins</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">color_discrete_sequence</span> <span class="o">=</span> <span class="p">[</span><span class="n">colors</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                                              <span class="n">colors</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="n">barmode</span> <span class="o">=</span> <span class="s1">&#39;group&#39;</span><span class="p">,</span> <span class="n">histfunc</span> <span class="o">=</span> <span class="s1">&#39;count&#39;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">add_vline</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">line_width</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">line_color</span> <span class="o">=</span> <span class="n">colors_dark</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line_dash</span> <span class="o">=</span> <span class="s1">&#39;dot&#39;</span><span class="p">,</span> <span class="n">opacity</span> <span class="o">=</span> <span class="mf">0.7</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">add_annotation</span><span class="p">(</span><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;El nivel típico de carbono orgánico es de hasta 10 ppm&quot;</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="mf">5.3</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">110</span><span class="p">,</span> <span class="n">showarrow</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">font_size</span> <span class="o">=</span> <span class="mi">13</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span><span class="n">font_family</span> <span class="o">=</span> <span class="s1">&#39;Gravitas One&#39;</span><span class="p">,</span> <span class="n">title</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Distribución de carbono orgánico&quot;</span><span class="p">,</span>  <span class="n">y</span> <span class="o">=</span> <span class="mf">0.95</span><span class="p">,</span>
+                               <span class="n">font</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">color</span> <span class="o">=</span> <span class="n">colors_dark</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)),</span>
+                  <span class="n">xaxis_title_text</span> <span class="o">=</span> <span class="s2">&quot;Carbono orgánico (ppm)&quot;</span><span class="p">,</span> <span class="n">yaxis_title_text</span> <span class="o">=</span> <span class="s1">&#39;Cantidad&#39;</span><span class="p">,</span> <span class="n">legend</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mf">0.96</span><span class="p">,</span>
+                                <span class="n">bordercolor</span> <span class="o">=</span> <span class="n">colors_dark</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">borderwidth</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">tracegroupgap</span> <span class="o">=</span> <span class="mi">5</span><span class="p">),</span>
+                  <span class="n">bargap</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">();</span>
+</pre>
+                                   </div>
+                              </div>
+                         </div>
+                    </div>
+               </div>
+               <div class="jp-Cell-outputWrapper">
+                    <div class="jp-OutputArea jp-Cell-outputArea">
+                         <div class="jp-OutputArea-child">
+                              <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+                              <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output "
+                                   data-mime-type="text/html">
+                                   <div class="jp-RenderedImage jp-OutputArea-output ">
+                                        <img src="python_images/eda_con_tecnicas_de_visualizacion/image_0015.jpg">
+                                   </div>
+                              </div>
+                         </div>
+                    </div>
+               </div>
+          </div>
+          <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+               <div class="jp-Cell-inputWrapper">
+                    <div class="jp-InputArea jp-Cell-inputArea">
+                         <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[20]:</div>
+                         <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+                              <div class="CodeMirror cm-s-jupyter">
+                                   <div class=" highlight hl-ipython3">
+                                        <pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="s1">&#39;Trihalomethanes&#39;</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Trihalomethanes&#39;</span><span class="p">]),</span> <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;Potability&#39;</span><span class="p">,</span> <span class="n">template</span> <span class="o">=</span> <span class="s1">&#39;plotly_white&#39;</span><span class="p">,</span>
+                   <span class="n">marginal</span><span class="o">=</span><span class="s1">&#39;box&#39;</span><span class="p">,</span><span class="n">opacity</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span><span class="n">nbins</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span><span class="n">color_discrete_sequence</span><span class="o">=</span><span class="p">[</span><span class="n">colors</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">colors</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="n">barmode</span><span class="o">=</span><span class="s1">&#39;group&#39;</span><span class="p">,</span><span class="n">histfunc</span><span class="o">=</span><span class="s1">&#39;count&#39;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">add_vline</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="mi">80</span><span class="p">,</span> <span class="n">line_width</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">line_color</span> <span class="o">=</span> <span class="n">colors_dark</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line_dash</span> <span class="o">=</span> <span class="s1">&#39;dot&#39;</span><span class="p">,</span> <span class="n">opacity</span> <span class="o">=</span> <span class="mf">0.7</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">add_annotation</span><span class="p">(</span><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;El límite superior del nivel de trihalometanos &lt;br&gt; es de 80 μg / L&quot;</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">110</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">90</span><span class="p">,</span><span class="n">showarrow</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span><span class="n">font_family</span> <span class="o">=</span> <span class="s1">&#39;Gravitas One&#39;</span><span class="p">,</span> <span class="n">title</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Distribución de trihalometanos&quot;</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mf">0.95</span><span class="p">,</span>
+                                                             <span class="n">font</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">color</span> <span class="o">=</span> <span class="n">colors_dark</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)),</span>
+                  <span class="n">xaxis_title_text</span> <span class="o">=</span> <span class="s1">&#39;Trihalometanos (μg/L)&#39;</span><span class="p">,</span> <span class="n">yaxis_title_text</span> <span class="o">=</span> <span class="s2">&quot;Cantidad&quot;</span><span class="p">,</span>
+                  <span class="n">legend</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mf">0.96</span><span class="p">,</span> <span class="n">bordercolor</span> <span class="o">=</span> <span class="n">colors_dark</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">borderwidth</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span><span class="n">tracegroupgap</span> <span class="o">=</span> <span class="mi">5</span><span class="p">),</span> <span class="n">bargap</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">();</span>
+</pre>
+                                   </div>
+                              </div>
+                         </div>
+                    </div>
+               </div>
+               <div class="jp-Cell-outputWrapper">
+                    <div class="jp-OutputArea jp-Cell-outputArea">
+                         <div class="jp-OutputArea-child">
+                              <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+                              <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output "
+                                   data-mime-type="text/html">
+                                   <div class="jp-RenderedImage jp-OutputArea-output ">
+                                        <img src="python_images/eda_con_tecnicas_de_visualizacion/image_0016.jpg">
+                                   </div>
+                              </div>
+                         </div>
+                    </div>
+               </div>
+          </div>
+          <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+               <div class="jp-Cell-inputWrapper">
+                    <div class="jp-InputArea jp-Cell-inputArea">
+                         <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[21]:</div>
+                         <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+                              <div class="CodeMirror cm-s-jupyter">
+                                   <div class=" highlight hl-ipython3">
+                                        <pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="s1">&#39;Turbidity&#39;</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Turbidity&#39;</span><span class="p">]),</span> <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;Potability&#39;</span><span class="p">,</span> <span class="n">template</span> <span class="o">=</span> <span class="s1">&#39;plotly_white&#39;</span><span class="p">,</span>
+                   <span class="n">marginal</span> <span class="o">=</span> <span class="s1">&#39;box&#39;</span><span class="p">,</span> <span class="n">opacity</span> <span class="o">=</span> <span class="mf">0.7</span><span class="p">,</span> <span class="n">nbins</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">color_discrete_sequence</span> <span class="o">=</span> <span class="p">[</span><span class="n">colors</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">colors</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span>
+                   <span class="n">barmode</span> <span class="o">=</span> <span class="s1">&#39;group&#39;</span><span class="p">,</span> <span class="n">histfunc</span> <span class="o">=</span> <span class="s1">&#39;count&#39;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">add_vline</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">line_width</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">line_color</span> <span class="o">=</span> <span class="n">colors_dark</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line_dash</span> <span class="o">=</span> <span class="s1">&#39;dot&#39;</span><span class="p">,</span> <span class="n">opacity</span> <span class="o">=</span> <span class="mf">0.7</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">add_annotation</span><span class="p">(</span><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&lt; 5 NTU La turbidez se considera segura&quot;</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">90</span><span class="p">,</span> <span class="n">showarrow</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">font_size</span> <span class="o">=</span> <span class="mi">13</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span><span class="n">font_family</span> <span class="o">=</span> <span class="s1">&#39;Gravitas One&#39;</span><span class="p">,</span> <span class="n">title</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Distribución de Turbidez&quot;</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mf">0.95</span><span class="p">,</span>
+                                                             <span class="n">font</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">color</span> <span class="o">=</span> <span class="n">colors_dark</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)),</span>
+                  <span class="n">xaxis_title_text</span> <span class="o">=</span> <span class="s1">&#39;Turbidez (NTU)&#39;</span><span class="p">,</span> <span class="n">yaxis_title_text</span> <span class="o">=</span> <span class="s1">&#39;Cantidad&#39;</span><span class="p">,</span>
+                  <span class="n">legend</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mf">0.96</span><span class="p">,</span> <span class="n">bordercolor</span> <span class="o">=</span> <span class="n">colors_dark</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">borderwidth</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span><span class="n">tracegroupgap</span> <span class="o">=</span> <span class="mi">5</span><span class="p">),</span>
+                  <span class="n">bargap</span> <span class="o">=</span> <span class="mf">0.3</span><span class="p">,)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">();</span>
+</pre>
+                                   </div>
+                              </div>
+                         </div>
+                    </div>
+               </div>
+               <div class="jp-Cell-outputWrapper">
+                    <div class="jp-OutputArea jp-Cell-outputArea">
+                         <div class="jp-OutputArea-child">
+                              <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+                              <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output "
+                                   data-mime-type="text/html">
+                                   <div class="jp-RenderedImage jp-OutputArea-output ">
+                                        <img src="python_images/eda_con_tecnicas_de_visualizacion/image_0017.jpg">
+                                   </div>
+                              </div>
+                         </div>
+                    </div>
+               </div>
+          </div>
+          <div class="jp-Cell-inputWrapper">
+               <div class="jp-InputPrompt jp-InputArea-prompt">
+               </div>
+               <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+                    <h3>
+                         Conclusiones
+                    </h3>
+                    <p>Hay varias conclusiones que se pueden extraer de los pasos generales de EDA en este artículo:</p>
+                    <ul>
+                         <li>El conjunto de datos consta de 3276 filas y 10 columnas,</li>
+                         <li>Hay 9 variables con tipo de datos flotantes y 1 columna con tipo de datos categóricos,</li>
+                         <li>La variable <em>Potabilidad</em> se considera como una etiqueta y las demás como
+                              características,</li>
+                         <li>3 variables contienen valores faltantes (NaN): pH, Sulfato y Trihalometanos. Por lo tanto,
+                              la imputación de datos debe realizarse en estas tres variables,</li>
+                         <li>La calidad del agua en el conjunto de datos consiste en 61% no potable (no segura para el
+                              consumo) y 39% potable (segura para el consumo),</li>
+                         <li>La mayoría de las variables tienen una correlación muy baja entre ellas, excepto las
+                              variables de dureza y pH. Por tanto, será necesario normalizar los datos,</li>
+                         <li>La distribución de la muestra de agua que no es potable es mayor que la de la potable en
+                              las variables de Trihalometanos, Conductividad y Turbidez. En la variable de sólidos casi
+                              nada,</li>
+                         <li>Todas las variables tienen datos atípicos, por lo que necesitan un manejo de valores
+                              atípicos.</li>
+                    </ul>
+               </div>
+          </div>
+</body>
+
+</html>
