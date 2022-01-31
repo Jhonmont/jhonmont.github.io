@@ -1,0 +1,2277 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Churn con Python</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+  <link rel="stylesheet" href="python_css/python_posts.css" />
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-MML-AM_CHTML-full,Safe"> </script>
+  <script type="text/x-mathjax-config">
+    init_mathjax = function() {
+        if (window.MathJax) {
+        // MathJax loaded
+            MathJax.Hub.Config({
+                TeX: {
+                    equationNumbers: {
+                    autoNumber: "AMS",
+                    useLabelIds: true
+                    }
+                },
+                tex2jax: {
+                    inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+                    displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+                    processEscapes: true,
+                    processEnvironments: true
+                },
+                displayAlign: 'center',
+                CommonHTML: {
+                    linebreaks: { 
+                    automatic: true 
+                    }
+                },
+                "HTML-CSS": {
+                    linebreaks: { 
+                    automatic: true 
+                    }
+                }
+            });
+        
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+        }
+    }
+    init_mathjax();
+    </script>
+  <!-- ************************ Common Code ************************ -->
+  <link href="../../assets/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .bd-placeholder-img {
+      font-size: 1.125rem;
+      text-anchor: middle;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      user-select: none;
+    }
+
+    @media (min-width: 768px) {
+      .bd-placeholder-img-lg {
+        font-size: 3.5rem;
+      }
+    }
+  </style>
+  <link href="../assets/css/headers.css" rel="stylesheet">
+  <!-- ************************ Common Code ************************ -->
+</head>
+
+<body class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
+  <!-- ************************ Common Code ************************ -->
+  <div class="container">
+    <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+      <a href="../../index.html"
+        class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+        <svg class="bi me-2" width="40" height="32">
+          <use xlink:href="#bootstrap" />
+        </svg>
+        <span style="color: var(--jp-content-link-color);">Volver al Inicio</span>
+      </a>
+      <ul class=" nav nav-pills">
+        <li class="nav-item"><a href="funcionamiento_aprendizaje_automatico.html" class="nav-link">Anterior</a></li>
+        <li class="nav-item"><a href="#" class="nav-link">Siguiente</a></li>
+      </ul>
+    </header>
+  </div>
+  <div style="padding-left: 50px; padding-right: 100px;">
+    <!-- ************************ Common Code ************************ -->
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h1>
+          Rotación de Empleados (Churn con Python)
+        </h1>
+        <p style="font-size: medium;">
+          <strong>
+            Publicado el: 31 de Enero del 2022
+          </strong> - Jhonatan Montilla
+        </p>
+        <figure style="text-align: center;">
+          <img src="python_images/rotacion_de_empleados_churn/0018.jpg" alt="image">
+        </figure>
+        <p>
+          En este caso práctico se analizará la rotación de empleados de una Empresa, se establecerá una hipótesis del
+          por qué los empleados abandonan la Empresa a través de los datos actuales y se realizarán predicciones de
+          cuantos empleados posiblemente abandonarán su cargo.
+        </p>
+        <h2>
+          1. Introducción.
+        </h2>
+        <p>
+          La pérdida de empleados se puede definir como una fuga o salida de un activo intelectual en una Empresa u
+          organización, en palabras simples, cuando un empleado deja la organización se conoce como abandono,
+          posteriormente se deberá reemplazar a este por otro lo que se conoce como rotación.</p>
+        <p>En varias investigaciones, se descubrió que la rotación de los empleados se verá afectada por la edad, la
+          antigüedad, el sueldo, la satisfacción, las condiciones laborales, el potencial de crecimiento y las
+          percepciones de equidad, otras variables, como la edad, el género, la etnia, la educación y el estado civil,
+          fueron factores importantes en la estimación de la rotación de empleados.</p>
+        <p>Anteriormente, la mayoría de los departamentos de RRHH se centraba en las "tasas", como la tasa de deserción
+          y las tasas de retención. Los gerentes de RRHH calculaban las tasas anteriores intentado predecir las tasas
+          futuras de abandono, a través de herramientas de almacenamiento de datos. Estas tasas representan un impacto
+          agregado de la deserción, sin embargo, esto no es del todo cierto, debido a que existen otros enfoques que
+          pueden ser el enfoque de registros individuales, así como también, los de agregados.</p>
+        <p>Existen muchos casos de estudio disponibles sobre la pérdida de clientes, es decir, en la rotación de
+          clientes, en donde predicen cuántos clientes y cuándo dejarán de comprar bienes o servicios. La rotación de
+          empleados es similar a la de clientes, centrándose principalmente en el empleado, con este caso de práctico,
+          podremos predecir quién y cuándo un empleado dejará de prestarle servicios a la Empresa, debido a que la
+          rotación de empleados es costosa para las Empresas y las mejoras incrementales representan un gasto mucho
+          menor, estás mejoras permitirán diseñar mejores planes de incentivos para mejorar en cierta medida la
+          satisfacción del empleado.</p>
+        <p>En este caso práctico se abordarán los siguientes temas:</p>
+        <ul>
+          <li>Análisis de rotación de empleados,</li>
+          <li>Función de carga y comprensión de datos,</li>
+          <li>Análisis exploratorio de datos y visualización de datos,</li>
+          <li>Análisis de conglomerados,</li>
+          <li>Creación de un modelo de predicción mediante árbol de clasificación y,</li>
+          <li>Evaluación del rendimiento del modelo</li>
+        </ul>
+        <h3 id="1.1-Consideraciones-Iniciales">1.1 Consideraciones Iniciales<a class="anchor-link"
+            href="#1.1-Consideraciones-Iniciales">&#182;</a></h3>
+        <p>Los siguientes puntos ayudarán a comprender mejor la diferencia entre la rotación de empleados y de clientes:
+        </p>
+        <ol>
+          <li>La empresa elige al empleado para que contrate a alguien, mientras que en marketing no puede elegir
+            directamente a los clientes.</li>
+          <li>Los empleados serán el rostro de la Empresa y, colectivamente, los empleados producen todo lo que hace la
+            Empresa.</li>
+          <li>La pérdida de un cliente afecta los ingresos y la imagen de marca. Adquirir nuevos clientes es difícil y
+            costoso, en comparación con retener a un cliente existente, la rotación de empleados también es dolorosa
+            para las Empresas. Requiere tiempo y esfuerzo encontrar y capacitar a un reemplazo.</li>
+          <li>La rotación de empleados tiene una dinámica única, en comparación con la rotación de clientes, nos ayuda a
+            diseñar mejores planes de retención de empleados y a mejorar en cierta medida la satisfacción de los mismos.
+          </li>
+        </ol>
+        <p>Los algoritmos de ciencia de datos pueden ayudar a predecir la rotación futura de cierto grupo de empleados
+          que permitan establecer planes para de alguna manera reducirlo o evitarlo.</p>
+        <h2 id="2.-An%C3%A1lisis-Exploratorio-de-Datos.">2. Análisis Exploratorio de Datos.<a class="anchor-link"
+            href="#2.-An%C3%A1lisis-Exploratorio-de-Datos.">&#182;</a></h2>
+        <p>Se resumirán las características de los datos como patrones, tendencias, valores atípicos y pruebas de
+          hipótesis utilizando estadísticas descriptiva y visualización.</p>
+        <p>Primeramente, se importan las librerías necesarias a continuación.</p>
+
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[1]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.cluster</span> <span class="kn">import</span> <span class="n">KMeans</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">preprocessing</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">GradientBoostingClassifier</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">metrics</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">confusion_matrix</span>
+</pre>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h3 id="2.1-Carga-del-Conjunto-de-Datos.">2.1 Carga del Conjunto de Datos.<a class="anchor-link"
+            href="#2.1-Carga-del-Conjunto-de-Datos.">&#182;</a></h3>
+        <p>Se cargan los datos desde un archivo tipo .csv a través de la librería de Pandas. Podrá descargar el conjunto
+          de datos desde nuestro repositorio haciendo
+          <!-- ************************ Common Code ************************ -->
+          <a href="https://github.com/Jhonmont/all_datasets_repository" target="_blank">
+            clic aquí.
+          </a>
+        </p>
+        <!-- ************************ Common Code ************************ -->
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[2]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;hhrr_employee_list.csv&quot;</span><span class="p">,</span> <span class="n">encoding</span> <span class="o">=</span> <span class="s1">&#39;latin-1&#39;</span><span class="p">)</span>
+</pre>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <ul>
+          <li>Se revisan los datos iniciales a través de la función <code>head()</code></li>
+          <li>De manera similar, se revisan los datos finales del conjunto de datos a través de la función
+            <code>tail()</code>
+          </li>
+        </ul>
+
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[3]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="jp-Cell-outputWrapper">
+
+
+        <div class="jp-OutputArea jp-Cell-outputArea">
+
+          <div class="jp-OutputArea-child">
+
+
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[3]:</div>
+
+
+
+            <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+              data-mime-type="text/html">
+              <div>
+                <style scoped>
+                  .dataframe tbody tr th:only-of-type {
+                    vertical-align: middle;
+                  }
+
+                  .dataframe tbody tr th {
+                    vertical-align: top;
+                  }
+
+                  .dataframe thead th {
+                    text-align: right;
+                  }
+                </style>
+                <table border="1" class="dataframe">
+                  <thead>
+                    <tr style="text-align: right;">
+                      <th></th>
+                      <th>Nivel_de_Satisfacción</th>
+                      <th>Última_Evaluación</th>
+                      <th>Cantidad_de_Proyectos</th>
+                      <th>Horas_Promedio_Mensual</th>
+                      <th>Tiempo_en_la_Empresa</th>
+                      <th>Accidentes_Laborales</th>
+                      <th>Abandono</th>
+                      <th>Promoción_Últimos_5_Años</th>
+                      <th>Departamento</th>
+                      <th>Nivel_de_Sueldo</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>0</th>
+                      <td>0.38</td>
+                      <td>0.53</td>
+                      <td>2</td>
+                      <td>157</td>
+                      <td>3</td>
+                      <td>0</td>
+                      <td>1</td>
+                      <td>0</td>
+                      <td>Ventas</td>
+                      <td>Bajo</td>
+                    </tr>
+                    <tr>
+                      <th>1</th>
+                      <td>0.80</td>
+                      <td>0.86</td>
+                      <td>5</td>
+                      <td>262</td>
+                      <td>6</td>
+                      <td>0</td>
+                      <td>1</td>
+                      <td>0</td>
+                      <td>Ventas</td>
+                      <td>Medio</td>
+                    </tr>
+                    <tr>
+                      <th>2</th>
+                      <td>0.11</td>
+                      <td>0.88</td>
+                      <td>7</td>
+                      <td>272</td>
+                      <td>4</td>
+                      <td>0</td>
+                      <td>1</td>
+                      <td>0</td>
+                      <td>Ventas</td>
+                      <td>Medio</td>
+                    </tr>
+                    <tr>
+                      <th>3</th>
+                      <td>0.72</td>
+                      <td>0.87</td>
+                      <td>5</td>
+                      <td>223</td>
+                      <td>5</td>
+                      <td>0</td>
+                      <td>1</td>
+                      <td>0</td>
+                      <td>Ventas</td>
+                      <td>Bajo</td>
+                    </tr>
+                    <tr>
+                      <th>4</th>
+                      <td>0.37</td>
+                      <td>0.52</td>
+                      <td>2</td>
+                      <td>159</td>
+                      <td>3</td>
+                      <td>0</td>
+                      <td>1</td>
+                      <td>0</td>
+                      <td>Ventas</td>
+                      <td>Bajo</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[4]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">tail</span><span class="p">()</span>
+</pre>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="jp-Cell-outputWrapper">
+
+
+        <div class="jp-OutputArea jp-Cell-outputArea">
+
+          <div class="jp-OutputArea-child">
+
+
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[4]:</div>
+
+
+
+            <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+              data-mime-type="text/html">
+              <div>
+                <style scoped>
+                  .dataframe tbody tr th:only-of-type {
+                    vertical-align: middle;
+                  }
+
+                  .dataframe tbody tr th {
+                    vertical-align: top;
+                  }
+
+                  .dataframe thead th {
+                    text-align: right;
+                  }
+                </style>
+                <table border="1" class="dataframe">
+                  <thead>
+                    <tr style="text-align: right;">
+                      <th></th>
+                      <th>Nivel_de_Satisfacción</th>
+                      <th>Última_Evaluación</th>
+                      <th>Cantidad_de_Proyectos</th>
+                      <th>Horas_Promedio_Mensual</th>
+                      <th>Tiempo_en_la_Empresa</th>
+                      <th>Accidentes_Laborales</th>
+                      <th>Abandono</th>
+                      <th>Promoción_Últimos_5_Años</th>
+                      <th>Departamento</th>
+                      <th>Nivel_de_Sueldo</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>14994</th>
+                      <td>0.40</td>
+                      <td>0.57</td>
+                      <td>2</td>
+                      <td>151</td>
+                      <td>3</td>
+                      <td>0</td>
+                      <td>1</td>
+                      <td>0</td>
+                      <td>Soporte Técnico</td>
+                      <td>Bajo</td>
+                    </tr>
+                    <tr>
+                      <th>14995</th>
+                      <td>0.37</td>
+                      <td>0.48</td>
+                      <td>2</td>
+                      <td>160</td>
+                      <td>3</td>
+                      <td>0</td>
+                      <td>1</td>
+                      <td>0</td>
+                      <td>Soporte Técnico</td>
+                      <td>Bajo</td>
+                    </tr>
+                    <tr>
+                      <th>14996</th>
+                      <td>0.37</td>
+                      <td>0.53</td>
+                      <td>2</td>
+                      <td>143</td>
+                      <td>3</td>
+                      <td>0</td>
+                      <td>1</td>
+                      <td>0</td>
+                      <td>Soporte Técnico</td>
+                      <td>Bajo</td>
+                    </tr>
+                    <tr>
+                      <th>14997</th>
+                      <td>0.11</td>
+                      <td>0.96</td>
+                      <td>6</td>
+                      <td>280</td>
+                      <td>4</td>
+                      <td>0</td>
+                      <td>1</td>
+                      <td>0</td>
+                      <td>Soporte Técnico</td>
+                      <td>Bajo</td>
+                    </tr>
+                    <tr>
+                      <th>14998</th>
+                      <td>0.37</td>
+                      <td>0.52</td>
+                      <td>2</td>
+                      <td>158</td>
+                      <td>3</td>
+                      <td>0</td>
+                      <td>1</td>
+                      <td>0</td>
+                      <td>Soporte Técnico</td>
+                      <td>Bajo</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <ul>
+          <li>Se procede a la revisión de las características del conjunto de datos a través de la función
+            <code>info()</code>
+          </li>
+        </ul>
+
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[5]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+</pre>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="jp-Cell-outputWrapper">
+
+
+        <div class="jp-OutputArea jp-Cell-outputArea">
+
+          <div class="jp-OutputArea-child">
+
+
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+            <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+              <pre>&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
+RangeIndex: 14999 entries, 0 to 14998
+Data columns (total 10 columns):
+ #   Column                    Non-Null Count  Dtype  
+---  ------                    --------------  -----  
+ 0   Nivel_de_Satisfacción     14999 non-null  float64
+ 1   Última_Evaluación         14999 non-null  float64
+ 2   Cantidad_de_Proyectos     14999 non-null  int64  
+ 3   Horas_Promedio_Mensual    14999 non-null  int64  
+ 4   Tiempo_en_la_Empresa      14999 non-null  int64  
+ 5   Accidentes_Laborales      14999 non-null  int64  
+ 6   Abandono                  14999 non-null  int64  
+ 7   Promoción_Últimos_5_Años  14999 non-null  int64  
+ 8   Departamento              14999 non-null  object 
+ 9   Nivel_de_Sueldo           14999 non-null  object 
+dtypes: float64(2), int64(6), object(2)
+memory usage: 1.1+ MB
+</pre>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <p>A través de la función <code>info()</code> se obtiene la siguiente información:</p>
+        <ul>
+          <li>El conjunto de datos contiene 14.999 registros y 10 columnas o características (6 de tipo enteros, 2 de
+            tipo flotantes y 2 de tipo objetos).</li>
+          <li>Ninguna columna o característica contiene valores nulos o perdidos.</li>
+        </ul>
+        <h3>
+          2.2 Descripción de Características.
+        </h3>
+        <ul>
+          <li><strong>Nivel_de_Satisfacción</strong>: Es el porcentaje de satisfacción del empleado en la Empresa (0 a
+            1),</li>
+          <li><strong>Última_Evaluación</strong>: Es el porcentaje de desempeño evaluado por el empleador (0 a 1),</li>
+          <li><strong>Cantidad_de_Proyectos</strong>: Es la cantidad de proyectos asignados al empleado,</li>
+          <li><strong>Horas_Promedio_Mensual</strong>: Es la cantidad de horas promedio mensual que trabaja un empleado,
+          </li>
+          <li><strong>Tiempo_en_la_Empresa</strong>: Corresponde al número de años que ha permanecido un empleado en la
+            empresa,</li>
+          <li><strong>Accidentes_Laborales</strong>: Indica si un empleado ha tenido un accidente laboral o no,</li>
+          <li><strong>Abandono</strong>: Indica si el empleado ha dejado la Empresa o no, (0: No, 1: Sí),</li>
+          <li><strong>Promoción_Últimos_5_Años</strong>: Indica si un empleado ha tenido un ascenso en los últimos 5
+            años o no, (0: No, 1: Sí),</li>
+          <li><strong>Departamento</strong>: Indica en cual departamento el empleado trabaja y,</li>
+          <li><strong>Nivel_de_Sueldo</strong>: Indica el nivel de sueldo del empleado, bajo, medio y alto.</li>
+        </ul>
+        <h3>
+          2.3 Estadísticas de los Datos
+        </h3>
+        <p>
+          En el conjunto de datos se tienen dos tipos de empleados, uno que permanece y otro que dejó la Empresa,
+          entonces, se pueden dividir los datos en dos grupos para comparar sus características, primeramente
+          analizaremos el promedio de ambos grupos usando las funciones <code>groupby()</code> y <code>mean()</code>.
+        </p>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[6]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">abandono</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;Abandono&quot;</span><span class="p">)</span>
+<span class="n">abandono</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[6]:</div>
+            <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+              data-mime-type="text/html">
+              <div>
+                <table border="1" class="dataframe">
+                  <thead>
+                    <tr style="text-align: right;">
+                      <th></th>
+                      <th>Nivel_de_Satisfacción</th>
+                      <th>Última_Evaluación</th>
+                      <th>Cantidad_de_Proyectos</th>
+                      <th>Horas_Promedio_Mensual</th>
+                      <th>Tiempo_en_la_Empresa</th>
+                      <th>Accidentes_Laborales</th>
+                      <th>Promoción_Últimos_5_Años</th>
+                    </tr>
+                    <tr>
+                      <th>Abandono</th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>0</th>
+                      <td>0.666810</td>
+                      <td>0.715473</td>
+                      <td>3.786664</td>
+                      <td>199.060203</td>
+                      <td>3.380032</td>
+                      <td>0.175009</td>
+                      <td>0.026251</td>
+                    </tr>
+                    <tr>
+                      <th>1</th>
+                      <td>0.440098</td>
+                      <td>0.718113</td>
+                      <td>3.855503</td>
+                      <td>207.419210</td>
+                      <td>3.876505</td>
+                      <td>0.047326</td>
+                      <td>0.005321</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <p>Con los resultados obtenidos, inicialmente se puede interpretar lo siguiente, los empleados que dejaron la
+          empresa tenían:</p>
+        <ul>
+          <li>Bajos niveles de satisfacción,</li>
+          <li>Baja tasa de promoción y,</li>
+          <li>Trabajaron más horas en comparación con los que permanecen en la empresa.</li>
+        </ul>
+        <p>A través de la función <code>describe()</code> de pandas se obtienen varias estadísticas de resumen, la
+          función devuelve:</p>
+        <ul>
+          <li>Un recuento,</li>
+          <li>La media,</li>
+          <li>La desviación estándar,</li>
+          <li>Los valores mínimo y máximo y,</li>
+          <li>Los cuartiles de los datos.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[7]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[7]:</div>
+            <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+              data-mime-type="text/html">
+              <div>
+                <table border="1" class="dataframe">
+                  <thead>
+                    <tr style="text-align: right;">
+                      <th></th>
+                      <th>Nivel_de_Satisfacción</th>
+                      <th>Última_Evaluación</th>
+                      <th>Cantidad_de_Proyectos</th>
+                      <th>Horas_Promedio_Mensual</th>
+                      <th>Tiempo_en_la_Empresa</th>
+                      <th>Accidentes_Laborales</th>
+                      <th>Abandono</th>
+                      <th>Promoción_Últimos_5_Años</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>count</th>
+                      <td>14999.000000</td>
+                      <td>14999.000000</td>
+                      <td>14999.000000</td>
+                      <td>14999.000000</td>
+                      <td>14999.000000</td>
+                      <td>14999.000000</td>
+                      <td>14999.000000</td>
+                      <td>14999.000000</td>
+                    </tr>
+                    <tr>
+                      <th>mean</th>
+                      <td>0.612834</td>
+                      <td>0.716102</td>
+                      <td>3.803054</td>
+                      <td>201.050337</td>
+                      <td>3.498233</td>
+                      <td>0.144610</td>
+                      <td>0.238083</td>
+                      <td>0.021268</td>
+                    </tr>
+                    <tr>
+                      <th>std</th>
+                      <td>0.248631</td>
+                      <td>0.171169</td>
+                      <td>1.232592</td>
+                      <td>49.943099</td>
+                      <td>1.460136</td>
+                      <td>0.351719</td>
+                      <td>0.425924</td>
+                      <td>0.144281</td>
+                    </tr>
+                    <tr>
+                      <th>min</th>
+                      <td>0.090000</td>
+                      <td>0.360000</td>
+                      <td>2.000000</td>
+                      <td>96.000000</td>
+                      <td>2.000000</td>
+                      <td>0.000000</td>
+                      <td>0.000000</td>
+                      <td>0.000000</td>
+                    </tr>
+                    <tr>
+                      <th>25%</th>
+                      <td>0.440000</td>
+                      <td>0.560000</td>
+                      <td>3.000000</td>
+                      <td>156.000000</td>
+                      <td>3.000000</td>
+                      <td>0.000000</td>
+                      <td>0.000000</td>
+                      <td>0.000000</td>
+                    </tr>
+                    <tr>
+                      <th>50%</th>
+                      <td>0.640000</td>
+                      <td>0.720000</td>
+                      <td>4.000000</td>
+                      <td>200.000000</td>
+                      <td>3.000000</td>
+                      <td>0.000000</td>
+                      <td>0.000000</td>
+                      <td>0.000000</td>
+                    </tr>
+                    <tr>
+                      <th>75%</th>
+                      <td>0.820000</td>
+                      <td>0.870000</td>
+                      <td>5.000000</td>
+                      <td>245.000000</td>
+                      <td>4.000000</td>
+                      <td>0.000000</td>
+                      <td>0.000000</td>
+                      <td>0.000000</td>
+                    </tr>
+                    <tr>
+                      <th>max</th>
+                      <td>1.000000</td>
+                      <td>1.000000</td>
+                      <td>7.000000</td>
+                      <td>310.000000</td>
+                      <td>10.000000</td>
+                      <td>1.000000</td>
+                      <td>1.000000</td>
+                      <td>1.000000</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <p>De la tabla anterior se puede observar lo siguiente:</p>
+        <ul>
+          <li>El nivel de satisfacción promedio general (empleados que permanecen y los que abandonaron) es del 61%.
+          </li>
+          <li>La evaluación promedio general de los empleados es del casi 72%.</li>
+          <li>En la empresa cada empleado maneja en un promedio general 4 proyectos a la vez.</li>
+          <li>En la empresa se trabaja en promedio general un poco más de 201 horas al mes, es decir, 41 horas más en
+            promedio de lo establecido.</li>
+          <li>En promedio general los empleados permanecen en la empresa casi 3 años y medio.</li>
+          <li>El porcentaje de abandono general promedio es de casi 24%.</li>
+          <li>La tasa promedio de accidentes general es del 14%, bastante baja.</li>
+          <li>El porcentaje de promoción general de empleados es de un poco más del 21%, es considerada baja.</li>
+        </ul>
+        <h2>
+          3. Visualización de los Datos.
+        </h2>
+        <h3>
+          3.1. Correlación de Variables.
+        </h3>
+        <p>
+          Primeramente, se observará gráficamente cómo se correlacionan las variables entre sí a través de una matriz de
+          correlación de variables numéricas, se determinará el porcentaje positivo o negativo de afectación entre
+          éstas.
+        </p>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[8]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="c1"># Define la paleta de colores a utilizar</span>
+<span class="n">colors_blue</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;#06344d&quot;</span><span class="p">,</span> <span class="s2">&quot;#1E90FF&quot;</span><span class="p">,</span> <span class="s1">&#39;#00b2ff&#39;</span><span class="p">,</span> <span class="s1">&#39;#51C4D3&#39;</span><span class="p">,</span> <span class="s1">&#39;#B4DBE9&#39;</span><span class="p">]</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">palplot</span><span class="p">(</span><span class="n">colors_blue</span><span class="p">)</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">
+            </div>
+            <div class="jp-RenderedImage jp-OutputArea-output ">
+              <img src="python_images/rotacion_de_empleados_churn/0001.jpg">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[9]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">corr</span><span class="p">(),</span> <span class="n">annot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cmap</span> <span class="o">=</span> <span class="n">colors_blue</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Correlación de Variables Numéricas</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">);</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedImage jp-OutputArea-output ">
+              <img src="python_images/rotacion_de_empleados_churn/0002.jpg">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h3>
+          Análisis.
+        </h3>
+        <p>De la matriz de correlación anterior se pueden obtener las siguientes conclusiones.</p>
+        <p><em>Afectaciones negativas:</em></p>
+        <ul>
+          <li>La <em>Cantidad de Proyectos</em> disminuye el <em>Nivel de Satisfacción</em> en <strong>-14%</strong>,
+          </li>
+          <li>El <em>Nivel de Satisfacción</em> disminuye la cantidad de <em>Abandono</em> en <strong>-39%</strong>,
+          </li>
+          <li>La <em>Cantidad de Accidentes</em> disminuye la cantidad de <em>Abandono</em> en <strong>-15%</strong> y,
+          </li>
+          <li>Las <em>Promociones en los Últimos 5 Años</em> disminuye la cantidad de abandono en <strong>-6%</strong>.
+          </li>
+        </ul>
+        <p><em>Afectaciones positivas:</em></p>
+        <p>La <em>Cantidad de Proyectos</em> incrementa positivamente,</p>
+        <ul>
+          <li>La <em>Cantidad de Horas</em> trabajadas en <strong>42%</strong>,</li>
+          <li>La <em>Última Evaluación</em> del empleado en <strong>35%</strong> y,</li>
+          <li>La cantidad de <em>Abandono</em> en <strong>24%</strong>,</li>
+        </ul>
+        <p>El <em>Tiempo en la Empresa</em> incrementa positivamente,</p>
+        <ul>
+          <li>La <em>Cantidad de Proyectos</em> en un <strong>20%</strong>,</li>
+          <li>La cantidad de <em>Abandono</em> en <strong>14%</strong>,</li>
+          <li>La <em>Última Evaluación</em> en <strong>13%</strong> y,</li>
+          <li>Las <em>Horas Promedio Mensual</em> trabajadas en <strong>13%</strong>, por lo tanto, las <em>Horas
+              Promedio Mensual</em> trabajadas incrementa positivamente la <em>Última Evaluación</em> del empleado en
+            <strong>34%</strong>.
+          </li>
+        </ul>
+        <h3>
+          3.2 Proporción de permanencia y abandono.
+        </h3>
+        <p>Se representará el porcentaje o cantidad de registros de empleados que permanecen y los que dejaron la
+          Empresa en el actual conjunto de datos, a través del siguiente gráfico:</p>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[10]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">elem</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">Abandono</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+<span class="n">elem</span> <span class="o">=</span> <span class="n">elem</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="o">/</span> <span class="n">data</span><span class="o">.</span><span class="n">Abandono</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+<span class="n">elem</span> <span class="o">=</span> <span class="n">elem</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+<span class="n">labels</span> <span class="o">=</span> <span class="s1">&#39;Permanece&#39;</span><span class="p">,</span> <span class="s1">&#39;Abandonó&#39;</span>
+<span class="n">sizes</span> <span class="o">=</span> <span class="n">elem</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">pie</span><span class="p">(</span><span class="n">sizes</span><span class="p">,</span>
+        <span class="n">autopct</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%1.1f%%</span><span class="s1">&#39;</span><span class="p">,</span>
+        <span class="n">shadow</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">startangle</span> <span class="o">=</span> <span class="mi">90</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">% d</span><span class="s2">e empleados que permanecen </span><span class="se">\n</span><span class="s2">y que abandonaron la Empresa&quot;</span><span class="p">,</span>
+          <span class="n">size</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span>
+          <span class="n">y</span> <span class="o">=</span> <span class="mf">1.05</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedImage jp-OutputArea-output ">
+              <img src="python_images/rotacion_de_empleados_churn/0003.jpg">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h3>
+          Análisis.
+        </h3>
+        <p>
+          Se puede observar que la cantidad de empleados que permanecen en la Empresa es del 76.2% bastante superior al
+          23.8% de empleados que abandonaron sus puestos de trabajo, aunque la proporción sea inferior con respecto a la
+          cantidad de empleados que aún trabajan en la Empresa, es importante conocer los niveles de satisfacción y
+          otras variables para cada uno de los grupos, los cuales se revisarán a continuación.
+        </p>
+        <h3>
+          3.3 Nivel de satisfacción general.
+        </h3>
+        <p>
+          Se observará gráficamente la distribución de empleados que permanecen y/o abandonaron la Empresa según el
+          porcentaje del nivel de satisfacción, a través de un histograma de distribución de frecuencias para mostrar el
+          recuento de dichas variables discretas.
+        </p>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[11]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">8</span><span class="p">))</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="s2">&quot;Nivel_de_Satisfacción&quot;</span><span class="p">,</span>
+             <span class="n">kde</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+             <span class="n">hue</span> <span class="o">=</span> <span class="s2">&quot;Abandono&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Distribución de empleados que </span><span class="se">\n</span><span class="s2">permanecen y abandonaron la Empresa </span><span class="se">\n</span><span class="s2">según el porcentaje satisfacción&quot;</span><span class="p">,</span>
+          <span class="n">size</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mf">1.04</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">% d</span><span class="s2">e Satisfacción&quot;</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">15</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Frecuencia / Empleados&quot;</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">15</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">();</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedImage jp-OutputArea-output ">
+              <img src="python_images/rotacion_de_empleados_churn/0004.jpg">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h3>
+          Análisis.
+        </h3>
+        <p>
+          Se puede observar en el gráfico anterior que según la distribución de frecuencias de la satisfacción de
+          empleados que permanecen o dejaron la Empresa es lo siguiente:
+        </p>
+        <ul>
+          <li>Aproximadamente 900 empleados que abandonaron la Empresa tenían un nivel de satisfacción del 10%,</li>
+          <li>Aproximadamente 450 empleados que abandonaron la Empresa tenían un nivel de satisfacción entre el 35% y
+            45%</li>
+          <li>Aproximadamente 200 empleados que abandonaron la Empresa tenían un nivel de satisfacción entre el 80% y
+            90%</li>
+        </ul>
+        <p>Mientras que:</p>
+        <ul>
+          <li>Aproximadamente 200 empleados que permanecen en la Empresa tienen un nivel de satisfacción entre el 15% y
+            25%</li>
+          <li>Aproximadamente entre 500 a 600 empleados que permanecen en la Empresa tienen un nivel de satisfacción
+            entre el 50% y 100%.</li>
+        </ul>
+        <h3>
+          3.4 Niveles de satisfacción según proyectos asignados.
+        </h3>
+        <p>
+          Se analizará visualmente el porcentaje promedio de satisfacción según la cantidad de proyectos asignados en
+          general, es decir, incluyendo todos los empleados que permanecen y los que abandonaron su cargo en la Empresa.
+        </p>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[12]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">cant_proyectos</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;Cantidad_de_Proyectos&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">8</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">barh</span><span class="p">(</span><span class="n">cant_proyectos</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+         <span class="n">cant_proyectos</span><span class="p">[</span><span class="s2">&quot;Nivel_de_Satisfacción&quot;</span><span class="p">])</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">cant_proyectos</span><span class="p">[</span><span class="s2">&quot;Nivel_de_Satisfacción&quot;</span><span class="p">]):</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">v</span> <span class="o">+</span> <span class="mf">0.01</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mf">1.9</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">% d</span><span class="s2">e Satisfacción&quot;</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">15</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Proyectos&quot;</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">15</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;% promedio de satisfacción de empleados </span><span class="se">\n</span><span class="s2">según la cantidad de proyectos</span><span class="se">\n</span><span class="s2">asignados&quot;</span><span class="p">,</span>
+          <span class="n">y</span> <span class="o">=</span> <span class="mf">1.05</span><span class="p">,</span>
+          <span class="n">size</span> <span class="o">=</span> <span class="mi">15</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">();</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedImage jp-OutputArea-output ">
+              <img src="python_images/rotacion_de_empleados_churn/0005.jpg">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h3>
+          Análisis.
+        </h3>
+        <ul>
+          <li>Los empleados con el menor porcentaje de satisfacción promedio son los que tienen asignados o gestionan 7
+            proyectos al mismo tiempo, siendo éste el porcentaje promedio más bajo (12%),</li>
+          <li>Sin embargo, los empleados que gestionan y administran 4 proyectos al mismo tiempo, registran el mayor
+            porcentaje promedio de satisfacción (70%), se podría inferir que, aunque esos empleados tengan una mayor
+            cantidad de proyectos, no generan un elevado nivel de estrés en ellos,</li>
+          <li>Por el contrario, los empleados que administran y gestionan únicamente 2 proyectos a la vez, registran un
+            porcentaje de satisfacción del 48%,</li>
+          <li>Se podría decir que los mejores porcentajes promedio de satisfacción se encuentra entre los empleados que
+            gestionan entre 3 y 4 proyectos a la vez.</li>
+        </ul>
+        <p>Con este análisis no se pretende obtener conclusiones finales debido a que no se están evaluando el resto de
+          variables que pueden incidir en la satisfacción del empleado, su permanencia o abandono, por lo que se
+          continuará con el estudio visual del resto de variables.</p>
+        <h3>
+          3.5 Niveles de satisfacción según la cantidad de tiempo en la Empresa (Experiencia).
+        </h3>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[13]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">experiencia</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;Tiempo_en_la_Empresa&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">8</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">barh</span><span class="p">(</span><span class="n">experiencia</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+         <span class="n">experiencia</span><span class="p">[</span><span class="s2">&quot;Nivel_de_Satisfacción&quot;</span><span class="p">])</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">experiencia</span><span class="p">[</span><span class="s2">&quot;Nivel_de_Satisfacción&quot;</span><span class="p">]):</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">v</span> <span class="o">+</span> <span class="mf">0.01</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mf">1.9</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;% promedio de satisfacción de empleados </span><span class="se">\n</span><span class="s2">según la cantidad de años trabajando</span><span class="se">\n</span><span class="s2">en la Empresa&quot;</span><span class="p">,</span>
+          <span class="n">y</span> <span class="o">=</span> <span class="mf">1.05</span><span class="p">,</span>
+          <span class="n">size</span> <span class="o">=</span> <span class="mi">15</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">% d</span><span class="s2">e satisfacción&quot;</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">15</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Años&quot;</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">15</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">();</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedImage jp-OutputArea-output ">
+              <img src="python_images/rotacion_de_empleados_churn/0006.jpg">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h3>
+          Análisis.
+        </h3>
+        <ul>
+          <li>Se puede observar que el mayor porcentaje promedio de satisfacción se encuentran en los empleados que
+            tienen hasta 2 años trabajando para la Empresa (70%), posteriormente desciende entre los 3 y 4 años.</li>
+          <li>Los empleados con 8 y 10 años de experiencia en la empresa tienen un porcentaje promedio de satisfacción
+            bastante similar a la de los empleados con dos años de experiencia, 67% y 66% respectivamente.</li>
+        </ul>
+        <p>La mayor parte de los empleados tienen una experiencia de entre 2 y 4 años. Además, existe una enorme brecha
+          entre 3 y 4 años de empleados con experiencia.</p>
+        <h3>
+          3.6 Totalización de empleados.
+        </h3>
+        <p>
+          Se procederá de manera gráfica, a la totalización y análisis de la cantidad de empleados a través de las
+          siguientes características:
+        </p>
+        <ul>
+          <li>Por la cantidad de gestión de proyectos a la vez,</li>
+          <li>Por el tiempo de experiencia en la Empresa,</li>
+          <li>La cantidad de accidentes laborales,</li>
+          <li>El abandono (renuncia o dimisión),</li>
+          <li>Si ha obtenido al menos una promoción en los últimos 5 años,</li>
+          <li>Por departamento al que pertenece y,</li>
+          <li>Por el nivel de sueldos.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[14]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">features</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Cantidad_de_Proyectos&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Tiempo_en_la_Empresa&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Accidentes_Laborales&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Abandono&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Promoción_Últimos_5_Años&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Departamento&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Nivel_de_Sueldo&quot;</span><span class="p">]</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">30</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">features</span><span class="p">):</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">hspace</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">splot</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">countplot</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">j</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="s1">&#39;PuBu&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">splot</span><span class="o">.</span><span class="n">patches</span><span class="p">:</span>
+        <span class="n">splot</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="nb">format</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">get_height</span><span class="p">(),</span> <span class="s1">&#39;.1f&#39;</span><span class="p">),</span>
+                       <span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">get_x</span><span class="p">()</span> <span class="o">+</span> <span class="n">p</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">get_height</span><span class="p">()),</span>
+                       <span class="n">ha</span> <span class="o">=</span> <span class="s1">&#39;center&#39;</span><span class="p">,</span>
+                       <span class="n">va</span> <span class="o">=</span> <span class="s1">&#39;bottom&#39;</span><span class="p">,</span>
+                       <span class="n">rotation</span> <span class="o">=</span> <span class="mi">90</span><span class="p">,</span>
+                       <span class="n">xytext</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">),</span>
+                       <span class="n">textcoords</span> <span class="o">=</span> <span class="s1">&#39;offset points&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">rotation</span> <span class="o">=</span> <span class="mi">90</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Cantidad de empleados&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mf">1.2</span><span class="p">);</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedImage jp-OutputArea-output ">
+              <img src="python_images/rotacion_de_empleados_churn/0007.jpg">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h3>
+          Análisis.
+        </h3>
+        <p>
+          De los gráficos anteriores se puede concluir lo siguiente:
+        </p>
+        <ul>
+          <li>La mayor cantidad de empleados se encuentran trabajando en 4 proyectos al mismo tiempo (4.365 empleados),
+          </li>
+          <li>La mayor cantidad de empleados tienen tres años trabajando para la Empresa (6.443 empleados),</li>
+          <li>Únicamente 2.169 empleados han tenido algún accidente laboral.</li>
+          <li>Únicamente 3.571 empleados han abandonado sus puestos de trabajo en la Empresa,</li>
+          <li>Únicamente 319 empleados han obtenido al menos una promoción en los últimos 5 años,</li>
+          <li>La mayor cantidad de empleados se encuentran trabajando en el departamento de ventas (4.140 empleados),
+            seguido por los de área técnica con 2.720 empleados,</li>
+          <li>En el nivel más bajo de sueldos se encuentra la mayoría de los empleados (7.316 empleados), mientras que
+            únicamente 1.237 empleados obtienen los sueldos más altos.</li>
+        </ul>
+        <h3>
+          3.7 Proporción de empleados.
+        </h3>
+        <p>
+          En esta sección se procederá al análisis de las proporciones de empleados según alguno de los grupos señalados
+          en los gráficos anteriores.
+        </p>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[15]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="k">def</span> <span class="nf">element</span> <span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">col</span><span class="p">):</span>
+    <span class="n">elem</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+    <span class="n">elem</span> <span class="o">=</span> <span class="n">elem</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="o">/</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+    <span class="n">elem</span> <span class="o">=</span> <span class="n">elem</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">elem</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[16]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="k">def</span> <span class="nf">donas</span> <span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="n">labs</span><span class="p">,</span><span class="n">titl</span><span class="p">):</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">pie</span><span class="p">(</span><span class="n">df</span><span class="p">,</span>
+             <span class="n">autopct</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%1.1f%%</span><span class="s1">&#39;</span><span class="p">,</span>
+             <span class="n">startangle</span> <span class="o">=</span> <span class="mi">90</span><span class="p">,</span>
+             <span class="n">pctdistance</span> <span class="o">=</span> <span class="mf">0.85</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">titl</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mf">1.05</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">labs</span><span class="p">)</span>
+    <span class="n">centre_circle</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Circle</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span><span class="mf">0.60</span><span class="p">,</span> <span class="n">fc</span> <span class="o">=</span> <span class="s1">&#39;white&#39;</span><span class="p">)</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">add_artist</span><span class="p">(</span><span class="n">centre_circle</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>  
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">();</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[17]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">elem</span> <span class="o">=</span> <span class="n">element</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="s2">&quot;Cantidad_de_Proyectos&quot;</span><span class="p">)</span>
+<span class="n">donas</span><span class="p">(</span><span class="n">elem</span><span class="p">,</span>
+      <span class="p">[</span><span class="s2">&quot;1 Proyecto&quot;</span><span class="p">,</span> <span class="s2">&quot;2 Proyectos&quot;</span><span class="p">,</span><span class="s2">&quot;3 Proyectos&quot;</span><span class="p">,</span><span class="s2">&quot;4 Proyectos&quot;</span><span class="p">,</span><span class="s2">&quot;5 Proyectos&quot;</span><span class="p">,</span><span class="s2">&quot;6 Proyectos&quot;</span><span class="p">,</span><span class="s2">&quot;7 Proyectos&quot;</span><span class="p">],</span>
+      <span class="s2">&quot;</span><span class="si">% d</span><span class="s2">e empleados que trabajan en </span><span class="se">\n</span><span class="s2">varios proyectos a la vez&quot;</span><span class="p">)</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedImage jp-OutputArea-output ">
+              <img src="python_images/rotacion_de_empleados_churn/0008.jpg">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h3>
+          Análisis.
+        </h3>
+        <p>
+          Se puede observar en el gráfico anterior que:
+        </p>
+        <ul>
+          <li>El 29.1% de los empleados tienen asignado un único proyecto,</li>
+          <li>El 27% de los empleados tienen asignados dos proyectos simultáneamente,</li>
+          <li>Por lo tanto, el 56.1% del total de empleados tienen asignados menos o igual a dos proyectos
+            simultáneamente,</li>
+          <li>Únicamente el 1.7% del total de empleados tienen asignados seis proyectos simultáneamente.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[18]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">elem</span> <span class="o">=</span> <span class="n">element</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="s2">&quot;Tiempo_en_la_Empresa&quot;</span><span class="p">)</span>
+<span class="n">donas</span><span class="p">(</span><span class="n">elem</span><span class="p">,</span>
+      <span class="p">[</span><span class="s2">&quot;1 Año&quot;</span><span class="p">,</span> <span class="s2">&quot;2 Años&quot;</span><span class="p">,</span><span class="s2">&quot;3 Años&quot;</span><span class="p">,</span><span class="s2">&quot;4 Años&quot;</span><span class="p">,</span><span class="s2">&quot;5 Años&quot;</span><span class="p">,</span><span class="s2">&quot;6 Años&quot;</span><span class="p">,</span><span class="s2">&quot;7 Años&quot;</span><span class="p">,</span><span class="s2">&quot;8 Años&quot;</span><span class="p">,</span><span class="s2">&quot;9 Años&quot;</span><span class="p">,</span><span class="s2">&quot;10 Años&quot;</span><span class="p">],</span>
+      <span class="s2">&quot;</span><span class="si">% d</span><span class="s2">e empleados que tienen tantos </span><span class="se">\n</span><span class="s2">años de experiencia trabajando </span><span class="se">\n</span><span class="s2">en la empresa&quot;</span><span class="p">)</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedImage jp-OutputArea-output ">
+              <img src="python_images/rotacion_de_empleados_churn/0009.jpg">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h3>
+          Análisis.
+        </h3>
+        <p>
+          Se puede observar en el gráfico anterior que:
+        </p>
+        <ul>
+          <li>El 43% del total de empleados tiene tan solo un año de experiencia trabajando en la Empresa,</li>
+          <li>El 21.6% del total de empleados tiene un par de años de experiencia trabajando en la Empresa,</li>
+          <li>Por lo tanto, el 64.6% del total de empleados tienen menos o igual a dos años de experiencia trabajando en
+            la Empresa.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[19]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">elem</span> <span class="o">=</span> <span class="n">element</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="s2">&quot;Promoción_Últimos_5_Años&quot;</span><span class="p">)</span>
+<span class="n">donas</span><span class="p">(</span><span class="n">elem</span><span class="p">,</span>
+      <span class="p">[</span><span class="s2">&quot;No&quot;</span><span class="p">,</span> <span class="s2">&quot;Si&quot;</span><span class="p">,],</span>
+      <span class="s2">&quot;</span><span class="si">% d</span><span class="s2">e empleados que obtivieron al menos una </span><span class="se">\n</span><span class="s2">promoción en los últimos 5 años&quot;</span><span class="p">)</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedImage jp-OutputArea-output ">
+              <img src="python_images/rotacion_de_empleados_churn/0010.jpg">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h3>
+          Análisis.
+        </h3>
+        <ul>
+          <li>
+            <p>Es evidente que la mayoría de los empleados no han recibido al menos una promoción en los últimos cinco
+              años, sin embargo, es importante señalar, como se pudo observar en el gráfico anterior, el 91.4% del total
+              de empleados no superan los cuatro años de experiencia trabajando dentro de la Empresa.
+            </p>
+          </li>
+          <li>
+            <p>Por lo tanto, <strong>será necesario analizar cuantos del 8.6% restante</strong> superan los cinco años
+              de experiencia y si obtuvieron o no un ascenso o promoción.</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[20]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">elem</span> <span class="o">=</span> <span class="n">element</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="s2">&quot;Nivel_de_Sueldo&quot;</span><span class="p">)</span>
+<span class="n">donas</span><span class="p">(</span><span class="n">elem</span><span class="p">,</span>
+      <span class="p">[</span><span class="s2">&quot;Bajo&quot;</span><span class="p">,</span> <span class="s2">&quot;Medio&quot;</span><span class="p">,</span><span class="s2">&quot;Alto&quot;</span><span class="p">],</span>
+      <span class="s2">&quot;</span><span class="si">% d</span><span class="s2">el total de empleados con distintos niveles </span><span class="se">\n</span><span class="s2">de sueldos&quot;</span><span class="p">)</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedImage jp-OutputArea-output ">
+              <img src="python_images/rotacion_de_empleados_churn/0011.jpg">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h3>
+          Análisis.
+        </h3>
+        <ul>
+          <li>Se puede observar que el 48% del total de empleados obtiene sueldos bajos y el 43% obtiene sueldos medios.
+          </li>
+        </ul>
+        <h3>
+          3.8 Niveles de satisfacción según niveles de sueldos (Variable Categórica).
+        </h3>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[21]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="k">def</span> <span class="nf">show_values_on_bars</span><span class="p">(</span><span class="n">axs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_show_on_single_plot</span><span class="p">(</span><span class="n">ax</span><span class="p">):</span>        
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">ax</span><span class="o">.</span><span class="n">patches</span><span class="p">:</span>
+            <span class="n">_x</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">get_x</span><span class="p">()</span> <span class="o">+</span> <span class="n">p</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="n">_y</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">get_y</span><span class="p">()</span> <span class="o">+</span> <span class="n">p</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">+</span> <span class="mi">5</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:.2f}</span><span class="s1">%&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">get_height</span><span class="p">())</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">_x</span><span class="p">,</span> <span class="n">_y</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span> 
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">axs</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">ndenumerate</span><span class="p">(</span><span class="n">axs</span><span class="p">):</span>
+            <span class="n">_show_on_single_plot</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">_show_on_single_plot</span><span class="p">(</span><span class="n">axs</span><span class="p">)</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[22]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">data</span>
+<span class="n">df_</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Nivel_de_Satisfacción&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span>
+<span class="n">df</span><span class="p">[</span><span class="s2">&quot;Nivel_de_Satisfacción&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[23]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">barplot</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="s2">&quot;Nivel_de_Sueldo&quot;</span><span class="p">,</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="s2">&quot;Nivel_de_Satisfacción&quot;</span><span class="p">,</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;Abandono&quot;</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span><span class="p">],</span>
+            <span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">despine</span><span class="p">(</span><span class="n">bottom</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">left</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;% promedio del nivel de satisfacción </span><span class="se">\n</span><span class="s2">según niveles de sueldo en </span><span class="se">\n</span><span class="s2">empleados que permanecen en la Empresa&quot;</span><span class="p">,</span>
+          <span class="n">size</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span>
+          <span class="n">y</span> <span class="o">=</span> <span class="mf">1.1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Niveles de Sueldo&quot;</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">15</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">% d</span><span class="s2">e Satisfacción&quot;</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">15</span><span class="p">)</span>
+<span class="n">show_values_on_bars</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedImage jp-OutputArea-output ">
+              <img src="python_images/rotacion_de_empleados_churn/0012.jpg">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[24]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">barplot</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="s2">&quot;Nivel_de_Sueldo&quot;</span><span class="p">,</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="s2">&quot;Nivel_de_Satisfacción&quot;</span><span class="p">,</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;Abandono&quot;</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">despine</span><span class="p">(</span><span class="n">bottom</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">left</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;% promedio del nivel de satisfacción </span><span class="se">\n</span><span class="s2">según niveles de sueldo en </span><span class="se">\n</span><span class="s2">empleados que abandonaron la Empresa&quot;</span><span class="p">,</span>
+          <span class="n">size</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span>
+          <span class="n">y</span> <span class="o">=</span> <span class="mf">1.1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Niveles de Sueldo&quot;</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">15</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">% d</span><span class="s2">e Satisfacción&quot;</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">15</span><span class="p">)</span>
+<span class="n">show_values_on_bars</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedImage jp-OutputArea-output ">
+              <img src="python_images/rotacion_de_empleados_churn/0013.jpg">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h3>
+          Análisis.
+        </h3>
+        <p>
+          De los dos gráficos anteriores se puede concluir los siguiente.
+        </p>
+        <p>
+          <em>
+            Empleados que abandonaron la Empresa:
+          </em>
+        </p>
+        <ul>
+          <li>El porcentaje del nivel de satisfacción se encuentra aproximadamente en un 20% por debajo de los empleados
+            que permanecen, independientemente del nivel de sueldo y,</li>
+          <li>El porcentaje de satisfacción más bajo se registra para empleados con los niveles de sueldo más altos con
+            43.45%, seguido por los de sueldos medios con 43.85% y, finalmente con 44.12% de satisfacción para los
+            empleados con sueldos más bajos, esto podría indicar que los empleados que recibieron sueldos altos no se
+            encontraban satisfechos con sus ingresos, aunque obtenían los sueldos más altos.</li>
+        </ul>
+        <p><em>Empleados que permanecen en la Empresa:</em></p>
+        <ul>
+          <li>El porcentaje de satisfacción mayor se encuentra en el grupo con sueldos medios con 66.89%, seguido por
+            los de sueldos más bajos con 66.81% y, finalmente por los de sueldos más altos con 65.19%. Esto podría
+            indicar que los empleados con los sueldos altos se encuentran menos satisfechos con sus ingresos en
+            comparación con el nivel de satisfacción de empleados con sueldos medios y bajos.</li>
+        </ul>
+        <h3>
+          3.9 Promociones (Empleados con 5 años o más de experiencia).
+        </h3>
+        <p>
+          En esta sección se analizará el porcentaje de empleados que tienen cinco o más años de experiencia trabajando
+          en la Empresa.
+        </p>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[25]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">data_5</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;Tiempo_en_la_Empresa&quot;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">5</span><span class="p">]</span> <span class="c1"># Crea un conjunto de datos filtrado</span>
+<span class="c1"># Confirma que efectivamente el conjunto de datos filtrado</span>
+<span class="c1"># corresponde a empleados con 5 años o más de experiencia</span>
+<span class="c1"># trabajando en la Empresa</span>
+<span class="n">data_5</span><span class="o">.</span><span class="n">Tiempo_en_la_Empresa</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[25]:</div>
+            <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+              <pre>array([ 6,  5,  8, 10,  7], dtype=int64)</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[26]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">elem</span> <span class="o">=</span> <span class="n">element</span><span class="p">(</span><span class="n">data_5</span><span class="p">,</span><span class="s2">&quot;Promoción_Últimos_5_Años&quot;</span><span class="p">)</span>
+<span class="n">donas</span><span class="p">(</span><span class="n">elem</span><span class="p">,</span>
+      <span class="p">[</span><span class="s2">&quot;No&quot;</span><span class="p">,</span> <span class="s2">&quot;Si&quot;</span><span class="p">,],</span>
+      <span class="s2">&quot;</span><span class="si">% e</span><span class="s2">mpleados con 5 años o más que obtivieron </span><span class="se">\n</span><span class="s2">al menos una promoción &quot;</span><span class="p">)</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedImage jp-OutputArea-output ">
+              <img src="python_images/rotacion_de_empleados_churn/0014.jpg">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[27]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Cantidad de empleados con promoción: &quot;</span><span class="p">,</span>
+      <span class="n">data_5</span><span class="p">[</span><span class="n">data_5</span><span class="p">[</span><span class="s2">&quot;Promoción_Últimos_5_Años&quot;</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">Promoción_Últimos_5_Años</span><span class="o">.</span><span class="n">count</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Cantidad de total empleados con 5 años o más de experiencia: &quot;</span><span class="p">,</span>
+      <span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;Tiempo_en_la_Empresa&quot;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">5</span><span class="p">]</span><span class="o">.</span><span class="n">Promoción_Últimos_5_Años</span><span class="o">.</span><span class="n">count</span><span class="p">())</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+              <pre>Cantidad de empleados con promoción:  96
+Cantidad de total empleados con 5 años o más de experiencia:  2755
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h3>
+          Análisis.
+        </h3>
+        <ul>
+          <li>Se puede observar que del total de empleados que tienen cinco años o más de experiencia trabajando en la
+            Empresa, únicamente el 3.5% obtuvo al menos un ascenso o promoción, es decir, de un total de 2.755 empleados
+            con cinco años de experiencia o más trabajando en la empresa, únicamente 96 han obtenido al menos una
+            promoción.</li>
+        </ul>
+        <h3>
+          3.10 Contraste de Empleados.
+        </h3>
+        <p>
+          Al igual que la sección anterior de <strong>Totalización de Empleados</strong> se procederá de manera gráfica,
+          a la totalización y análisis de la cantidad de empleados realizando una comparación de cantidades entre los
+          empleados que abandonaron sus puestos de trabajo y los que aún permanecen en la Empresa.
+        </p>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[28]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">30</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">features</span><span class="p">):</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">hspace</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">splot</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">countplot</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">j</span><span class="p">,</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="s1">&#39;PuBu&#39;</span><span class="p">,</span> <span class="n">hue</span> <span class="o">=</span> <span class="s2">&quot;Abandono&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">splot</span><span class="o">.</span><span class="n">patches</span><span class="p">:</span>
+        <span class="n">splot</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="nb">format</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">get_height</span><span class="p">(),</span> <span class="s1">&#39;.1f&#39;</span><span class="p">),</span>
+                       <span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">get_x</span><span class="p">()</span> <span class="o">+</span> <span class="n">p</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">get_height</span><span class="p">()),</span>
+                       <span class="n">ha</span> <span class="o">=</span> <span class="s1">&#39;center&#39;</span><span class="p">,</span>
+                       <span class="n">va</span> <span class="o">=</span> <span class="s1">&#39;bottom&#39;</span><span class="p">,</span>
+                       <span class="n">rotation</span> <span class="o">=</span> <span class="mi">90</span><span class="p">,</span>
+                       <span class="n">xytext</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">),</span>
+                       <span class="n">textcoords</span> <span class="o">=</span> <span class="s1">&#39;offset points&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">rotation</span> <span class="o">=</span> <span class="mi">90</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Cantidad de empleados&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mf">1.2</span><span class="p">);</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedImage jp-OutputArea-output ">
+              <img src="python_images/rotacion_de_empleados_churn/0015.jpg">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h3>
+          Análisis.
+        </h3>
+        <ul>
+          <li>
+            <p>
+              <em>
+                Según la cantidad de proyectos asignados</em>: Se puede observar que la mayoría de empleados que
+              abandonaron sus cargos fueron empleados (1.567 empleados) con únicamente dos proyectos asignados al mismo
+              tiempo, muy superior al número de empleados (256 empleados) que abandonaron sus puestos de trabajo con
+              siete proyectos asignados al mismo tiempo.
+            </p>
+          </li>
+          <li>
+            <p><em>Según los años de experiencia en la empresa</em>: Se puede observar que la mayoría de los empleados
+              (1.586 empleados) que abandonaron sus puestos de trabajo tenían al menos tres años de experiencia, por lo
+              que es claro que la mayoría de los empleados que abandonaron sus puestos de trabajo no hayan obtenido al
+              menos una promoción o ascenso (3.552 empleados).</p>
+          </li>
+          <li>
+            <p><em>Según el departamento</em>: Se puede observar que la mayoría de los empleados que abandonaron sus
+              puestos de trabajo se encuentran en el departamento de ventas (1.014 empleados), esto se debe a que en ese
+              departamento es donde se encuentra la mayoría de empleados, tal como se observó en la sección de gráficos,
+              <em>Totalización de Empleados</em>.
+            </p>
+          </li>
+          <li>
+            <p><em>Según el nivel de sueldo</em>: Se puede observar que la mayoría de los empleados que abandonaron sus
+              puestos de trabajos se encuentran en el grupo con los sueldos más bajos (2.172 empleados).</p>
+          </li>
+        </ul>
+        <p>Antes de finalizar la sección de análisis exploratorio de datos con gráficos, para obtener un enfoque más
+          amplio, veremos un aspecto fundamental en el análisis de los datos, el análisis de conglomerados
+          (clusterización).</p>
+        <h3>
+          3.11 Análisis de conglomerados:
+        </h3>
+        <p>
+          Será necesario analizar más el grupo de empleados que abandonaron sus puestos de trabajo, como se ha observado
+          en los gráficos anteriores, el factor más importante para que cualquier empleado que permanezca o abandone la
+          Empresa depende del nivel de satisfacción personal y su desempeño en la Empresa, por lo tanto, se procederá a
+          agruparlos para realizar un análisis de conglomerados o de clusterización.
+        </p>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[29]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="c1"># Se filtran los datos (únicamente empleados que abandonaron)</span>
+<span class="n">abandona_emp</span> <span class="o">=</span>  <span class="n">data</span><span class="p">[[</span><span class="s1">&#39;Nivel_de_Satisfacción&#39;</span><span class="p">,</span> <span class="s1">&#39;Última_Evaluación&#39;</span><span class="p">]][</span><span class="n">data</span><span class="o">.</span><span class="n">Abandono</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>
+<span class="c1"># Se crean los grupos usando K-means</span>
+<span class="n">clustering_kmeans</span> <span class="o">=</span> <span class="n">KMeans</span><span class="p">(</span><span class="n">n_clusters</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+                           <span class="n">random_state</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">abandona_emp</span><span class="p">)</span>
+<span class="c1"># Se agrega una nueva columna &quot;etiqueta&quot; y se asigna por grupo.</span>
+<span class="n">abandona_emp</span><span class="p">[</span><span class="s1">&#39;etiqueta&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">clustering_kmeans</span><span class="o">.</span><span class="n">labels_</span>
+<span class="c1"># Se crea el diagrama de dispersión</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">abandona_emp</span><span class="p">[</span><span class="s1">&#39;Nivel_de_Satisfacción&#39;</span><span class="p">],</span>
+            <span class="n">abandona_emp</span><span class="p">[</span><span class="s1">&#39;Última_Evaluación&#39;</span><span class="p">],</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="n">abandona_emp</span><span class="p">[</span><span class="s1">&#39;etiqueta&#39;</span><span class="p">],</span>
+            <span class="n">cmap</span> <span class="o">=</span> <span class="s1">&#39;Accent&#39;</span>
+           <span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">% d</span><span class="s2">e satisfacción&quot;</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">15</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">% d</span><span class="s2">e desempeño según </span><span class="se">\n</span><span class="s2">última evaluación&quot;</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">15</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Clusterización de empleados </span><span class="se">\n</span><span class="s2">que abandonaron la Empresa&quot;</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mf">1.05</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">15</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">();</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedImage jp-OutputArea-output ">
+              <img src="python_images/rotacion_de_empleados_churn/0016.jpg">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h3>
+          Análisis.
+        </h3>
+        <p>
+          El empleado que abandonó la empresa se puede clasificar en tres tipos de empleados:
+        </p>
+        <ul>
+          <li>Empleados con alta satisfacción y alta evaluación, puntos en color verde, se pueden clasificar como
+            <strong>"Los Ganadores"</strong>,
+          </li>
+          <li>Empleados con baja satisfacción y alta evaluación, puntos en color gris, se pueden clasificar como
+            <strong>"Los Frustrados"</strong> y,
+          </li>
+          <li>Empleados con satisfacción moderada y evaluación moderada, puntos en color azul, se pueden clasificar como
+            <strong>"Los No Comprometidos"</strong>.
+          </li>
+        </ul>
+        <h2>
+          4. Construcción del Modelo de Predicción.
+        </h2>
+        <h3>
+          4.1 Datos de preprocesamiento
+        </h3>
+        <p>
+          Muchos algoritmos de aprendizaje automático requieren datos de entrada numéricos, por lo que será necesario
+          transformar las columnas categóricas en columnas numéricas. Para la codificación de los datos, se asignará
+          cada categoría a un número, por ejemplo, el valor de la columna de nivel de sueldos se puede representar como:
+          Bajo: 0, Medio: 1 y Alto: 2. Este proceso se conoce como codificación, haciendo uso de la librería SkLearn
+          convenientemente lo hará la función <code>LabelEncoder()</code>.
+        </p>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[30]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;hhrr_employee_list.csv&quot;</span><span class="p">,</span> <span class="n">encoding</span> <span class="o">=</span> <span class="s1">&#39;latin-1&#39;</span><span class="p">)</span>
+<span class="c1"># Se crea el codificador</span>
+<span class="n">le</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">LabelEncoder</span><span class="p">()</span>
+<span class="c1"># Se transforman las etiquetas en números.</span>
+<span class="n">data</span><span class="p">[</span><span class="s1">&#39;Nivel_de_Sueldo&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">le</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Nivel_de_Sueldo&#39;</span><span class="p">])</span>
+<span class="n">data</span><span class="p">[</span><span class="s1">&#39;Departamento&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">le</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Departamento&#39;</span><span class="p">])</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[31]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Departamentos: &quot;</span><span class="p">,</span>
+      <span class="n">data</span><span class="o">.</span><span class="n">Departamento</span><span class="o">.</span><span class="n">unique</span><span class="p">(),</span>
+      <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Niveles de sueldo: &quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">Nivel_de_Sueldo</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+              <pre>Departamentos:  [8 0 6 9 7 1 3 2 4 5] 
+Niveles de sueldo:  [1 2 0]
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <p>
+          El procedimiento anterior importó el módulo de preprocesamiento, se creó el objeto LabelEncoder, con este se
+          ajustaron y se transformaron las columnas "Nivel_de_Sueldo" y "Departamento" en columnas numéricas.
+        </p>
+        <h3>
+          4.2 División del conjunto de datos (Train, Test)
+        </h3>
+        <p>
+          Para comprender el rendimiento del modelo, se procede a dividir el conjunto de datos en un conjunto de
+          entrenamiento y otro conjunto de pruebas, a través del uso de la función <code>train_test_split()</code>.
+        </p>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[32]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="c1"># Se dividen los datos según características</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">data</span><span class="p">[[</span><span class="s2">&quot;Nivel_de_Satisfacción&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;Última_Evaluación&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;Cantidad_de_Proyectos&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;Horas_Promedio_Mensual&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;Tiempo_en_la_Empresa&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;Accidentes_Laborales&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;Promoción_Últimos_5_Años&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;Departamento&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;Nivel_de_Sueldo&quot;</span><span class="p">]]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;Abandono&quot;</span><span class="p">]</span>
+<span class="c1"># Se divide el conjunto de datos en un conjuntos</span>
+<span class="c1"># de entrenamiento y pruebas (70% de entrenamiento</span>
+<span class="c1"># y 30% de prueba)</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+    <span class="n">X</span><span class="p">,</span>
+    <span class="n">y</span><span class="p">,</span>
+    <span class="n">test_size</span> <span class="o">=</span> <span class="mf">0.3</span><span class="p">,</span>
+    <span class="n">random_state</span> <span class="o">=</span> <span class="mi">42</span>
+<span class="p">)</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <p>
+          El conjunto de datos se dividió en dos partes en una proporción de 70:30, es decir,70% de los datos se
+          utilizarán para el entrenamiento de modelo y el 30% para las pruebas.
+        </p>
+        <h3>
+          4.3 Construcción del modelo
+        </h3>
+        <p>
+          En esta sección se construirá un modelo para predicción de abandono de empleados, este será capaz de predecir
+          la deserción haciendo uso de la función <code>GradientBoostingClassifier()</code>, primeramente se importará
+          el módulo, posteriormente se creará el objeto clasificador, seguidamente se ajustará el modelo al conjunto de
+          entrenamiento a través de la función <code>fit()</code>, para finalmente realizar predicciones, y a través del
+          conjunto de pruebas evaluarlas.
+        </p>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[33]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="c1"># Se crear el clasificador de aumento de gradiente</span>
+<span class="n">gb</span> <span class="o">=</span> <span class="n">GradientBoostingClassifier</span><span class="p">()</span>
+<span class="c1"># Se entrena el modelo con el conjunto de entrenamiento</span>
+<span class="n">gb</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="c1"># Se realizan las predicciones para el conjunto de</span>
+<span class="c1"># datos de prueba</span>
+<span class="n">y_pred</span> <span class="o">=</span> <span class="n">gb</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h3>
+          4.4 Predicciones del Modelo
+        </h3>
+        <h3>
+          4.4.1 Matriz de Confusión
+        </h3>
+        <p>
+          A través de una matriz de confusión se podrá observar visualmente la cantidad de aciertos en la predicción del
+          modelo
+        </p>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[35]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="n">matriz</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+<span class="n">group_counts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;</span><span class="si">{0:0.0f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span>
+                <span class="n">matriz</span><span class="o">.</span><span class="n">flatten</span><span class="p">()]</span>
+<span class="n">group_percentages</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;</span><span class="si">{0:.2%}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span>
+                     <span class="n">matriz</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">matriz</span><span class="p">)]</span>
+<span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">v1</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">v2</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">v1</span><span class="p">,</span> <span class="n">v2</span> <span class="ow">in</span>
+          <span class="nb">zip</span><span class="p">(</span><span class="n">group_counts</span><span class="p">,</span><span class="n">group_percentages</span><span class="p">)]</span>
+<span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">matriz</span><span class="p">,</span>
+                 <span class="n">annot</span> <span class="o">=</span> <span class="n">labels</span><span class="p">,</span>
+                 <span class="n">fmt</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+                 <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Blues&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Matriz de Confución para </span><span class="se">\n</span><span class="s2">evaluación del modelo</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">);</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Valores Predichos&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Valores Reales&quot;</span><span class="p">);</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_ticklabels</span><span class="p">([</span><span class="s1">&#39;Permanece&#39;</span><span class="p">,</span><span class="s1">&#39;Abandona&#39;</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_ticklabels</span><span class="p">([</span><span class="s1">&#39;Permanece&#39;</span><span class="p">,</span><span class="s1">&#39;Abandona&#39;</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">();</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedImage jp-OutputArea-output ">
+              <img src="python_images/rotacion_de_empleados_churn/0017.jpg">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h3>
+          Análisis.
+        </h3>
+        <p>
+          Según el gráfico anterior de la matriz de confusión, se pude concluir los siguiente:
+        </p>
+        <ul>
+          <li>De un total de 3.428 empleados que aparecen clasificados en el conjunto de datos de pruebas, que
+            permanecen en la Empresa, el modelo predijo que 3.382 empleados permanecerán (acertando 75.16%) y 46
+            empleados abandonarán (fallando 1.02%).</li>
+          <li>De un total de 1.072 empleados que aparecen clasificados en el conjunto de datos de pruebas, que
+            abandonaron la Empresa, el modelo predijo que 987 (acertando 21.93%) empleados abandonarán y 85 (fallando
+            1.89%) empleados permanecerán.</li>
+        </ul>
+        <p>Para entender que significan estas predicciones del modelo será necesario entender sus niveles de exactitud y
+          precisión, las cuales se analizarán a continuación.</p>
+        <h3>
+          4.4.2 Evaluación y Métricas
+        </h3>
+        <p>
+          En esta sección se evaluará la exactitud, y la precisión del modelo haciendo uso de las funciones de métricas
+          <code>metrics.accuracy_score()</code>, <code>metrics.precision_score()</code> y, evaluación del modelo a
+          través del conjunto de pruebas con la función <code>metrics.recall_score()</code>.
+        </p>
+      </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+      <div class="jp-Cell-inputWrapper">
+        <div class="jp-InputArea jp-Cell-inputArea">
+          <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[36]:</div>
+          <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+            <div class="CodeMirror cm-s-jupyter">
+              <div class=" highlight hl-ipython3">
+                <pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Exactitud: &quot;</span><span class="p">,</span><span class="n">metrics</span><span class="o">.</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Precisión: &quot;</span><span class="p">,</span><span class="n">metrics</span><span class="o">.</span><span class="n">precision_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Evaluación: &quot;</span><span class="p">,</span><span class="n">metrics</span><span class="o">.</span><span class="n">recall_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">))</span>
+</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jp-Cell-outputWrapper">
+        <div class="jp-OutputArea jp-Cell-outputArea">
+          <div class="jp-OutputArea-child">
+            <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+            <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+              <pre>
+Exactitud:  0.9708888888888889
+Precisión:  0.9554695062923524
+Evaluación:  0.9207089552238806
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputPrompt jp-InputArea-prompt">
+      </div>
+      <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+        <h2>
+          5. Conclusiones
+        </h2>
+        <ul>
+          <li>En la exactitud, a través de este modelo se obtiene una tasa de clasificación con exactitud general de
+            97%, se considera un alto índice de exactitud,</li>
+          <li>En la predicción, cuando el modelo predice que algún número de empleados abandonarán la Empresa, éste
+            tendrá una precisión general del 95% de las veces.</li>
+          <li>En la evaluación, si hay un empleado clasificado como que permanece en la Empresa en el conjunto de
+            pruebas, el modelo es capaz de identificarlo en general el 92% de las veces.</li>
+        </ul>
+        <p>
+          A través de este caso de uso se ha podido estudiar de manera bastante completa un caso de abandono de
+          empleados, desde el análisis exploratorio de datos, la creación de un modelo de clasificación y predicción,
+          como se comentó al inicio, este modelo también se podría utilizar para la predicción de abandono de clientes,
+          tomando en consideración que habría que realizar un análisis exploratorio de datos para ese caso en
+          particular.
+        </p>
+        <p>
+          El empleado es como con un nicho, donde sus habilidades son más difíciles de reemplazar, esto afecta el
+          trabajo continuo y la productividad de los empleados existentes, la adquisición de nuevos empleados como
+          reemplazo, tiene sus propios costos, como los costos de contratación, costos de capacitación entre otros,
+          además, el nuevo empleado se tomará un tiempo para adquirir las habilidades a un nivel similar de conocimiento
+          técnico o de experiencia comercial de un empleado con mayor tiempo en la Empresa, por esta razón este caso de
+          uso ayudará a la organización para abordar este problema a través de aplicar las técnicas de aprendizaje
+          automático implementadas, para predecir la rotación de empleados, lo que les permitirá a tomar las medidas
+          necesarias.
+        </p>
+      </div>
+    </div>
+</body>
+</html>
