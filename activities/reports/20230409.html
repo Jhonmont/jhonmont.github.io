@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <title>Date: 09/04/2023</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="shortcut icon" href="../activities/images/garmin_edge500.png" type="image/x-icon">
+    <link rel="stylesheet" href="../styles/style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+        
+</head>
+<body>
+    <header>
+        <a href="../main.html"
+        class="logo">
+            <img src="../activities/images/garmin_edge500.png" alt="logo">
+            <h2 class="nombre-empresa">Heart rate zones</h2>
+        </a>
+        <nav>
+          <a href="20230326.html" class="nav-link">< Back</a>
+          <a href="../main.html" class="nav-link"> | Home | </a>
+          <a href="20230416.html" class="nav-link">Next ></a>
+        </nav>
+    </header>
+
+    <div class="image">
+        <img src="../activities/images/20230409.png">
+    </div>
+
+    <div class="pre">
+
+    <pre>
+    Route: Carolina Rabat
+	Date: 2023-04-09
+
+	Distance: 16.99 (km)
+	Total Time: 2:28 (h:m)
+
+	Cadence (rpm):  Min: 0  Avg: 42  Max: 188
+	H.Rate (bpm):  Min: 95  Avg: 135  Max: 165
+	Temp (°C):  Min: 25  Avg: 27  Max: 30
+    </pre>
+    <pre>
+                                   time_in_zone (hh:mm)    pct
+	zone                                                      
+	Zone 5 &gt;= 163 bpm (Maximun)                     0:1  0.54%
+	Zone 4 145-162 bpm (Threshold)                 0:25 16.77%
+	Zone 3 127-144 bpm (Aerobic)                   0:43 28.98%
+	Zone 2 109-126 bpm (Easy)                      0:26 17.85%
+	Zone 1 91-108 bpm (Warm Up)                    0:53 35.86%
+    </pre>
+        
+    </div>
+
+    <div class="folium-map" id="new_map" ></div>
+    
+    <br>
+</body>
+<script src="../activities/maps/20230409.js"></script>
+</html>
