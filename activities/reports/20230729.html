@@ -1,78 +1,63 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-    <title>Report - 29/07/2023</title>
+    <meta charset="UTF-8">
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-    <script>
-        L_NO_TOUCH = false;
-        L_DISABLE_3D = false;
-    </script>
+    <title>Date: 29/07/2023</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="shortcut icon" href="../activities/images/garmin_edge500.png" type="image/x-icon">
+    <link rel="stylesheet" href="../styles/style.css">
 
     <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
-    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script
-        src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css" />
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css" />
-    <link rel="stylesheet"
-        href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css" />
-
-    <link rel="stylesheet" href="../styles/style.css" />
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-
+        
 </head>
-
 <body>
+    <header>
+        <a href="../main.html"
+        class="logo">
+            <img src="../activities/images/garmin_edge500.png" alt="logo">
+            <h2 class="nombre-empresa">Heart rate zones</h2>
+        </a>
+        <nav>
+          <a href="20230716.html" class="nav-link">< Back</a>
+          <a href="../main.html" class="nav-link"> | Home | </a>
+          <a href="20230801.html" class="nav-link">Next ></a>
+        </nav>
+    </header>
 
-    <div style="text-align: center;">
-        <a href="20230716.html">< Back </a>
-        <a href="../main.html">| Home |</a>
-        <a href="20230801.html"> Next ></a>
-        <br>
-    </div>
-
-    <div class="div_pre">
-        <pre class="pre">
-Route: San Cristobal - Anfiteatro
-Date: 2023-07-29
-
-Distance: 20.31 (km)
-Moving Time: 2:36 (h:m)
-Total Time: 2:44 (h:m)
-
-Cadence (rpm):  Min: 0  Avg: 36  Max: 167
-H.Rate (bpm):  Min: 83  Avg: 136  Max: 164
-Temp (°C):  Min: 18  Avg: 21  Max: 24
-</pre>
-    </div>
-
-    <div class="folium-map" id="new_map"></div>
-
-    <div class="div_pre">
+    <div class="image">
         <img src="../activities/images/20230729.png">
     </div>
 
-    <div class="div_pre">
-        <pre class="pre">
-                               time_in_zone (hh:mm)    pct
-zone                                                      
-Zone 5 &gt;= 163 bpm (Maximun)                     0:1  0.61%
-Zone 4 145-162 bpm (Threshold)                 1:24 52.71%
-Zone 3 127-144 bpm (Aerobic)                   0:26 16.61%
-Zone 2 109-126 bpm (Easy)                      0:20 12.36%
-Zone 1 91-108 bpm (Warm Up)                    0:28 17.72%
-</pre>
+    <div class="pre">
+
+        <pre>
+        Route: San Cristobal - Anfiteatro
+        Date: 2023-07-29
+        
+        Distance: 20.31 (km)
+        Total Time: 2:44 (h:m)
+        
+        Cadence (rpm):  Min: 0  Avg: 36  Max: 167
+        H.Rate (bpm):  Min: 83  Avg: 136  Max: 164
+        Temp (°C):  Min: 18  Avg: 21  Max: 24
+        </pre>
+        <pre>
+                                       time_in_zone (hh:mm)    pct
+        zone                                                      
+        Zone 5 &gt;= 163 bpm (Maximun)                     0:1  0.61%
+        Zone 4 145-162 bpm (Threshold)                 1:24 52.71%
+        Zone 3 127-144 bpm (Aerobic)                   0:26 16.61%
+        Zone 2 109-126 bpm (Easy)                      0:20 12.36%
+        Zone 1 91-108 bpm (Warm Up)                    0:28 17.72%
+        </pre>
+        
     </div>
 
+    <div class="folium-map" id="new_map" ></div>
+    
+    <br>
 </body>
-
 <script src="../activities/maps/20230729.js"></script>
-
 </html>
