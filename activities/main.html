@@ -1,43 +1,311 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Heart rate zones list</title>
-        <link rel="shortcut icon" href="activities/images/garmin_edge500.png" type="image/x-icon">
-        <link rel="stylesheet" href="styles/style.css">
-    </head>
-    <body>
-        <h2>
-            <img src="activities/images/garmin_edge500.png" alt="logo" width="50px">
-            Heart Rate Zones List
-        </h2>
-        <div style="margin-left: 90px;">
-        	<a href="../index.html">Back to Index</a>
-    	</div>
-        <ul>
-        <li><a href="reports/20230803.html">03/08/2023 / San Cristobal - Vitacura</a></li>
-        <li><a href="reports/20230801.html">01/08/2023 / San Cristobal - Virgen</a></li>
-        <li><a href="reports/20230801.html">01/08/2023 / San Cristobal - Virgen</a></li>
-        <li><a href="reports/20230729.html">29/07/2023 / San Cristobal - Anfiteatro</a></li>
-        <li><a href="reports/20230716.html">16/07/2023 / Manquehuito</a></li>
-        <li><a href="reports/20230713.html">13/07/2023 / San Cristobal - Anfiteatro</a></li>
-        <li><a href="reports/20230710.html">10/07/2023 / San Cristobal - Los Gemelos</a></li>
-        <li><a href="reports/20230618.html">18/06/2023 / Manquehuito</a></li>
-        <li><a href="reports/20230616.html">16/06/2023 / San Cristobal - Anfiteatro</a></li>
-        <li><a href="reports/20230611.html">11/06/2023 / Carolina Rabat</a></li>
-        <li><a href="reports/20230604.html">04/06/2023 / Carolina Rabat</a></li>
-        <li><a href="reports/20230531.html">31/05/2023 / San cristobal - Corto</a></li>
-        <li><a href="reports/20230528.html">28/05/2023 / Carolina Rabat</a></li>
-        <li><a href="reports/20230521.html">21/05/2023 / Carolina Rabat</a></li>
-        <li><a href="reports/20230514.html">14/05/2023 / Carolina Rabat</a></li>
-        <li><a href="reports/20230503.html">03/05/2023 / Carolina Rabat</a></li>
-        <li><a href="reports/20230423.html">23/04/2023 / Carolina Rabat</a></li>
-        <li><a href="reports/20230416.html">16/04/2023 / Carolina Rabat</a></li>
-        <li><a href="reports/20230409.html">09/04/2023 / Carolina Rabat</a></li>
-        <li><a href="reports/20230326.html">26/03/2023 / Carolina Rabat</a></li>
-        <li><a href="reports/20230312.html">12/03/2023 / Carolina Rabat</a></li>
-        <li><a href="reports/20230226.html">26/02/2023 / Carolina Rabat</a></li>
-        <li><a href="reports/20230205.html">05/02/2023 / Carolina Rabat</a></li>
-        </u
-        </ul>
-    </body>
+<html lang="en">
+
+<head>
+    <title>Heart rate zones list</title>
+    <link rel="shortcut icon" href="activities/images/garmin_edge500.png" type="image/x-icon">
+    <link rel="stylesheet" href="styles/style_main.css">
+</head>
+
+<body>
+    <h2>
+        <img src="activities/images/garmin_edge500.png" alt="logo" width="50px">
+        Heart Rate Zones List
+    </h2>
+    <br>
+    <div class="back-index">
+        <a href="../index.html">
+            Back to Index</a>
+    </div>
+    <ul id='timeline'>
+
+        <li class='work'>
+            <input class='radio' id='work22' name='works' type='radio'>
+            <div class="relative">
+                <label for='work22'>San Cristobal - Vitacura</label>
+                <span class='date'><a href="reports/20230803.html">2023-08-03</a></span>
+                <span class='circle'></span>
+            </div>
+            <div class='content'>
+                <p>
+                <img src="activities/images/20230803.png" alt="20230803">
+                </p>
+            </div>
+        </li>
+        <li class='work'>
+            <input class='radio' id='work21' name='works' type='radio'>
+            <div class="relative">
+                <label for='work21'>San Cristobal - Virgen</label>
+                <span class='date'><a href="reports/20230801.html">2023-08-01</a></span>
+                <span class='circle'></span>
+            </div>
+            <div class='content'>
+                <p>
+                <img src="activities/images/20230801.png" alt="20230801">
+                </p>
+            </div>
+        </li>
+        <li class='work'>
+            <input class='radio' id='work20' name='works' type='radio'>
+            <div class="relative">
+                <label for='work20'>San Cristobal - Anfiteatro</label>
+                <span class='date'><a href="reports/20230729.html">2023-07-29</a></span>
+                <span class='circle'></span>
+            </div>
+            <div class='content'>
+                <p>
+                <img src="activities/images/20230729.png" alt="20230729">
+                </p>
+            </div>
+        </li>
+        <li class='work'>
+            <input class='radio' id='work19' name='works' type='radio'>
+            <div class="relative">
+                <label for='work19'>Manquehuito</label>
+                <span class='date'><a href="reports/20230716.html">2023-07-16</a></span>
+                <span class='circle'></span>
+            </div>
+            <div class='content'>
+                <p>
+                <img src="activities/images/20230716.png" alt="20230716">
+                </p>
+            </div>
+        </li>
+        <li class='work'>
+            <input class='radio' id='work18' name='works' type='radio'>
+            <div class="relative">
+                <label for='work18'>San Cristobal - Anfiteatro</label>
+                <span class='date'><a href="reports/20230713.html">2023-07-13</a></span>
+                <span class='circle'></span>
+            </div>
+            <div class='content'>
+                <p>
+                <img src="activities/images/20230713.png" alt="20230713">
+                </p>
+            </div>
+        </li>
+        <li class='work'>
+            <input class='radio' id='work17' name='works' type='radio'>
+            <div class="relative">
+                <label for='work17'>San Cristobal - Los Gemelos</label>
+                <span class='date'><a href="reports/20230710.html">2023-07-10</a></span>
+                <span class='circle'></span>
+            </div>
+            <div class='content'>
+                <p>
+                <img src="activities/images/20230710.png" alt="20230710">
+                </p>
+            </div>
+        </li>
+        <li class='work'>
+            <input class='radio' id='work16' name='works' type='radio'>
+            <div class="relative">
+                <label for='work16'>Manquehuito</label>
+                <span class='date'><a href="reports/20230618.html">2023-06-18</a></span>
+                <span class='circle'></span>
+            </div>
+            <div class='content'>
+                <p>
+                <img src="activities/images/20230618.png" alt="20230618">
+                </p>
+            </div>
+        </li>
+        <li class='work'>
+            <input class='radio' id='work15' name='works' type='radio'>
+            <div class="relative">
+                <label for='work15'>San Cristobal - Anfiteatro</label>
+                <span class='date'><a href="reports/20230616.html">2023-06-16</a></span>
+                <span class='circle'></span>
+            </div>
+            <div class='content'>
+                <p>
+                <img src="activities/images/20230616.png" alt="20230616">
+                </p>
+            </div>
+        </li>
+        <li class='work'>
+            <input class='radio' id='work14' name='works' type='radio'>
+            <div class="relative">
+                <label for='work14'>Carolina Rabat</label>
+                <span class='date'><a href="reports/20230611.html">2023-06-11</a></span>
+                <span class='circle'></span>
+            </div>
+            <div class='content'>
+                <p>
+                <img src="activities/images/20230611.png" alt="20230611">
+                </p>
+            </div>
+        </li>
+        <li class='work'>
+            <input class='radio' id='work13' name='works' type='radio'>
+            <div class="relative">
+                <label for='work13'>Carolina Rabat</label>
+                <span class='date'><a href="reports/20230604.html">2023-06-04</a></span>
+                <span class='circle'></span>
+            </div>
+            <div class='content'>
+                <p>
+                <img src="activities/images/20230604.png" alt="20230604">
+                </p>
+            </div>
+        </li>
+        <li class='work'>
+            <input class='radio' id='work12' name='works' type='radio'>
+            <div class="relative">
+                <label for='work12'>San cristobal - Corto</label>
+                <span class='date'><a href="reports/20230531.html">2023-05-31</a></span>
+                <span class='circle'></span>
+            </div>
+            <div class='content'>
+                <p>
+                <img src="activities/images/20230531.png" alt="20230531">
+                </p>
+            </div>
+        </li>
+        <li class='work'>
+            <input class='radio' id='work11' name='works' type='radio'>
+            <div class="relative">
+                <label for='work11'>Carolina Rabat</label>
+                <span class='date'><a href="reports/20230528.html">2023-05-28</a></span>
+                <span class='circle'></span>
+            </div>
+            <div class='content'>
+                <p>
+                <img src="activities/images/20230528.png" alt="20230528">
+                </p>
+            </div>
+        </li>
+        <li class='work'>
+            <input class='radio' id='work10' name='works' type='radio'>
+            <div class="relative">
+                <label for='work10'>Carolina Rabat</label>
+                <span class='date'><a href="reports/20230521.html">2023-05-21</a></span>
+                <span class='circle'></span>
+            </div>
+            <div class='content'>
+                <p>
+                <img src="activities/images/20230521.png" alt="20230521">
+                </p>
+            </div>
+        </li>
+        <li class='work'>
+            <input class='radio' id='work9' name='works' type='radio'>
+            <div class="relative">
+                <label for='work9'>Carolina Rabat</label>
+                <span class='date'><a href="reports/20230514.html">2023-05-14</a></span>
+                <span class='circle'></span>
+            </div>
+            <div class='content'>
+                <p>
+                <img src="activities/images/20230514.png" alt="20230514">
+                </p>
+            </div>
+        </li>
+        <li class='work'>
+            <input class='radio' id='work8' name='works' type='radio'>
+            <div class="relative">
+                <label for='work8'>Carolina Rabat</label>
+                <span class='date'><a href="reports/20230503.html">2023-05-03</a></span>
+                <span class='circle'></span>
+            </div>
+            <div class='content'>
+                <p>
+                <img src="activities/images/20230503.png" alt="20230503">
+                </p>
+            </div>
+        </li>
+        <li class='work'>
+            <input class='radio' id='work7' name='works' type='radio'>
+            <div class="relative">
+                <label for='work7'>Carolina Rabat</label>
+                <span class='date'><a href="reports/20230423.html">2023-04-23</a></span>
+                <span class='circle'></span>
+            </div>
+            <div class='content'>
+                <p>
+                <img src="activities/images/20230423.png" alt="20230423">
+                </p>
+            </div>
+        </li>
+        <li class='work'>
+            <input class='radio' id='work6' name='works' type='radio'>
+            <div class="relative">
+                <label for='work6'>Carolina Rabat</label>
+                <span class='date'><a href="reports/20230416.html">2023-04-16</a></span>
+                <span class='circle'></span>
+            </div>
+            <div class='content'>
+                <p>
+                <img src="activities/images/20230416.png" alt="20230416">
+                </p>
+            </div>
+        </li>
+        <li class='work'>
+            <input class='radio' id='work5' name='works' type='radio'>
+            <div class="relative">
+                <label for='work5'>Carolina Rabat</label>
+                <span class='date'><a href="reports/20230409.html">2023-04-09</a></span>
+                <span class='circle'></span>
+            </div>
+            <div class='content'>
+                <p>
+                <img src="activities/images/20230409.png" alt="20230409">
+                </p>
+            </div>
+        </li>
+        <li class='work'>
+            <input class='radio' id='work4' name='works' type='radio'>
+            <div class="relative">
+                <label for='work4'>Carolina Rabat</label>
+                <span class='date'><a href="reports/20230326.html">2023-03-26</a></span>
+                <span class='circle'></span>
+            </div>
+            <div class='content'>
+                <p>
+                    <img src="activities/images/20230326.png" alt="20230326">
+                </p>
+            </div>
+        </li>
+        <li class='work'>
+            <input class='radio' id='work3' name='works' type='radio'>
+            <div class="relative">
+                <label for='work3'>Carolina Rabat</label>
+                <span class='date'><a href="reports/20230312.html">2023-03-12</a></span>
+                <span class='circle'></span>
+            </div>
+            <div class='content'>
+                <p>
+                    <img src="activities/images/20230312.png" alt="20230312">
+                </p>
+            </div>
+        </li>
+        <li class='work'>
+            <input class='radio' id='work2' name='works' type='radio'>
+            <div class="relative">
+                <label for='work2'>Carolina Rabat</label>
+                <span class='date'><a href="reports/20230226.html">2023-02-26</a></span>
+                <span class='circle'></span>
+            </div>
+            <div class='content'>
+                <p>
+                    <img src="activities/images/20230226.png" alt="20230226">
+                </p>
+            </div>
+        </li>
+        <li class='work'>
+            <input class='radio' id='work1' name='works' type='radio'>
+            <div class="relative">
+                <label for='work1'>Carolina Rabat</label>
+                <span class='date'><a href="reports/20230205.html">2023-02-05</a></span>
+                <span class='circle'></span>
+            </div>
+            <div class='content'>
+                <p>
+                    <img src="activities/images/20230205.png" alt="20230205">
+                </p>
+            </div>
+        </li>
+    </ul>
+</body>
+
 </html>

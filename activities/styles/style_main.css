@@ -1,0 +1,135 @@
+@import url(https://fonts.googleapis.com/css?family=Noto+Sans);
+
+body {
+    padding: 0 5%;
+    font-size: 100%;
+    font-family: sans-serif;
+    color: #eee9dc;
+    background: rgb(33, 40, 44);
+}
+
+h2 {
+    margin: 3em 0 0 0;
+    font-size: 1.5em;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+#timeline {
+    list-style: none;
+    margin: 50px 0 30px 120px;
+    padding-left: 30px;
+    border-left: 1.5px solid white;
+}
+
+#timeline li {
+    margin: 40px 0;
+    position: relative;
+}
+
+#timeline p {
+    margin: 0 0 15px;
+}
+
+.date {
+    margin-top: -10px;
+    top: 50%;
+    left: -158px;
+    font-size: 0.95em;
+    line-height: 20px;
+    position: absolute;
+}
+
+.date a {
+    text-decoration: none;
+    color: white;
+    font-size: 20px;
+}
+
+.date a:hover,
+.back-index a:hover {
+    color: orange;
+}
+
+.back-index a {
+    text-decoration: none;
+    color: white;
+    font-size: 20px;
+    margin-left: 55px;
+}
+
+.circle {
+    margin-top: -10px;
+    top: 50%;
+    left: -36px;
+    width: 10px;
+    height: 10px;
+    background: white;
+    border: 1px solid white;
+    border-radius: 50%;
+    display: block;
+    position: absolute;
+}
+
+.content {
+    padding: 50px 10px 0;
+    position: relative;
+}
+
+.content:after {
+    border-right-color: white;
+    border-width: 17px;
+    top: 50%;
+    margin-top: -17px;
+}
+
+.content p {
+    padding-left: 10px;
+    max-height: 0;
+    color: transparent;
+    text-align: justify;
+    word-break: break-word;
+    hyphens: auto;
+    overflow: hidden;
+}
+
+label {
+    font-size: 1.3em;
+    position: absolute;
+    z-index: 100;
+    cursor: pointer;
+    top: 10px;
+    transition: transform 0.2s linear;
+}
+
+label:hover {
+    color: orange;
+}
+
+.radio {
+    display: none;
+}
+
+.radio:checked+.relative label {
+    cursor: auto;
+    transform: translateX(42px);
+}
+
+.radio:checked+.relative .circle {
+    background: orange;
+    border-color: orange;
+}
+
+.radio:checked~.content {
+    max-height: 180px;
+    border-color: white;
+    margin-right: 20px;
+    transform: translateX(20px);
+    transition: max-height 0.4s linear, border-color 0.5s linear, transform 0.2s linear;
+}
+
+.radio:checked~.content p {
+    max-height: 200px;
+    color: white;
+    transition: color 0.3s linear 0.3s;
+}
