@@ -14,6 +14,137 @@
   <link rel="stylesheet" href="assets/css/templatemo-style.css" />
   <link rel="stylesheet" href="assets/css/owl.css" />
   <link rel="stylesheet" href="assets/css/lightbox.css" />
+
+<style>
+      @import url(https://fonts.googleapis.com/css?family=Noto+Sans);
+
+    h2 {
+        margin: 3em 0 0 0;
+        font-size: 1.5em;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+    }
+
+    #timeline {
+        list-style: none;
+        margin: 50px 0 30px 120px;
+        padding-left: 30px;
+        border-left: 1.5px solid white;
+    }
+
+    #timeline li {
+        margin: 40px 0;
+        position: relative;
+    }
+
+    #timeline p {
+        margin: 0 0 15px;
+    }
+
+    .date {
+        margin-top: -10px;
+        top: 50%;
+        left: -158px;
+        font-size: 0.95em;
+        line-height: 20px;
+        position: absolute;
+    }
+
+    .work label {
+        text-decoration: none;
+        color: white;
+        font-size: 20px;
+    }
+
+    .content a {
+        text-decoration: none;
+        color: rgb(17, 120, 218);
+        font-size: 16px;
+    }
+
+    .date a:hover,
+    .back-index a:hover,
+    .content a:hover {
+        color: orange;
+    }
+
+    .circle {
+        margin-top: -10px;
+        top: 50%;
+        left: -36px;
+        width: 10px;
+        height: 10px;
+        background: white;
+        border: 1px solid white;
+        border-radius: 50%;
+        display: block;
+        position: absolute;
+    }
+
+    .content {
+        padding: 50px 10px 0;
+        position: relative;
+    }
+
+    .content:after {
+        border-right-color: white;
+        border-width: 17px;
+        top: 50%;
+        margin-top: -17px;
+    }
+
+    .content p {
+        padding-left: 10px;
+        max-height: 0;
+        color: transparent;
+        text-align: justify;
+        word-break: break-word;
+        hyphens: auto;
+        overflow: hidden;
+    }
+
+    label {
+        font-size: 1.3em;
+        position: absolute;
+        z-index: 100;
+        cursor: pointer;
+        top: 10px;
+        transition: transform 0.2s linear;
+    }
+
+    label:hover {
+        color: orange;
+    }
+
+    .radio {
+        display: none;
+    }
+
+    .radio:checked+.relative label {
+        cursor: auto;
+        transform: translateX(42px);
+    }
+
+    .radio:checked+.relative .circle {
+        background: orange;
+        border-color: orange;
+    }
+
+    .radio:checked~.content {
+        max-height: 180px;
+        border-color: white;
+        margin-right: 20px;
+        transform: translateX(20px);
+        transition: max-height 0.4s linear, border-color 0.5s linear, transform 0.2s linear;
+    }
+
+    .radio:checked~.content p {
+        max-height: 200px;
+        color: white;
+        transition: color 0.3s linear 0.3s;
+    }
+</style>
+
 </head>
 
 <body>
@@ -60,30 +191,165 @@
     <section class="section about-me" data-section="section1">
       <div class="container">
         <div class="section-heading">
-          <!--h3>Publicaciones para compartir conceptos, ideas y algunos códigos.</h3-->
           <h3>
             Sitio optimizado para Tabletas y PCs. No para Teléfonos
             Móviles.
           </h3>
-          <!--div class="line-dec"></div>
-          <span>
-            Bienvenido a mi blog personal en donde hago publicaciones como científico y analista de
-            datos para la comunidad de desarrolladores de habla hispana. Espero que sea de utilidad
-            para sus ideas de proyectos.
-          </span>
-          <br>
-          <span>
-            ( Sitio optimizado para Tabletas y PCs. No para Teléfonos
-            Móviles )
-          </span-->
-        </div>
-
-        <div class="section-heading">
-          <h2>Publicaciones en Python</h2>
           <div class="line-dec"></div>
         </div>
+        <!-- <div class="section-heading">
+          <h2>Publicaciones en Python</h2>
+          
+        </div> -->
+<!-- <p>############################################################################################</p> -->
+        <h2>
+          <img src="activities/images/garmin_edge500.png" alt="logo" width="50px">
+          Publicaciones en Python
+        </h2>
+        <br>
+        <ul id='timeline'>
+              <li class='work'>
+                <input class='radio' id='work10' name='works' type='radio'>
+                <div class="relative">
+                    <label for='work10'>San Cristobal - Vitacura</label>
+                    <span class='date'>2023-08-08</span>
+                    <span class='circle'></span>
+                </div>
+                <div class='content'>
+                    <p>
+                      Texto para ver los espacios
+                    </p>
+                </div>
+            </li>
+              <li class='work'>
+                <input class='radio' id='work9' name='works' type='radio'>
+                <div class="relative">
+                    <label for='work9'>San Cristobal - Vitacura</label>
+                    <span class='date'>2023-08-08</span>
+                    <span class='circle'></span>
+                </div>
+                <div class='content'>
+                    <p>
+                      Texto para ver los espacios
+                    </p>
+                </div>
+            </li>
+              <li class='work'>
+                <input class='radio' id='work8' name='works' type='radio'>
+                <div class="relative">
+                    <label for='work8'>San Cristobal - Vitacura</label>
+                    <span class='date'>2023-08-08</span>
+                    <span class='circle'></span>
+                </div>
+                <div class='content'>
+                    <p>
+                      Texto para ver los espacios
+                    </p>
+                </div>
+            </li>
+              <li class='work'>
+                <input class='radio' id='work7' name='works' type='radio'>
+                <div class="relative">
+                    <label for='work7'>San Cristobal - Vitacura</label>
+                    <span class='date'>2023-08-08</span>
+                    <span class='circle'></span>
+                </div>
+                <div class='content'>
+                    <p>
+                      Texto para ver los espacios
+                    </p>
+                </div>
+            </li>
+              <li class='work'>
+                <input class='radio' id='work6' name='works' type='radio'>
+                <div class="relative">
+                    <label for='work6'>San Cristobal - Vitacura</label>
+                    <span class='date'>2023-08-08</span>
+                    <span class='circle'></span>
+                </div>
+                <div class='content'>
+                    <p>
+                      Texto para ver los espacios
+                    </p>
+                </div>
+            </li>
+              <li class='work'>
+                <input class='radio' id='work5' name='works' type='radio'>
+                <div class="relative">
+                    <label for='work5'>San Cristobal - Vitacura</label>
+                    <span class='date'>2023-08-08</span>
+                    <span class='circle'></span>
+                </div>
+                <div class='content'>
+                    <p>
+                      Texto para ver los espacios
+                    </p>
+                </div>
+            </li>
+              <li class='work'>
+                <input class='radio' id='work4' name='works' type='radio'>
+                <div class="relative">
+                    <label for='work4'>San Cristobal - Vitacura</label>
+                    <span class='date'>2023-08-08</span>
+                    <span class='circle'></span>
+                </div>
+                <div class='content'>
+                    <p>
+                      Texto para ver los espacios
+                    </p>
+                </div>
+            </li>
+            <li class='work'>
+                <input class='radio' id='work3' name='works' type='radio'>
+                <div class="relative">
+                    <label for='work3'>Agrupación Jerárquica: Aprendizaje Automático No Supervisado</label>
+                    <span class='date'>2020-12-05</span>
+                    <span class='circle'></span>
+                </div>
+                <div class='content'>
+                    <p>
+                      Vivir en Nueva York puede ser caro, pero ¿cuánto de caro exactamente?, en este artículo
+                      simple, encontraremos la media, la mediana y la moda de los cinco distritos de Nueva York:
+                      Brooklyn, Manhattan y Queens...
+                      <a href="posts/r_posts/conceptos_estadisticos.html">Continuar leyendo.</a>
+                    </p>
+                </div>
+            </li>
+            <li class='work'>
+                <input class='radio' id='work2' name='works' type='radio'>
+                <div class="relative">
+                    <label for='work2'>Análisis de Datos Financieros con Python</label>
+                    <span class='date'>2020-12-02</span>
+                    <span class='circle'></span>
+                </div>
+                <div class='content'>
+                    <p>
+                      En este apartado se analizarán los precios de las acciones de tres empresas: Amazon (AMZN),
+                      Google (GOOGL) y Apple (AAPL). Se realizará un análisis de datos exploratorio simple de
+                      estas acciones mediante la generación...
+                      <a href="posts/python_posts/analisis_data_financiera.html">Continuar leyendo.</a>
+                    </p>
+                </div>
+            </li>
+            <li class='work'>
+                <input class='radio' id='work1' name='works' type='radio'>
+                <div class="relative">
+                    <label for='work1'>Análisis Exploratorio de Datos (Caso 1)</label>
+                    <span class='date'>2020-11-25</span>
+                    <span class='circle'></span>
+                </div>
+                <div class='content'>
+                    <p>
+                      El análisis exploratorio de datos nos permite entender mejor los datos proporcionados
+                      para que podamos encontrar algo de sentido en estos. En estadística, el análisis de datos
+                      exploratorios es un enfoque para...
+                      <a href="posts/python_posts/analisis_exploratorio_1.html">Continuar leyendo.</a>
+                    </p>
+                </div>
+            </li>
+        </ul>
 
-        <div class="right-image-post">
+        <!-- <div class="right-image-post">
           <div class="row">
             <div class="right-text">
               <h3>
@@ -407,52 +673,7 @@
               </p>
             </div>
           </div>
-        </div>
-
-        <div class="right-image-post">
-          <div class="row">
-            <div class="right-text">
-              <h3>Agrupación Jerárquica: Aprendizaje Automático No Supervisado</h3>
-              <p style="font-size: small;">Publicado el: 05 de Diciembre del 2020</p>
-              <p>
-                Otro método popular de agrupamiento es la agrupación jerárquica. Hemos visto que en la
-                agrupación K-Means que es necesario indicar el número de agrupaciones. La agrupación
-                jerárquica no requiere de esto. La agrupación jerárquica...
-                <a href="posts/python_posts/agrupacion_jerarquica.html">Continuar leyendo.</a>
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div class="right-image-post">
-          <div class="row">
-            <div class="left-text">
-              <h3>Análisis de Datos Financieros con Python</h3>
-              <p style="font-size: small;">Publicado el: 02 de Diciembre del 2020</p>
-              <p>
-                En este apartado se analizarán los precios de las acciones de tres empresas: Amazon (AMZN),
-                Google (GOOGL) y Apple (AAPL). Se realizará un análisis de datos exploratorio simple de
-                estas acciones mediante la generación...
-                <a href="posts/python_posts/analisis_data_financiera.html">Continuar leyendo.</a>
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div class="right-image-post">
-          <div class="row">
-            <div class="right-text">
-              <h3>Análisis Exploratorio de Datos (Caso 1)</h3>
-              <p style="font-size: small;">Publicado el: 25 de Noviembre del 2020</p>
-              <p>
-                El análisis exploratorio de datos nos permite entender mejor los datos proporcionados
-                para que podamos encontrar algo de sentido en estos. En estadística, el análisis de datos
-                exploratorios es un enfoque para...
-                <a href="posts/python_posts/analisis_exploratorio_1.html">Continuar leyendo.</a>
-              </p>
-            </div>
-          </div>
-        </div>
+        </div>-->
 
       </div>
     </section>
@@ -469,10 +690,7 @@
             <div class="right-text">
               <h3>Conceptos Estadisticos</h3>
               <p style="font-size: small;">Publicado el: 31 de Mayo del 2020</p>
-              <p>Vivir en Nueva York puede ser caro, pero ¿cuánto de caro exactamente?, en este artículo
-                simple, encontraremos la media, la mediana y la moda de los cinco distritos de Nueva York:
-                Brooklyn, Manhattan y Queens...
-                <a href="posts/r_posts/conceptos_estadisticos.html">Continuar leyendo.</a>
+              <p>
               </p>
             </div>
           </div>
