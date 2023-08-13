@@ -15,135 +15,139 @@
   <link rel="stylesheet" href="assets/css/owl.css" />
   <link rel="stylesheet" href="assets/css/lightbox.css" />
 
-<style>
-      @import url(https://fonts.googleapis.com/css?family=Noto+Sans);
+  <style>
+    @import url(https://fonts.googleapis.com/css?family=Noto+Sans);
 
     h2 {
-        margin: 3em 0 0 0;
-        font-size: 1.5em;
-        letter-spacing: 2px;
-        text-transform: uppercase;
+      margin: 3em 0 0 0;
+      font-size: 1.5em;
+      letter-spacing: 2px;
+      text-transform: uppercase;
     }
 
     #timeline {
-        list-style: none;
-        margin: 50px 0 30px 120px;
-        padding-left: 30px;
-        border-left: 1.5px solid white;
+      list-style: none;
+      margin: 50px 0 30px 120px;
+      padding-left: 30px;
+      border-left: 1.5px solid white;
     }
 
     #timeline li {
-        margin: 40px 0;
-        position: relative;
+      margin: 40px 0;
+      position: relative;
     }
 
     #timeline p {
-        margin: 0 0 15px;
+      margin: 0 0 15px;
     }
 
     .date {
-        margin-top: -10px;
-        top: 50%;
-        left: -158px;
-        font-size: 0.95em;
-        line-height: 20px;
-        position: absolute;
+      margin-top: -10px;
+      top: 50%;
+      left: -158px;
+      font-size: 0.95em;
+      line-height: 20px;
+      position: absolute;
     }
 
     .work label {
-        text-decoration: none;
-        color: white;
-        font-size: 20px;
+      text-decoration: none;
+      color: white;
+      font-size: 20px;
     }
 
     .content a {
-        text-decoration: none;
-        color: rgb(17, 120, 218);
-        font-size: 16px;
+      text-decoration: none;
+      color: rgb(17, 120, 218);
+      font-size: 16px;
     }
 
     .date a:hover,
     .back-index a:hover,
     .content a:hover {
-        color: orange;
+      color: orange;
     }
 
     .circle {
-        margin-top: -10px;
-        top: 50%;
-        left: -36px;
-        width: 10px;
-        height: 10px;
-        background: white;
-        border: 1px solid white;
-        border-radius: 50%;
-        display: block;
-        position: absolute;
+      margin-top: -10px;
+      top: 50%;
+      left: -36px;
+      width: 10px;
+      height: 10px;
+      background: white;
+      border: 1px solid white;
+      border-radius: 50%;
+      display: block;
+      position: absolute;
     }
 
     .content {
-        padding: 50px 10px 0;
-        position: relative;
+      padding: 50px 10px 0;
+      position: relative;
     }
 
     .content:after {
-        border-right-color: white;
-        border-width: 17px;
-        top: 50%;
-        margin-top: -17px;
+      border-right-color: white;
+      border-width: 17px;
+      top: 50%;
+      margin-top: -17px;
     }
 
     .content p {
-        padding-left: 10px;
-        max-height: 0;
-        color: transparent;
-        text-align: justify;
-        word-break: break-word;
-        hyphens: auto;
-        overflow: hidden;
+      padding-left: 10px;
+      max-height: 0;
+      color: transparent;
+      text-align: justify;
+      word-break: break-word;
+      hyphens: auto;
+      overflow: hidden;
+    }
+
+    .logos {
+      width: 50px;
     }
 
     label {
-        font-size: 1.3em;
-        position: absolute;
-        z-index: 100;
-        cursor: pointer;
-        top: 10px;
-        transition: transform 0.2s linear;
+      font-size: 1.3em;
+      position: absolute;
+      z-index: 100;
+      cursor: pointer;
+      top: 10px;
+      transition: transform 0.2s linear;
     }
 
     label:hover {
-        color: orange;
+      color: orange;
     }
 
     .radio {
-        display: none;
+      display: none;
     }
 
     .radio:checked+.relative label {
-        cursor: auto;
-        transform: translateX(42px);
+      cursor: auto;
+      transform: translateX(42px);
     }
 
     .radio:checked+.relative .circle {
-        background: orange;
-        border-color: orange;
+      background: orange;
+      border-color: orange;
     }
 
     .radio:checked~.content {
-        max-height: 180px;
-        border-color: white;
-        margin-right: 20px;
-        transform: translateX(20px);
-        transition: max-height 0.4s linear, border-color 0.5s linear, transform 0.2s linear;
+      max-height: 180px;
+      border-color: white;
+      margin-right: 20px;
+      transform: translateX(20px);
+      transition: max-height 0.4s linear, border-color 0.5s linear, transform 0.2s linear;
     }
 
     .radio:checked~.content p {
-        max-height: 200px;
-        color: white;
-        transition: color 0.3s linear 0.3s;
+      max-height: 200px;
+      color: white;
+      transition: color 0.3s linear 0.3s;
     }
-</style>
+  </style>
 
 </head>
 
@@ -191,240 +195,138 @@
     <section class="section about-me" data-section="section1">
       <div class="container">
         <div class="section-heading">
-          <h3>
+          <p>
             Sitio optimizado para Tabletas y PCs. No para Teléfonos
             Móviles.
-          </h3>
+          </p>
           <div class="line-dec"></div>
         </div>
-        <!-- <div class="section-heading">
-          <h2>Publicaciones en Python</h2>
-          
-        </div> -->
-<!-- <p>############################################################################################</p> -->
+
+        <!-- <p>############################################################################################</p> -->
+        
         <h2>
-          <img src="activities/images/garmin_edge500.png" alt="logo" width="50px">
+          <img class="logos" src="assets/images/python-logo.png" alt="logo">
           Publicaciones en Python
         </h2>
         <br>
         <ul id='timeline'>
-              <li class='work'>
-                <input class='radio' id='work10' name='works' type='radio'>
-                <div class="relative">
-                    <label for='work10'>San Cristobal - Vitacura</label>
-                    <span class='date'>2023-08-08</span>
-                    <span class='circle'></span>
-                </div>
-                <div class='content'>
-                    <p>
-                      Texto para ver los espacios
-                    </p>
-                </div>
-            </li>
-              <li class='work'>
-                <input class='radio' id='work9' name='works' type='radio'>
-                <div class="relative">
-                    <label for='work9'>San Cristobal - Vitacura</label>
-                    <span class='date'>2023-08-08</span>
-                    <span class='circle'></span>
-                </div>
-                <div class='content'>
-                    <p>
-                      Texto para ver los espacios
-                    </p>
-                </div>
-            </li>
-              <li class='work'>
-                <input class='radio' id='work8' name='works' type='radio'>
-                <div class="relative">
-                    <label for='work8'>San Cristobal - Vitacura</label>
-                    <span class='date'>2023-08-08</span>
-                    <span class='circle'></span>
-                </div>
-                <div class='content'>
-                    <p>
-                      Texto para ver los espacios
-                    </p>
-                </div>
-            </li>
-              <li class='work'>
-                <input class='radio' id='work7' name='works' type='radio'>
-                <div class="relative">
-                    <label for='work7'>San Cristobal - Vitacura</label>
-                    <span class='date'>2023-08-08</span>
-                    <span class='circle'></span>
-                </div>
-                <div class='content'>
-                    <p>
-                      Texto para ver los espacios
-                    </p>
-                </div>
-            </li>
-              <li class='work'>
-                <input class='radio' id='work6' name='works' type='radio'>
-                <div class="relative">
-                    <label for='work6'>San Cristobal - Vitacura</label>
-                    <span class='date'>2023-08-08</span>
-                    <span class='circle'></span>
-                </div>
-                <div class='content'>
-                    <p>
-                      Texto para ver los espacios
-                    </p>
-                </div>
-            </li>
-              <li class='work'>
-                <input class='radio' id='work5' name='works' type='radio'>
-                <div class="relative">
-                    <label for='work5'>San Cristobal - Vitacura</label>
-                    <span class='date'>2023-08-08</span>
-                    <span class='circle'></span>
-                </div>
-                <div class='content'>
-                    <p>
-                      Texto para ver los espacios
-                    </p>
-                </div>
-            </li>
-              <li class='work'>
-                <input class='radio' id='work4' name='works' type='radio'>
-                <div class="relative">
-                    <label for='work4'>San Cristobal - Vitacura</label>
-                    <span class='date'>2023-08-08</span>
-                    <span class='circle'></span>
-                </div>
-                <div class='content'>
-                    <p>
-                      Texto para ver los espacios
-                    </p>
-                </div>
-            </li>
-            <li class='work'>
-                <input class='radio' id='work3' name='works' type='radio'>
-                <div class="relative">
-                    <label for='work3'>Agrupación Jerárquica: Aprendizaje Automático No Supervisado</label>
-                    <span class='date'>2020-12-05</span>
-                    <span class='circle'></span>
-                </div>
-                <div class='content'>
-                    <p>
-                      Vivir en Nueva York puede ser caro, pero ¿cuánto de caro exactamente?, en este artículo
-                      simple, encontraremos la media, la mediana y la moda de los cinco distritos de Nueva York:
-                      Brooklyn, Manhattan y Queens...
-                      <a href="posts/r_posts/conceptos_estadisticos.html">Continuar leyendo.</a>
-                    </p>
-                </div>
-            </li>
-            <li class='work'>
-                <input class='radio' id='work2' name='works' type='radio'>
-                <div class="relative">
-                    <label for='work2'>Análisis de Datos Financieros con Python</label>
-                    <span class='date'>2020-12-02</span>
-                    <span class='circle'></span>
-                </div>
-                <div class='content'>
-                    <p>
-                      En este apartado se analizarán los precios de las acciones de tres empresas: Amazon (AMZN),
-                      Google (GOOGL) y Apple (AAPL). Se realizará un análisis de datos exploratorio simple de
-                      estas acciones mediante la generación...
-                      <a href="posts/python_posts/analisis_data_financiera.html">Continuar leyendo.</a>
-                    </p>
-                </div>
-            </li>
-            <li class='work'>
-                <input class='radio' id='work1' name='works' type='radio'>
-                <div class="relative">
-                    <label for='work1'>Análisis Exploratorio de Datos (Caso 1)</label>
-                    <span class='date'>2020-11-25</span>
-                    <span class='circle'></span>
-                </div>
-                <div class='content'>
-                    <p>
-                      El análisis exploratorio de datos nos permite entender mejor los datos proporcionados
-                      para que podamos encontrar algo de sentido en estos. En estadística, el análisis de datos
-                      exploratorios es un enfoque para...
-                      <a href="posts/python_posts/analisis_exploratorio_1.html">Continuar leyendo.</a>
-                    </p>
-                </div>
-            </li>
-        </ul>
 
-        <!-- <div class="right-image-post">
-          <div class="row">
-            <div class="right-text">
-              <h3>
-                Análisis de Modelos de Aprendizaje Automático (ML).
-              </h3>
-              <p style="font-size: small;">Publicado el: 28 de Febrero del 2022</p>
+          <!-- <li class='work'>
+            <input class='radio' id='work20' name='works' type='radio'>
+            <div class="relative">
+              <label for='work20'>San Cristobal - Vitacura</label>
+              <span class='date'>2023-08-08</span>
+              <span class='circle'></span>
+            </div>
+            <div class='content'>
               <p>
-                Valores de Explicación de Características Shapley (SHAP), En este caso práctico se
-                profundizarán los conocimientos de los valores de explicación de características
-                Shapley, mejor conocidos como SHAP, este tema había sido tratado en una anterior
-                publicación de manera general, para revisar dicho artículo...
-                <a href="posts/python_posts/analisis_de_modelos_ml.html">Continuar leyendo.</a>
+                Texto para ver los espacios
               </p>
             </div>
-          </div>
-        </div>
+          </li> -->
 
-        <div class="right-image-post">
-          <div class="row">
-            <div class="right-text">
-              <h3>
-                Rotación de Empleados (Churn con Python).
-              </h3>
-              <p style="font-size: small;">Publicado el: 31 de Enero del 2022</p>
+          <!-- <li class='work'>
+            <input class='radio' id='work25' name='works' type='radio'>
+            <div class="relative">
+              <label for='work25'>San Cristobal - Vitacura</label>
+              <span class='date'>2023-08-08</span>
+              <span class='circle'></span>
+            </div>
+            <div class='content'>
               <p>
-                En este caso práctico se analizará la rotación de empleados de una Empresa, se establecerá
-                una hipótesis del por qué los empleados abandonan la Empresa a través de los datos actuales
-                y realizarán predicciones de cuantos empleados posiblemente abandonarán su cargo...
-                <a href="posts/python_posts/rotacion_de_empleados_churn.html">Continuar leyendo.</a>
+                Texto para ver los espacios
               </p>
             </div>
-          </div>
-        </div>
+          </li> -->
 
-        <div class="right-image-post">
-          <div class="row">
-            <div class="right-text">
-              <h3>
-                Funcionamiento del Aprendizaje Automático (Machine Learning).
-              </h3>
-              <p style="font-size: small;">Publicado el: 19 de Diciembre del 2021</p>
+          <!-- <li class='work'>
+            <input class='radio' id='work24' name='works' type='radio'>
+            <div class="relative">
+              <label for='work24'>San Cristobal - Vitacura</label>
+              <span class='date'>2023-08-08</span>
+              <span class='circle'></span>
+            </div>
+            <div class='content'>
               <p>
-                Mucha gente dice que los modelos de aprendizaje automático son "cajas negras", en el sentido
-                de que pueden hacer buenas predicciones, pero no se puede entender la lógica detrás de esas
-                predicciones. Esta afirmación es cierta en el sentido...
-                <a href="posts/python_posts/funcionamiento_aprendizaje_automatico.html">Continuar leyendo.</a>
+                Texto para ver los espacios
               </p>
             </div>
-          </div>
-        </div>
+          </li> -->
 
-        <div class="right-image-post">
-          <div class="row">
-            <div class="right-text">
-              <h3>
-                Introducción al Aprendizaje Automático (Machine Learning).
-              </h3>
-              <p style="font-size: small;">Publicado el: 28 de Febrero del 2021</p>
+          <li class='work'>
+            <input class='radio' id='worka23' name='works' type='radio' checked>
+            <div class="relative">
+              <label for='worka23'>Análisis de Modelos de Aprendizaje Automático (ML)</label>
+              <span class='date'>2022-02-28</span>
+              <span class='circle'></span>
+            </div>
+            <div class='content'>
               <p>
-                Utilizaremos el siguiente caso de ejemplo. Un familiar ha ganado millones de dólares especulando con
-                bienes raíces. Se ha ofrecido a convertirse en socio comercial con nosotros debido a su interés en
-                la ciencia de datos. Él proporcionará el dinero y nosotros proporcionaremos...
-                <a href="posts/python_posts/introduccion_aprendizaje_automatico.html">Continuar leyendo.</a>
+                  Valores de Explicación de Características Shapley (SHAP), En este caso práctico se
+                  profundizarán los conocimientos de los valores de explicación de características
+                  Shapley, mejor conocidos como SHAP, este tema había sido tratado en una anterior
+                  publicación de manera general, para revisar dicho artículo...
+                  <a href="posts/python_posts/analisis_de_modelos_ml.html">Continuar leyendo.</a>
               </p>
             </div>
-          </div>
-        </div>
+          </li>
+          <li class='work'>
+            <input class='radio' id='worka22' name='works' type='radio'>
+            <div class="relative">
+              <label for='worka22'>Rotación de Empleados (Churn con Python)</label>
+              <span class='date'>2022-01-31</span>
+              <span class='circle'></span>
+            </div>
+            <div class='content'>
+              <p>
+                  En este caso práctico se analizará la rotación de empleados de una Empresa, se establecerá
+                  una hipótesis del por qué los empleados abandonan la Empresa a través de los datos actuales
+                  y realizarán predicciones de cuantos empleados posiblemente abandonarán su cargo...
+                  <a href="posts/python_posts/rotacion_de_empleados_churn.html">Continuar leyendo.</a>
+              </p>
+            </div>
+          </li>
+          <li class='work'>
+            <input class='radio' id='worka21' name='works' type='radio'>
+            <div class="relative">
+              <label for='worka21'>Funcionamiento del Aprendizaje Automático (Machine Learning)</label>
+              <span class='date'>2021-12-19</span>
+              <span class='circle'></span>
+            </div>
+            <div class='content'>
+              <p>
+                  Mucha gente dice que los modelos de aprendizaje automático son "cajas negras", en el sentido
+                  de que pueden hacer buenas predicciones, pero no se puede entender la lógica detrás de esas
+                  predicciones. Esta afirmación es cierta en el sentido...
+                  <a href="posts/python_posts/funcionamiento_aprendizaje_automatico.html">Continuar leyendo.</a>
+              </p>
+            </div>
+          </li>
+          <li class='work'>
+            <input class='radio' id='worka20' name='works' type='radio'>
+            <div class="relative">
+              <label for='worka20'>Introducción al Aprendizaje Automático (Machine Learning)</label>
+              <span class='date'>2021-02-28</span>
+              <span class='circle'></span>
+            </div>
+            <div class='content'>
+              <p>
+                  Utilizaremos el siguiente caso de ejemplo. Un familiar ha ganado millones de dólares especulando con
+                  bienes raíces. Se ha ofrecido a convertirse en socio comercial con nosotros debido a su interés en
+                  la ciencia de datos. Él proporcionará el dinero y nosotros proporcionaremos...
+                  <a href="posts/python_posts/introduccion_aprendizaje_automatico.html">Continuar leyendo.</a>
+              </p>
+            </div>
+          </li>
 
-        <div class="right-image-post">
-          <div class="row">
-            <div class="right-text">
-              <h3>
-                Evaluación de Modelos de Regresión Lineal.
-              </h3>
-              <p style="font-size: small;">Publicado el: 15 de Febrero del 2021</p>
+          <li class='work'>
+            <input class='radio' id='worka19' name='works' type='radio'>
+            <div class="relative">
+              <label for='worka19'>Evaluación de Modelos de Regresión Lineal</label>
+              <span class='date'>2021-02-15</span>
+              <span class='circle'></span>
+            </div>
+            <div class='content'>
               <p>
                 En el siguiente caso de uso, se desea predecir el precio de una vivienda mediante el uso de funciones
                 independientes o variables como promedio de renta de las personas, población de la zona y edad de la
@@ -432,16 +334,15 @@
                 <a href="posts/python_posts/evaluacion_de_regresion_lineal.html">Continuar leyendo.</a>
               </p>
             </div>
-          </div>
-        </div>
-
-        <div class="right-image-post">
-          <div class="row">
-            <div class="right-text">
-              <h3>
-                Análisis Exploratorio de Datos (EDA) con Técnicas de Visualización.
-              </h3>
-              <p style="font-size: small;">Publicado el: 10 de Febrero del 2021</p>
+          </li>
+          <li class='work'>
+            <input class='radio' id='worka18' name='works' type='radio'>
+            <div class="relative">
+              <label for='worka18'>Análisis Exploratorio de Datos (EDA) con Técnicas de Visualización</label>
+              <span class='date'>2021-02-10</span>
+              <span class='circle'></span>
+            </div>
+            <div class='content'>
               <p>
                 En este artículo mostraremos el proceso Exploratory Data Analysis (EDA) con técnicas de
                 visualización para analizar si una muestra de agua con cierto contenido es potable o no.
@@ -449,16 +350,15 @@
                 <a href="posts/python_posts/eda_con_tecnicas_de_visualizacion.html">Continuar leyendo.</a>
               </p>
             </div>
-          </div>
-        </div>
-
-        <div class="right-image-post">
-          <div class="row">
-            <div class="right-text">
-              <h3>
-                Detección de Valores Atípicos Multivariados.
-              </h3>
-              <p style="font-size: small;">Publicado el: 20 de Enero del 2021</p>
+          </li>
+          <li class='work'>
+            <input class='radio' id='worka17' name='works' type='radio'>
+            <div class="relative">
+              <label for='worka17'>Detección de Valores Atípicos Multivariados</label>
+              <span class='date'>2021-01-20</span>
+              <span class='circle'></span>
+            </div>
+            <div class='content'>
               <p>
                 La detección de valores atípicos en datos multivariados a menudo puede ser uno de los desafíos
                 de la fase de preprocesamiento de datos, existen varias métricas, puntuaciones y técnicas
@@ -466,16 +366,15 @@
                 <a href="posts/python_posts/valores_atipicos_multivariados.html">Continuar leyendo.</a>
               </p>
             </div>
-          </div>
-        </div>
-
-        <div class="right-image-post">
-          <div class="row">
-            <div class="right-text">
-              <h3>
-                Visualizaciones Impresionantes con Matplotlib y Seaborn
-              </h3>
-              <p style="font-size: small;">Publicado el: 16 de Enero del 2021</p>
+          </li>
+          <li class='work'>
+            <input class='radio' id='worka16' name='works' type='radio'>
+            <div class="relative">
+              <label for='worka16'>Visualizaciones Impresionantes con Matplotlib y Seaborn</label>
+              <span class='date'>2021-01-16</span>
+              <span class='circle'></span>
+            </div>
+            <div class='content'>
               <p>
                 En este artículo les enseñaremos como generar gráficos llamativos para la representación
                 gráfica de sus datos a través de las librerías de Python: Matplotlib y Seaborn.
@@ -483,16 +382,15 @@
                 <a href="posts/python_posts/visualizaciones_impresionantes.html">Continuar leyendo.</a>
               </p>
             </div>
-          </div>
-        </div>
-
-        <div class="right-image-post">
-          <div class="row">
-            <div class="right-text">
-              <h3>
-                Regresión Lineal Univariante
-              </h3>
-              <p style="font-size: small;">Publicado el: 12 de Enero del 2021</p>
+          </li>
+          <li class='work'>
+            <input class='radio' id='worka15' name='works' type='radio'>
+            <div class="relative">
+              <label for='worka15'>Regresión Lineal Univariante</label>
+              <span class='date'>2021-01-12</span>
+              <span class='circle'></span>
+            </div>
+            <div class='content'>
               <p>
                 La regresión lineal univariada se basa en determinar la relación entre una variable independiente
                 (variable explicativa) y una variable dependiente. Para demostrarlo realizaremos un ejemplo
@@ -500,16 +398,15 @@
                 <a href="posts/python_posts/regresion_lineal_univariante.html">Continuar leyendo.</a>
               </p>
             </div>
-          </div>
-        </div>
-
-        <div class="right-image-post">
-          <div class="row">
-            <div class="right-text">
-              <h3>
-                Modelo de Aprendizaje Automático (ML)
-              </h3>
-              <p style="font-size: small;">Publicado el: 06 de Enero del 2021</p>
+          </li>
+          <li class='work'>
+            <input class='radio' id='worka14' name='works' type='radio'>
+            <div class="relative">
+              <label for='worka14'>Modelo de Aprendizaje Automático (ML)</label>
+              <span class='date'>2021-01-06</span>
+              <span class='circle'></span>
+            </div>
+            <div class='content'>
               <p>
                 En este artículo se creará un modelo de aprendizaje automático simple, usando un conjunto de
                 datos para predecir el tamaño de la tripulación de un barco, este proyecto está organizado
@@ -517,16 +414,15 @@
                 <a href="posts/python_posts/aprendizaje_automatico.html">Continuar leyendo.</a>
               </p>
             </div>
-          </div>
-        </div>
-
-        <div class="right-image-post">
-          <div class="row">
-            <div class="right-text">
-              <h3>
-                Regresión Lineal con Scikit-learn
-              </h3>
-              <p style="font-size: small;">Publicado el: 04 de Enero del 2021</p>
+          </li>
+          <li class='work'>
+            <input class='radio' id='worka13' name='works' type='radio'>
+            <div class="relative">
+              <label for='worka13'>Regresión Lineal con Scikit-learn</label>
+              <span class='date'>2021-01-04</span>
+              <span class='circle'></span>
+            </div>
+            <div class='content'>
               <p>
                 Una de las maneras de predicción más antigua y básica es la regresión lineal, aún hoy día se
                 utiliza ampliamente en muchos campos diferentes para extrapolar e interpolar datos. En este
@@ -534,16 +430,15 @@
                 <a href="posts/python_posts/regresion_lineal.html">Continuar leyendo.</a>
               </p>
             </div>
-          </div>
-        </div>
-
-        <div class="right-image-post">
-          <div class="row">
-            <div class="right-text">
-              <h3>
-                Gráficos con Pandas
-              </h3>
-              <p style="font-size: small;">Publicado el: 23 de Diciembre del 2020</p>
+          </li>
+          <li class='work'>
+            <input class='radio' id='worka12' name='works' type='radio'>
+            <div class="relative">
+              <label for='worka12'>Gráficos con Pandas</label>
+              <span class='date'>2020-12-23</span>
+              <span class='circle'></span>
+            </div>
+            <div class='content'>
               <p>
                 En este artículo les enseñaremos como es posible obtener gráficos directamente desde la
                 librería Pandas, por lo general la librería más utilizada para este fin es la de
@@ -551,30 +446,30 @@
                 <a href="posts/python_posts/visualizaciones_con_pandas.html">Continuar leyendo.</a>
               </p>
             </div>
-          </div>
-        </div>
-
-        <div class="right-image-post">
-          <div class="row">
-            <div class="right-text">
-              <h3>
-                Más trucos de Pandas</h3>
-              <p style="font-size: small;">Publicado el: 19 de Diciembre del 2020</p>
+          </li>
+          <li class='work'>
+            <input class='radio' id='worka11' name='works' type='radio'>
+            <div class="relative">
+              <label for='worka11'>Más trucos de Pandas</label>
+              <span class='date'>2020-12-19</span>
+              <span class='circle'></span>
+            </div>
+            <div class='content'>
               <p>
                 Función concat() que debes conocer para acelerar tus análisis de datos. Pandas proporciona
                 varias funciones integradas para combinar fácilmente conjuntos de datos. Entre ello...
                 <a href="posts/python_posts/trucos_de_pandas.html">Continuar leyendo.</a>
               </p>
             </div>
-          </div>
-        </div>
-
-        <div class="right-image-post">
-          <div class="row">
-            <div class="right-text">
-              <h3>
-                Trucos de Pandas</h3>
-              <p style="font-size: small;">Publicado el: 17 de Diciembre del 2020</p>
+          </li>
+          <li class='work'>
+            <input class='radio' id='worka10' name='works' type='radio'>
+            <div class="relative">
+              <label for='worka10'>Trucos de Pandas</label>
+              <span class='date'>2020-12-17</span>
+              <span class='circle'></span>
+            </div>
+            <div class='content'>
               <p>
                 Como ya sabemos la librería de Python más popular utilizada por quienes trabajan con datos
                 es Pandas, una librería de análisis y manipulación de datos fácil y flexible. existe una gran
@@ -582,15 +477,15 @@
                 <a href="posts/python_posts/pandas_tips.html">Continuar leyendo.</a>
               </p>
             </div>
-          </div>
-        </div>
-
-        <div class="right-image-post">
-          <div class="row">
-            <div class="right-text">
-              <h3>
-                Función groupby() de Pandas</h3>
-              <p style="font-size: small;">Publicado el: 15 de Diciembre del 2020</p>
+          </li>
+          <li class='work'>
+            <input class='radio' id='worka9' name='works' type='radio'>
+            <div class="relative">
+              <label for='worka9'>Función groupby() de Pandas </label>
+              <span class='date'>2020-12-15</span>
+              <span class='circle'></span>
+            </div>
+            <div class='content'>
               <p>
                 Una función para resumen y análisis de datos. Groupby es una función muy popular en Pandas.
                 Es especialmente buena para resumir, transformar, filtrar y en algunas ocasiones para el
@@ -598,28 +493,30 @@
                 <a href="posts/python_posts/pandas_groupby.html">Continuar leyendo.</a>
               </p>
             </div>
-          </div>
-        </div>
-
-        <div class="right-image-post">
-          <div class="row">
-            <div class="right-text">
-              <h3>Funciones Principales de Pandas</h3>
-              <p style="font-size: small;">Publicado el: 13 de Diciembre del 2020</p>
+          </li>
+          <li class='work'>
+            <input class='radio' id='worka8' name='works' type='radio'>
+            <div class="relative">
+              <label for='worka8'>Funciones Principales de Pandas</label>
+              <span class='date'>2020-12-13</span>
+              <span class='circle'></span>
+            </div>
+            <div class='content'>
               <p>
                 La librería de análisis de datos más popular. Pandas es una de las librerías de ciencia de
                 datos más populares, sin ningún tipo de duda. Ha existido desde hace bastante tiempo...
                 <a href="posts/python_posts/tres_funciones_pandas.html">Continuar leyendo.</a>
               </p>
             </div>
-          </div>
-        </div>
-
-        <div class="right-image-post">
-          <div class="row">
-            <div class="right-text">
-              <h3>Gráficos Personalizados con Seaborn</h3>
-              <p style="font-size: small;">Publicado el: 11 de Diciembre del 2020</p>
+          </li>
+          <li class='work'>
+            <input class='radio' id='worka7' name='works' type='radio'>
+            <div class="relative">
+              <label for='worka7'>Gráficos Personalizados con Seaborn</label>
+              <span class='date'>2020-12-11</span>
+              <span class='circle'></span>
+            </div>
+            <div class='content'>
               <p>
                 En esta publicación se mostrarán las maneras más simples de personalizar los gráficos para hacerlos
                 más agradables estéticamente, esperamos que estos sencillos trucos le ayuden a elaborar gráficos más
@@ -627,14 +524,15 @@
                 <a href="posts/python_posts/graficos_personalizados.html">Continuar leyendo.</a>
               </p>
             </div>
-          </div>
-        </div>
-
-        <div class="right-image-post">
-          <div class="row">
-            <div class="right-text">
-              <h3>Asimetría y Curtosis en la distribución de Datos</h3>
-              <p style="font-size: small;">Publicado el: 09 de Diciembre del 2020</p>
+          </li>
+          <li class='work'>
+            <input class='radio' id='worka6' name='works' type='radio'>
+            <div class="relative">
+              <label for='worka6'>Asimetría y Curtosis en la distribución de Datos</label>
+              <span class='date'>2020-12-09</span>
+              <span class='circle'></span>
+            </div>
+            <div class='content'>
               <p>
                 En este artículo, se repasarán dos conceptos importantes de la estadística descriptiva: La
                 Asimetría y la Curtosis, al concluir este artículo se obtendrán respuestas a preguntas como,
@@ -642,14 +540,15 @@
                 <a href="posts/python_posts/asimetria_y_curtosis.html">Continuar leyendo.</a>
               </p>
             </div>
-          </div>
-        </div>
-
-        <div class="right-image-post">
-          <div class="row">
-            <div class="right-text">
-              <h3>Análisis Exploratorio de Datos (Caso 3)</h3>
-              <p style="font-size: small;">Publicado el: 07 de Diciembre del 2020</p>
+          </li>
+          <li class='work'>
+            <input class='radio' id='worka5' name='works' type='radio'>
+            <div class="relative">
+              <label for='worka5'>Análisis Exploratorio de Datos (Caso 3)</label>
+              <span class='date'>2020-12-07</span>
+              <span class='circle'></span>
+            </div>
+            <div class='content'>
               <p>
                 Walmart, es una cadena de tiendas minoristas líder en los EE.UU., la empresa desea predecir las
                 ventas de productos en sus tiendas con cierta precisión. Ciertos eventos y días festivos afectan
@@ -657,14 +556,15 @@
                 <a href="posts/python_posts/analisis_exploratorio_3.html">Continuar leyendo.</a>
               </p>
             </div>
-          </div>
-        </div>
-
-        <div class="right-image-post">
-          <div class="row">
-            <div class="right-text">
-              <h3>Análisis Exploratorio de Datos (Caso 2)</h3>
-              <p style="font-size: small;">Publicado el: 06 de Diciembre del 2020</p>
+          </li>
+          <li class='work'>
+            <input class='radio' id='worka4' name='works' type='radio'>
+            <div class="relative">
+              <label for='worka4'>Análisis Exploratorio de Datos (Caso 2)</label>
+              <span class='date'>2020-12-06</span>
+              <span class='circle'></span>
+            </div>
+            <div class='content'>
               <p>
                 Cuando comencé a estudiar sobre aprendizaje automático, solía leer blogs, ver el videos,
                 en todos estos señalaban que el EDA es uno de los pasos esenciales, esto plantea una
@@ -672,9 +572,56 @@
                 <a href="posts/python_posts/analisis_exploratorio_2.html">Continuar leyendo.</a>
               </p>
             </div>
-          </div>
-        </div>-->
-
+          </li>
+          <li class='work'>
+            <input class='radio' id='worka3' name='works' type='radio'>
+            <div class="relative">
+              <label for='worka3'>Agrupación Jerárquica: Aprendizaje Automático No Supervisado</label>
+              <span class='date'>2020-12-05</span>
+              <span class='circle'></span>
+            </div>
+            <div class='content'>
+              <p>
+                Vivir en Nueva York puede ser caro, pero ¿cuánto de caro exactamente?, en este artículo
+                simple, encontraremos la media, la mediana y la moda de los cinco distritos de Nueva York:
+                Brooklyn, Manhattan y Queens...
+                <a href="posts/r_posts/conceptos_estadisticos.html">Continuar leyendo.</a>
+              </p>
+            </div>
+          </li>
+          <li class='work'>
+            <input class='radio' id='worka2' name='works' type='radio'>
+            <div class="relative">
+              <label for='worka2'>Análisis de Datos Financieros con Python</label>
+              <span class='date'>2020-12-02</span>
+              <span class='circle'></span>
+            </div>
+            <div class='content'>
+              <p>
+                En este apartado se analizarán los precios de las acciones de tres empresas: Amazon (AMZN),
+                Google (GOOGL) y Apple (AAPL). Se realizará un análisis de datos exploratorio simple de
+                estas acciones mediante la generación...
+                <a href="posts/python_posts/analisis_data_financiera.html">Continuar leyendo.</a>
+              </p>
+            </div>
+          </li>
+          <li class='work'>
+            <input class='radio' id='worka1' name='works' type='radio'>
+            <div class="relative">
+              <label for='worka1'>Análisis Exploratorio de Datos (Caso 1)</label>
+              <span class='date'>2020-11-25</span>
+              <span class='circle'></span>
+            </div>
+            <div class='content'>
+              <p>
+                El análisis exploratorio de datos nos permite entender mejor los datos proporcionados
+                para que podamos encontrar algo de sentido en estos. En estadística, el análisis de datos
+                exploratorios es un enfoque para...
+                <a href="posts/python_posts/analisis_exploratorio_1.html">Continuar leyendo.</a>
+              </p>
+            </div>
+          </li>
+        </ul>
       </div>
     </section>
 
