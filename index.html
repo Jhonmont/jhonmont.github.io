@@ -9,150 +9,12 @@
   <link href="https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900" rel="stylesheet" />
 
   <title>Jhonatan Montilla Post-Blog</title>
+  <link rel="shortcut icon" href="../../assets/images/author-image.png" type="image/x-icon">
   <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="assets/css/fontawesome.css" />
   <link rel="stylesheet" href="assets/css/templatemo-style.css" />
   <link rel="stylesheet" href="assets/css/owl.css" />
   <link rel="stylesheet" href="assets/css/lightbox.css" />
-
-  <style>
-    @import url(https://fonts.googleapis.com/css?family=Noto+Sans);
-
-    h2 {
-      margin: 3em 0 0 0;
-      font-size: 1.5em;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-    }
-
-    #timeline {
-      list-style: none;
-      margin: 50px 0 30px 120px;
-      padding-left: 30px;
-      border-left: 1.5px solid white;
-    }
-
-    #timeline li {
-      margin: 40px 0;
-      position: relative;
-    }
-
-    #timeline p {
-      margin: 0 0 15px;
-    }
-
-    .date {
-      margin-top: -10px;
-      top: 50%;
-      left: -158px;
-      font-size: 0.95em;
-      line-height: 20px;
-      position: absolute;
-    }
-
-    .work label {
-      text-decoration: none;
-      color: white;
-      font-size: 20px;
-    }
-
-    .content a {
-      text-decoration: none;
-      color: rgb(17, 120, 218);
-      font-size: 16px;
-    }
-
-    .date a:hover,
-    .back-index a:hover,
-    .content a:hover {
-      color: orange;
-    }
-
-    .circle {
-      margin-top: -10px;
-      top: 50%;
-      left: -36px;
-      width: 10px;
-      height: 10px;
-      background: white;
-      border: 1px solid white;
-      border-radius: 50%;
-      display: block;
-      position: absolute;
-    }
-
-    .content {
-      padding: 50px 10px 0;
-      position: relative;
-    }
-
-    .content:after {
-      border-right-color: white;
-      border-width: 17px;
-      top: 50%;
-      margin-top: -17px;
-    }
-
-    .content p {
-      padding-left: 10px;
-      max-height: 0;
-      color: transparent;
-      text-align: justify;
-      word-break: break-word;
-      hyphens: auto;
-      overflow: hidden;
-    }
-
-    .logos {
-      width: 50px;
-    }
-
-    .mini-logos {
-      width: 20px;
-    }
-
-    label {
-      font-size: 1.3em;
-      position: absolute;
-      z-index: 100;
-      cursor: pointer;
-      top: 10px;
-      transition: transform 0.2s linear;
-    }
-
-    label:hover {
-      color: orange;
-    }
-
-    .radio {
-      display: none;
-    }
-
-    .radio:checked+.relative label {
-      cursor: auto;
-      transform: translateX(42px);
-    }
-
-    .radio:checked+.relative .circle {
-      background: orange;
-      border-color: orange;
-    }
-
-    .radio:checked~.content {
-      max-height: 180px;
-      border-color: white;
-      margin-right: 20px;
-      transform: translateX(20px);
-      transition: max-height 0.4s linear, border-color 0.5s linear, transform 0.2s linear;
-    }
-
-    .radio:checked~.content p {
-      max-height: 200px;
-      color: white;
-      transition: color 0.3s linear 0.3s;
-    }
-  </style>
-
 </head>
 
 <body>
@@ -233,36 +95,40 @@
             </div>
           </li> -->
 
-          <!-- <li class='work'>
-            <input class='radio' id='worka25' name='works' type='radio'>
+          <li class='work'>
+            <input class='radio' id='worka25' name='works' type='radio' checked>
             <div class="relative">
-              <label for='worka25'>San Cristobal - Vitacura</label>
-              <span class='date'>2023-08-08</span>
+              <label for='worka25'>Análisis Exploratorio Avanzado de Datos</label>
+              <span class='date'>2022-04-10</span>
               <span class='circle'></span>
             </div>
             <div class='content'>
               <p>
-                Texto para ver los espacios
+                Tener una buena idea de un nuevo conjunto de datos no siempre es fácil y lleva tiempo. Sin embargo, un buen y amplio análisis exploratorio de datos puede ayudar mucho a comprender su conjunto de datos, tener una idea de cómo están conectadas las cosas y qué se debe hacer para procesar adecuadamente su conjunto de datos...
+                <a href="posts/python_posts/analisis_exploratorio_de_datos_avanzado.html">
+                  Continuar leyendo.
+                </a>
               </p>
             </div>
-          </li> -->
-
-          <!-- <li class='work'>
+          </li>
+          <li class='work'>
             <input class='radio' id='worka24' name='works' type='radio'>
             <div class="relative">
-              <label for='worka24'>San Cristobal - Vitacura</label>
-              <span class='date'>2023-08-08</span>
+              <label for='worka24'>Análisis de Componentes Principales (PCA)</label>
+              <span class='date'>2022-03-03</span>
               <span class='circle'></span>
             </div>
             <div class='content'>
               <p>
-                Texto para ver los espacios
+                Hay mucho más en el análisis de componentes principales, más allá del contenido de este artículo, por lo que la única manera de apreciar verdaderamente la belleza de este es experimentarlo por usted mismo. Por lo tanto, vamos a compartir algunos fragmentos de código aquí para cualquiera que quiera probarlo...
+                <a href="posts/python_posts/analisis_de_componentes_principales.html">
+                  Continuar leyendo.
+                </a>
               </p>
             </div>
-          </li> -->
-
+          </li>
           <li class='work'>
-            <input class='radio' id='worka23' name='works' type='radio' checked>
+            <input class='radio' id='worka23' name='works' type='radio'>
             <div class="relative">
               <label for='worka23'>Análisis de Modelos de Aprendizaje Automático (ML)</label>
               <span class='date'>2022-02-28</span>
@@ -346,7 +212,7 @@
           <li class='work'>
             <input class='radio' id='worka18' name='works' type='radio'>
             <div class="relative">
-              <label for='worka18'>Análisis Exploratorio de Datos (EDA) con Técnicas de Visualización</label>
+              <label for='worka18'>Análisis Exploratorio de Datos con Técnicas de Visualización</label>
               <span class='date'>2021-02-10</span>
               <span class='circle'></span>
             </div>
