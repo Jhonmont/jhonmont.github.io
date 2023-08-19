@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Generación de Datos Sintéticos</title>
+    <link rel="shortcut icon" href="../../assets/images/python-logo.png" type="image/x-icon">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+    <link rel="stylesheet" href="python_css/python_new_posts.css" />
+
+</head>
+
+<body class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
+    <header>
+        <a href="../../index.html" class="logo">
+            <img src="../../assets/images/python-logo.png" alt="python-logo">
+            Volver al Inicio
+        </a>
+        <nav>
+            <a href="analisis_valores_atipicos_con_pca.html" class="nav-link">Anterior </a>
+            <a href="analisis_valores_atipicos_con_univariante.html" class="nav-link">Siguiente</a>
+        </nav>
+    </header>
+    <p style="font-size: medium;">
+        <strong>02 de Junio del 2022
+        </strong> | Jhonatan Montilla
+    </p>
+    <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+        <div class="jp-Cell-inputWrapper">
+            <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+            </div>
+            <div class="jp-InputArea jp-Cell-inputArea">
+                <div class="jp-InputPrompt jp-InputArea-prompt">
+                </div>
+                <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput "
+                    data-mime-type="text/markdown">
+                    <h2
+                        id="Guía-paso-a-paso-para-generar-datos-sintéticos-mediante-muestreo-a-partir-de-distribuciones-univariadas.">
+                        Generación de datos sintéticos mediante muestreo a partir de Distribuciones Univariadas.
+                    </h2>
+                    <p>
+                        Los datos son el combustible en los proyectos de Data Science. Pero, ¿y si las observaciones son
+                        escasas, caras o difíciles de medir? Los datos sintéticos pueden ser la solución. Los datos
+                        sintéticos son datos generados artificialmente que imitan las propiedades estadísticas de los
+                        eventos del mundo real. Demostraré cómo crear datos sintéticos continuos mediante el muestreo de
+                        distribuciones univariadas. Primero, mostraré cómo evaluar sistemas y procesos por simulación
+                        donde necesitamos elegir una distribución de probabilidad y especificar los parámetros. En
+                        segundo lugar, demostraré cómo generar muestras que imiten las propiedades de un conjunto de
+                        datos existente, es decir, las variables aleatorias que se distribuyen de acuerdo con un modelo
+                        probabilístico. Todos los ejemplos se crean utilizando scipy y la biblioteca distfit.
+                    </p>
+                    <p>
+                        Si encuentra útil este artículo, use mi enlace de referencia para continuar aprendiendo sin
+                        límites y regístrese para obtener una membresía de Medium. ¡Además, sígueme para estar al día
+                        con mi contenido más reciente!
+                    </p>
+                    <h3 id="Datos-sintéticos-%E2%80%94-Antecedentes.">
+                        Datos sintéticos &#8212; Antecedentes.
+                    </h3>
+                    <p>
+                        En la última década, la cantidad de datos ha crecido rápidamente y ha dado lugar a la idea de
+                        que los datos de mayor calidad son más importantes que la cantidad. Una mayor calidad puede
+                        ayudar a sacar conclusiones más precisas y decisiones mejor informadas. Hay muchas
+                        organizaciones y dominios donde los datos sintéticos pueden ser útiles, pero hay uno en
+                        particular que está fuertemente invertido en datos sintéticos, a saber, para vehículos
+                        autónomos. Aquí, los datos se generan para muchos casos extremos que posteriormente se utilizan
+                        para entrenar modelos. Empresas como Gartner subrayan la importancia de los datos sintéticos, y
+                        predicen que los datos reales se verán eclipsados muy pronto [1]. Ejemplos claros ya están a
+                        nuestro alrededor y en forma de imágenes falsas, generadas por Generative Adversarial Networks
+                        (GAN). En este blog, no me centraré en las imágenes producidas por GAN, sino en las técnicas más
+                        fundamentales, es decir, la creación de datos sintéticos basados en distribuciones de
+                        probabilidad.
+                    </p>
+                    <p>
+                        Los datos sintéticos se pueden crear utilizando técnicas de muestreo en dos amplias categorías:
+                    </p>
+                    <ol>
+                        <li>
+                            <p>
+                                Muestreo probabilístico; cree datos sintéticos que reflejen fielmente la distribución de
+                                los datos reales, haciéndolos útiles para entrenar modelos de aprendizaje automático y
+                                realizar análisis estadísticos.
+                            </p>
+                        </li>
+                        <li>
+                            <p>
+                                Muestreo no probabilístico; implica la selección de muestras sin una probabilidad de
+                                selección conocida, como el muestreo por conveniencia, el muestreo de bola de nieve y el
+                                muestreo por cuotas. Es una forma rápida, fácil y económica de obtener datos.
+                            </p>
+                        </li>
+                    </ol>
+                    <p>
+                        Me centraré en el muestreo probabilístico en el que la estimación de los parámetros de
+                        distribución de la población es clave. O, en otras palabras, buscamos la distribución teórica
+                        que mejor se ajuste en el caso de conjuntos de datos univariados. Con la distribución teórica
+                        estimada, podemos generar nuevas muestras; nuestro conjunto de datos sintéticos.
+                    </p>
+                    <h3 id="Descripción-general-de-las-funciones-de-densidad-de-probabilidad.">
+                        Descripción general de las funciones de densidad de probabilidad.
+                    </h3>
+                    <p>
+                        Encontrar la distribución teórica que mejor se ajuste que imite los eventos del mundo real puede
+                        ser un desafío, ya que hay muchas distribuciones de probabilidad diferentes. Las bibliotecas
+                        como distfit son muy útiles en estos casos.
+                    </p>
+                    <p>
+                        En la Figura 1 se muestra una excelente descripción general de las funciones de densidad de
+                        probabilidad (PDF) donde se capturan las formas &quot;canónicas&quot; de las distribuciones. Tal
+                        descripción general puede ayudar a comprender mejor y decidir qué distribución puede ser la más
+                        apropiada para un caso de uso específico. En las siguientes dos secciones, experimentaremos con
+                        diferentes distribuciones y sus parámetros y veremos qué tan bien podemos generar datos
+                        sintéticos.
+                    </p>
+                    <p>
+                        Los datos sintéticos son datos artificiales generados mediante modelos estadísticos.
+                    </p>
+                    <h3 id="Crear-datos-sintéticos-para-simulación.">
+                        Crear datos sintéticos para simulación.
+                    </h3>
+                    <p>
+                        El uso de datos sintéticos es ideal para generar conjuntos de datos grandes y diversos para la
+                        simulación y, como tal, permite probar y explorar diferentes escenarios. Esto puede ayudar a
+                        obtener percepciones y conocimientos que pueden ser difíciles o imposibles de obtener por otros
+                        medios, o donde necesitamos determinar los casos límite para sistemas y procesos. Sin embargo,
+                        la creación de datos sintéticos puede ser un desafío porque requiere imitar eventos del mundo
+                        real mediante el uso de distribución teórica y parámetros de población.
+                    </p>
+                    <p>
+                        Con datos sintéticos, nuestro objetivo es imitar eventos del mundo real mediante la estimación
+                        de distribuciones teóricas y parámetros de población.
+                    </p>
+                    <p>
+                        Con datos sintéticos, nuestro objetivo es imitar eventos del mundo real mediante la estimación
+                        de distribuciones teóricas y parámetros de población.
+                    </p>
+                    <p>
+                        Para demostrar la creación de datos sintéticos, creé un caso de uso hipotético en el que
+                        trabajamos en el dominio de la seguridad y necesitamos comprender el comportamiento de las
+                        actividades de la red. Un experto en seguridad nos proporcionó la siguiente información; la
+                        mayoría de las actividades de la red comienzan a las 8 y alcanzan su punto máximo alrededor de
+                        las 10. Algunas actividades se verán antes de las 8, pero no muchas. Por la tarde, las
+                        actividades disminuyen gradualmente y se detienen alrededor de las 6 pm. Sin embargo, también
+                        hay un pequeño pico a las 1-2 pm. Tenga en cuenta que, en general, es mucho más difícil
+                        describir eventos anormales que lo que es un comportamiento normal/esperado debido al hecho de
+                        que el comportamiento normal se ve con mayor frecuencia y, por lo tanto, la mayor proporción de
+                        las observaciones. Traduzcamos esta información a un modelo estadístico.
+                    </p>
+                    <h3 id="Traducir-el-conocimiento-del-dominio-en-un-modelo-estadístico.">
+                        Traducir el conocimiento del dominio en un modelo estadístico.</h3>
+                    <p>Con la descripción, necesitamos decidir la mejor distribución teórica coincidente. Sin embargo,
+                        elegir la mejor distribución teórica requiere investigar las propiedades de muchas
+                        distribuciones (ver Figura 1). Además, es posible que necesite más de una distribución; es
+                        decir, una mezcla de funciones de densidad de probabilidad. En nuestro ejemplo, crearemos una
+                        combinación de dos distribuciones, un PDF para las actividades de la mañana y otro PDF para las
+                        actividades de la tarde.
+
+                    </p>
+                    <p>
+                        Descripción mañana: &quot;la mayoría de las actividades de la red comienzan a las 8 y alcanzan
+                        su punto máximo alrededor de las 10. Algunas actividades se verán antes de las 8, pero no
+                        muchas&quot;.
+                    </p>
+                    <p>
+                        Para modelar las actividades de la red de la mañana, podemos usar la distribución Normal. Es
+                        simétrico y no tiene colas pesadas. Podemos establecer los siguientes parámetros; una media de
+                        10 am y una dispersión relativamente estrecha, como sigma=0.5. En la Figura 2 se muestran
+                        algunas PDF normales con diferentes parámetros mu y sigma. Trate de sentir cómo cambia la
+                        pendiente en el parámetro sigma.
+                    </p>
+                    <p>
+                        Descripción de la tarde: “Las actividades disminuyen gradualmente y se detienen alrededor de las
+                        6 de la tarde. Sin embargo, también hay un pequeño pico entre la 1 y las 2 de la tarde”.
+                    </p>
+                    <p>
+                        Una distribución adecuada para las actividades de la tarde podría ser una distribución sesgada
+                        con una cola derecha pesada que pueda capturar las actividades decrecientes graduales. La
+                        distribución de Weibull puede ser una candidata, ya que se utiliza para modelar datos que tienen
+                        una tendencia monotónica creciente o decreciente. Sin embargo, si no siempre esperamos una
+                        disminución monótona en la actividad de la red (porque es diferente los martes más o menos),
+                        puede ser mejor considerar una distribución como gamma (Figura 3). Aquí también debemos ajustar
+                        los parámetros para que coincida mejor con la descripción. Para tener más control sobre la forma
+                        de la distribución, de preferencia uso la distribución gamma generalizada.
+                    </p>
+                    <p>
+                        En la siguiente sección, experimentaremos con las dos distribuciones candidatas (Normal y Gamma
+                        generalizada) y estableceremos los parámetros para crear una combinación de PDF que sea
+                        representativa del caso de uso de actividades de red.
+                    </p>
+                    <h3
+                        id="Optimice-los-par%C3%A1metros-para-crear-datos-sintéticos-que-mejor-se-adapten-al-escenario.">
+                        Optimice los parámetros para crear datos sintéticos que mejor se adapten al escenario.
+                    </h3>
+                    <p>
+                        En la sección de códigos de abajo, generaremos 10.000 muestras a partir de una distribución
+                        normal con una media de 10 (que representa el pico a las 10 a. m.) y una desviación estándar de
+                        0,5. A continuación, generamos 2000 muestras a partir de una distribución gamma generalizada
+                        para la que configuro el segundo pico en loc=13. También podríamos haber elegido loc=14, pero
+                        eso resultó en una brecha más grande entre las dos distribuciones. El siguiente paso es combinar
+                        los dos conjuntos de datos y mezclarlos. Tenga en cuenta que no se requiere barajar, pero sin
+                        él, las muestras se ordenan primero por las 10.000 muestras de la distribución normal y luego
+                        por las 1000 muestras de la distribución gamma generalizada. Este orden podría introducir sesgos
+                        en cualquier análisis o modelado que se realice en el conjunto de datos al dividir el conjunto
+                        de datos.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+        <div class="jp-Cell-inputWrapper">
+            <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+            </div>
+            <div class="jp-InputArea jp-Cell-inputArea">
+                <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+                <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+                    <div class="CodeMirror cm-s-jupyter">
+                        <div class=" highlight hl-ipython3">
+                            <pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="kn">from</span> <span class="nn">distfit</span> <span class="kn">import</span> <span class="n">distfit</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span><span class="p">,</span> <span class="n">gengamma</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+        <div class="jp-Cell-inputWrapper">
+            <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+            </div>
+            <div class="jp-InputArea jp-Cell-inputArea">
+                <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+                <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+                    <div class="CodeMirror cm-s-jupyter">
+                        <div class=" highlight hl-ipython3">
+                            <pre><span></span><span class="c1"># Generar datos a partir de una distribución normal</span>
+<span class="n">normal_samples</span> <span class="o">=</span> <span class="n">norm</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10000</span><span class="p">)</span>
+<span class="c1"># Cree una distribución gamma generalizada con los parámetros especificados</span>
+<span class="n">dist</span> <span class="o">=</span> <span class="n">gengamma</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mf">1.4</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mi">13</span><span class="p">)</span>
+<span class="c1"># Generar muestras aleatorias a partir de la distribución.</span>
+<span class="n">gamma_samples</span> <span class="o">=</span> <span class="n">dist</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">2000</span><span class="p">)</span>
+<span class="c1"># Combine los dos conjuntos de datos por concatenación</span>
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">normal_samples</span><span class="p">,</span> <span class="n">gamma_samples</span><span class="p">))</span>
+<span class="c1"># Mezclar el conjunto de datos</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span>
+<span class="c1"># Gráfico</span>
+<span class="n">bar_properties</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="s1">&#39;#607B8B&#39;</span><span class="p">,</span> <span class="s1">&#39;linewidth&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;edgecolor&#39;</span><span class="p">:</span> <span class="s1">&#39;#5A5A5A&#39;</span><span class="p">}</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">15</span><span class="p">));</span> <span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="o">**</span><span class="n">bar_properties</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">22</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Frequency&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">22</span><span class="p">)</span>
+<span class="c1"># Tracemos la distribución y veamos cómo se ve (Figura 3).</span>
+<span class="c1"># Por lo general, se necesitan algunas iteraciones para</span>
+<span class="c1"># modificar los parámetros y realizar ajustes.</span>
+</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="jp-Cell-outputWrapper">
+            <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+            </div>
+            <div class="jp-OutputArea jp-Cell-outputArea">
+                <div class="jp-OutputArea-child jp-OutputArea-executeResult">
+                    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[&nbsp;]:</div>
+                    <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult"
+                        data-mime-type="text/plain">
+                        <pre>Text(0, 0.5, &#39;Frequency&#39;)</pre>
+                    </div>
+                </div>
+                <div class="jp-OutputArea-child">
+                    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+                    <div class="jp-RenderedImage jp-OutputArea-output ">
+                        <img src="python_images/generacion_de_data_sintetica/image_0001.jpg">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+        <div class="jp-Cell-inputWrapper">
+            <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+            </div>
+            <div class="jp-InputArea jp-Cell-inputArea">
+                <div class="jp-InputPrompt jp-InputArea-prompt">
+                </div>
+                <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput "
+                    data-mime-type="text/markdown">
+                    <p>
+                        Creamos datos sintéticos utilizando una combinación de dos distribuciones para modelar el
+                        comportamiento normal/esperado de la actividad de la red para una población específica (Figura
+                        4). Modelamos un pico importante a las 10 am con actividades de red desde las 6 am hasta la 1
+                        pm. Se modela un segundo pico alrededor de la 1-2 p. m. con una cola derecha pesada hacia las 8
+                        p. m. El siguiente paso podría ser establecer los intervalos de confianza y buscar la detección
+                        de valores atípicos. Puede encontrar más detalles sobre la detección de valores atípicos en el
+                        siguiente blog:
+                    </p>
+                    <h3 id="Creación-de-datos-sintéticos-que-reflejan-fielmente-la-distribución-de-datos-reales.">
+                        Creación de datos sintéticos que reflejan fielmente la distribución de datos reales.
+                    </h3>
+                    <p>
+                        Hasta este punto, creamos datos sintéticos que permiten explorar diferentes escenarios por
+                        simulación. Aquí, crearemos datos sintéticos que reflejen fielmente la distribución de datos
+                        reales. Para la demostración, usaré el conjunto de datos de consejos de dinero de Seaborn [4] y
+                        estimaré los parámetros usando la biblioteca distfit. Recomiendo leer el blog sobre distfit si
+                        es nuevo en la estimación de funciones de densidad de probabilidad. El conjunto de datos de
+                        consejos contiene solo 244 puntos de datos. Primero inicialicemos la biblioteca, carguemos el
+                        conjunto de datos y tracemos los valores (consulte la sección de código a continuación).
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+        <div class="jp-Cell-inputWrapper">
+            <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+            </div>
+            <div class="jp-InputArea jp-Cell-inputArea">
+                <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+                <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+                    <div class="CodeMirror cm-s-jupyter">
+                        <div class=" highlight hl-ipython3">
+                            <pre><span></span><span class="c1"># Inicializar distfit</span>
+<span class="n">dfit</span> <span class="o">=</span> <span class="n">distfit</span><span class="p">(</span><span class="n">distr</span><span class="o">=</span><span class="s1">&#39;popular&#39;</span><span class="p">)</span>
+<span class="c1"># Importar conjunto de datos</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">dfit</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="s1">&#39;tips&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+<span class="c1"># Hacer Gráfico</span>
+<span class="n">dfit</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;tip&#39;</span><span class="p">],</span> <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;Número&#39;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;Valor de la propina&#39;</span><span class="p">)</span>
+</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="jp-Cell-outputWrapper">
+            <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+            </div>
+            <div class="jp-OutputArea jp-Cell-outputArea">
+                <div class="jp-OutputArea-child">
+                    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+                    <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr">
+                        <pre>[distfit] &gt;INFO&gt; Downloading and processing [tips] from github source.
+No artists with labels found to put in legend.  Note that artists whose label start with
+an underscore are ignored when legend() is called with no argument.
+</pre>
+                    </div>
+                </div>
+                <div class="jp-OutputArea-child">
+                    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+                    <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+                        <pre>   total_bill   tip     sex smoker  day    time  size
+0       16.99  1.01  Female     No  Sun  Dinner     2
+1       10.34  1.66    Male     No  Sun  Dinner     3
+2       21.01  3.50    Male     No  Sun  Dinner     3
+3       23.68  3.31    Male     No  Sun  Dinner     2
+4       24.59  3.61  Female     No  Sun  Dinner     4
+</pre>
+                    </div>
+                </div>
+                <div class="jp-OutputArea-child jp-OutputArea-executeResult">
+                    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[&nbsp;]:</div>
+                    <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult"
+                        data-mime-type="text/plain">
+                        <pre>(&lt;Figure size 2500x1200 with 1 Axes&gt;,
+ &lt;AxesSubplot:xlabel=&#39;Número&#39;, ylabel=&#39;Valor de la propina&#39;&gt;)</pre>
+                    </div>
+                </div>
+                <div class="jp-OutputArea-child">
+                    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+                    <div class="jp-RenderedImage jp-OutputArea-output ">
+                        <img src="python_images/generacion_de_data_sintetica/image_0002.jpg">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+        <div class="jp-Cell-inputWrapper">
+            <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+            </div>
+            <div class="jp-InputArea jp-Cell-inputArea">
+                <div class="jp-InputPrompt jp-InputArea-prompt">
+                </div>
+                <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput "
+                    data-mime-type="text/markdown">
+                    <h3 id="Inspección-visual-del-conjunto-de-datos.">
+                        Inspección visual del conjunto de datos.
+                    </h3>
+                    <p>
+                        Después de cargar los datos, podemos hacer una inspección visual para tener una idea del rango y
+                        posibles valores atípicos (Figura 5). El rango entre las 244 puntas es principalmente entre 2 y
+                        4 dólares. Con base en esta gráfica, también podemos construir una intuición de la distribución
+                        esperada cuando proyectamos todos los puntos de datos hacia el eje y (lo demostraré más
+                        adelante).
+                    </p>
+                    <p>
+                        El espacio de búsqueda de distfit se establece en los PDF populares, y el parámetro de suavizado
+                        se establece en 3. Los tamaños de muestra bajos pueden hacer que el histograma tenga baches y
+                        causar ajustes de distribución deficientes.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+        <div class="jp-Cell-inputWrapper">
+            <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+            </div>
+            <div class="jp-InputArea jp-Cell-inputArea">
+                <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+                <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+                    <div class="CodeMirror cm-s-jupyter">
+                        <div class=" highlight hl-ipython3">
+                            <pre><span></span><span class="c1"># Inicializar con suavizado e intervalo de confianza de límite superior</span>
+<span class="n">dfit</span> <span class="o">=</span> <span class="n">distfit</span><span class="p">(</span><span class="n">smooth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">bound</span><span class="o">=</span><span class="s1">&#39;up&#39;</span><span class="p">)</span>
+<span class="c1"># Modelo de ajuste</span>
+<span class="n">dfit</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;tip&#39;</span><span class="p">],</span> <span class="n">n_boots</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="c1"># Graficar PDF/CDF</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">25</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">dfit</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">chart</span><span class="o">=</span><span class="s1">&#39;PDF&#39;</span><span class="p">,</span> <span class="n">n_top</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">dfit</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">chart</span><span class="o">=</span><span class="s1">&#39;CDF&#39;</span><span class="p">,</span> <span class="n">n_top</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="c1"># Crear gráfico de línea</span>
+<span class="n">dfit</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;tip&#39;</span><span class="p">],</span> <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;Número&#39;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;Valor de la propina&#39;</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="jp-Cell-outputWrapper">
+            <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+            </div>
+            <div class="jp-OutputArea jp-Cell-outputArea">
+                <div class="jp-OutputArea-child">
+                    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+                    <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr">
+                        <pre>[distfit] &gt;INFO&gt; fit
+[distfit] &gt;INFO&gt; transform
+[distfit] &gt;INFO&gt; [smoothline] &gt;Smoothing by interpolation..
+[distfit] &gt;INFO&gt; [norm      ] [0.51 sec] [RSS: 0.0156694] [loc=2.998 scale=1.381]
+[distfit] &gt;INFO&gt; [expon     ] [0.46 sec] [RSS: 0.146759] [loc=1.000 scale=1.998] 
+[distfit] &gt;INFO&gt; [pareto    ] [8.17 sec] [RSS: 0.275503] [loc=-0.211 scale=1.211] 
+[distfit] &gt;INFO&gt; [dweibull  ] [5.08 sec] [RSS: 0.0169087] [loc=2.801 scale=1.112]  
+[distfit] &gt;INFO&gt; [t         ] [13.4 sec] [RSS: 0.0103655] [loc=2.812 scale=1.060]
+[distfit] &gt;INFO&gt; [genextreme] [13.4 sec] [RSS: 0.0153201] [loc=2.344 scale=0.957]     
+[distfit] &gt;INFO&gt; [gamma     ] [6.01 sec] [RSS: 0.0135448] [loc=0.813 scale=0.852]
+[distfit] &gt;INFO&gt; [lognorm   ] [11.3 sec] [RSS: 0.0150311] [loc=0.218 scale=2.483] 
+[distfit] &gt;INFO&gt; [beta      ] [13.2 sec] [RSS: 0.00757804] [loc=-0.173 scale=13.910]
+[distfit] &gt;INFO&gt; [uniform   ] [0.38 sec] [RSS: 0.223683] [loc=1.000 scale=9.000]   
+[distfit] &gt;INFO&gt; [loggamma  ] [15.6 sec] [RSS: 0.0175704] [loc=-505.876 scale=66.339]
+[distfit] &gt;INFO&gt; Compute confidence intervals [parametric]
+[distfit] &gt;INFO&gt; Create PDF plot for the parametric method.
+[distfit] &gt;INFO&gt; Estimated distribution: Beta(loc:-0.173207, scale:13.909676)
+[distfit] &gt;INFO&gt; Create CDF plot for the parametric method.
+[distfit] &gt;INFO&gt; Ploting CDF
+</pre>
+                    </div>
+                </div>
+                <div class="jp-OutputArea-child">
+                    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+                    <div class="jp-RenderedImage jp-OutputArea-output ">
+                        <img src="python_images/generacion_de_data_sintetica/image_0003.jpg">
+                    </div>
+                </div>
+                <div class="jp-OutputArea-child">
+                    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+                    <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr">
+                        <pre>[distfit] &gt;INFO&gt; [smoothline] &gt;Smoothing by interpolation..
+</pre>
+                    </div>
+                </div>
+                <div class="jp-OutputArea-child jp-OutputArea-executeResult">
+                    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[&nbsp;]:</div>
+                    <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult"
+                        data-mime-type="text/plain">
+                        <pre>(&lt;Figure size 2500x1200 with 1 Axes&gt;,
+ &lt;AxesSubplot:title={&#39;center&#39;:&#39;\nbeta(a=3.83986, b=12.9412, loc=-0.173207, scale=13.9097)&#39;}, 
+ xlabel=&#39;Número&#39;, ylabel=&#39;Valor de la propina&#39;&gt;)</pre>
+                    </div>
+                </div>
+                <div class="jp-OutputArea-child">
+                    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+                    <div class="jp-RenderedImage jp-OutputArea-output ">
+                        <img src="python_images/generacion_de_data_sintetica/image_0004.jpg">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+        <div class="jp-Cell-inputWrapper">
+            <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+            </div>
+            <div class="jp-InputArea jp-Cell-inputArea">
+                <div class="jp-InputPrompt jp-InputArea-prompt">
+                </div>
+                <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput "
+                    data-mime-type="text/markdown">
+                    <p>
+                        El PDF que mejor se ajusta es beta. El límite superior del intervalo de confianza alfa = 0,05 es
+                        5,53, que parece un umbral razonable basado en una inspección visual (línea vertical roja).
+                    </p>
+                    <p>
+                        Después de encontrar la mejor distribución, podemos proyectar el PDF estimado en la parte
+                        superior de nuestro gráfico de líneas para una mejor intuición. Tenga en cuenta que tanto el PDF
+                        como el PDF empírico son exactamente iguales a los de la figura.
+                    </p>
+                    <p>
+                        Con los parámetros estimados para la distribución que mejor se ajuste, podemos comenzar a crear
+                        datos sintéticos para propinas monetarias (consulte la sección de código a continuación).
+                        Creemos 100 muestras nuevas y tracemos los puntos de datos. Los datos sintéticos brindan muchas
+                        oportunidades, es decir, se pueden usar para entrenar modelos, pero también para obtener
+                        información sobre cuestiones como el tiempo que llevaría ahorrar una cierta cantidad de dinero
+                        usando propinas.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+        <div class="jp-Cell-inputWrapper">
+            <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+            </div>
+            <div class="jp-InputArea jp-Cell-inputArea">
+                <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+                <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+                    <div class="CodeMirror cm-s-jupyter">
+                        <div class=" highlight hl-ipython3">
+                            <pre><span></span><span class="c1"># Crear datos sintéticos</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">dfit</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<span class="c1"># Graficar los datos</span>
+<span class="n">dfit</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;Número&#39;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;Valor de la propina&#39;</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="jp-Cell-outputWrapper">
+            <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+            </div>
+            <div class="jp-OutputArea jp-Cell-outputArea">
+                <div class="jp-OutputArea-child">
+                    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+                    <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr">
+                        <pre>[distfit] &gt;INFO&gt; Create Synthetic data for 100 beta distributed samples with fitted params
+  (3.8398602263040145, 12.941240498249325, -0.17320742358898006, 13.909676436498582).
+[distfit] &gt;INFO&gt; [smoothline] &gt;Smoothing by interpolation..
+</pre>
+                    </div>
+                </div>
+                <div class="jp-OutputArea-child jp-OutputArea-executeResult">
+                    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[&nbsp;]:</div>
+                    <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult"
+                        data-mime-type="text/plain">
+                        <pre>(&lt;Figure size 2500x1200 with 1 Axes&gt;,
+ &lt;AxesSubplot:title={&#39;center&#39;:&#39;\nbeta(a=3.83986, b=12.9412, loc=-0.173207, scale=13.9097)&#39;}, 
+ xlabel=&#39;Número&#39;, ylabel=&#39;Valor de la propina&#39;&gt;)</pre>
+                    </div>
+                </div>
+                <div class="jp-OutputArea-child">
+                    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+                    <div class="jp-RenderedImage jp-OutputArea-output ">
+                        <img src="python_images/generacion_de_data_sintetica/image_0005.jpg">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

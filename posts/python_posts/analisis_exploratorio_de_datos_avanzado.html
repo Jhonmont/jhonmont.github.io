@@ -21,7 +21,7 @@
         </a>
         <nav>
           <a href="analisis_de_componentes_principales.html" class="nav-link">Anterior </a>
-          <a href="#" class="nav-link">Siguiente</a>
+          <a href="analisis_valores_atipicos_con_pca.html" class="nav-link">Siguiente</a>
         </nav>
     </header>
     <h2 id="An%C3%A1lisis-exploratorio-avanzado-de-datos-(EDA)">
@@ -320,7 +320,7 @@
     </div>
     <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
       <p>
-        Entonces sabemos que este conjunto de datos tiene 363'243 muestras y 67 características. ¿Y cuántos tipos de datos diferentes contienen estas 67 características?
+        Entonces sabemos que este conjunto de datos tiene 363.243 muestras y 67 características. ¿Y cuántos tipos de datos diferentes contienen estas 67 características?
       </p>
     </div>
   </div>
@@ -661,7 +661,7 @@ dtype: int64</pre>
     </div>
     <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
       <p>
-        Para manejar estos duplicados, simplemente puede soltarlos con <code>.drop_duplicates()</code>.
+        Para manejar estos duplicados, simplemente puede eliminarlos con <code>.drop_duplicates()</code>.
       </p>
     </div>
   </div>
@@ -750,7 +750,7 @@ dtype: int64</pre>
     </div>
     <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
       <p>
-        Esta figura muestra en el eje Y cada una de las 360 000 muestras individuales, y en el eje X si alguna de las 67 características contiene un valor faltante. Si bien esta ya es una trama útil, un enfoque aún mejor es usar la biblioteca <a href="https://github.com/ResidentMario/missingno">missingno</a> para obtener una trama como esta:
+        Esta figura muestra en el eje Y cada una de las 360.000 muestras individuales, y en el eje X si alguna de las 67 características contiene un valor faltante. Si bien esta ya es una trama útil, un enfoque aún mejor es usar la biblioteca <a href="https://github.com/ResidentMario/missingno">missingno</a> para obtener una trama como esta:
       </p>
     </div>
   </div>
@@ -786,10 +786,10 @@ dtype: int64</pre>
     </div>
     <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
       <p>
-        A partir de estos dos gráficos, podemos ver que el conjunto de datos tiene un todo enorme, causado por algunas muestras en las que faltan más del 50 % de los valores de las características. Para esas muestras, probablemente no sea una buena idea llenar los valores que faltan con algunos valores de reemplazo.
+        A partir de estos dos gráficos, podemos ver que el conjunto de datos tiene un todo enorme, causado por algunas muestras en las que faltan más del 50% de los valores de las características. Para esas muestras, probablemente no sea una buena idea llenar los valores que faltan con algunos valores de reemplazo.
       </p>
       <p>
-        Por lo tanto, sigamos adelante y eliminemos muestras que tengan más del 20 % de valores faltantes. El umbral está inspirado en la información de la columna "Integridad de los datos" a la derecha de esta figura.
+        Por lo tanto, sigamos adelante y eliminemos muestras que tengan más del 20% de valores faltantes. El umbral está inspirado en la información de la columna "Integridad de los datos" a la derecha de esta figura.
       </p>
     </div>
   </div>
@@ -866,7 +866,7 @@ dtype: int64</pre>
     <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
       <p>
         De esta figura podemos ver que la mayoría de las características no contienen valores faltantes. No obstante, características como <code>2nd_Road_Class</code>, <code>Junction_Control</code>, <code>Age_of_Vehicle</code>todavía contienen muchos valores faltantes. Así que sigamos adelante y eliminemos cualquier función con más del
-        15 % de valores faltantes.
+        15% de valores faltantes.
       </p>
     </div>
   </div>
