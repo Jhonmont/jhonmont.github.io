@@ -1,0 +1,1354 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Análisis con Tablas Pivote</title>
+  <link rel="shortcut icon" href="../../assets/images/python-logo.png" type="image/x-icon">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+  <link rel="stylesheet" href="python_css/python_new_posts.css" />
+
+</head>
+
+<body class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
+<header>
+  <a href="../../index.html" class="logo">
+    <img src="../../assets/images/python-logo.png" alt="python-logo">
+    Volver al Inicio
+  </a>
+        <nav>
+          <a href="valores_atipicos_residuos.html" class="nav-link">Anterior </a>
+          <a href="pandas_data_wrangling.html" class="nav-link">Siguiente</a>
+        </nav>
+    </header>
+    <p style="font-size: medium;">
+          <strong>15 de Enero del 2023
+          </strong> | Jhonatan Montilla
+    </p>
+    <h2>
+      Análisis con Tablas Pivote
+    </h2>
+    <p>
+      En esta publicación veremos el uso de las tablas pivote en Pandas para el manejo y análisis de estructuras de datos. En este artículo encontrarás la guía más completa para la manipulación de datos con esta práctica y muy útil herramienta. Para obtener el conjunto de datos <strong>"hotel_reservations.csv"</strong> de ejemplo puedes descargarlo desde nuestro repositorio haciendo
+      <a class="repository" href="https://github.com/Jhonmont/all_datasets_repository" target="_blank">
+        clic aquí.
+      </a>
+    </p>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[1]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[2]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;hotel_reservations.csv&#39;</span><span class="p">)</span>
+<span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child jp-OutputArea-executeResult">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[2]:</div>
+          <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+            data-mime-type="text/html">
+            <div class="table-container">
+              <table class="dataframe">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>Booking_ID</th>
+                    <th>no_of_adults</th>
+                    <th>no_of_children</th>
+                    <th>no_of_weekend_nights</th>
+                    <th>no_of_week_nights</th>
+                    <th>type_of_meal_plan</th>
+                    <th>required_car_parking_space</th>
+                    <th>room_type_reserved</th>
+                    <th>lead_time</th>
+                    <th>arrival_year</th>
+                    <th>arrival_month</th>
+                    <th>arrival_date</th>
+                    <th>market_segment_type</th>
+                    <th>repeated_guest</th>
+                    <th>no_of_previous_cancellations</th>
+                    <th>no_of_previous_bookings_not_canceled</th>
+                    <th>avg_price_per_room</th>
+                    <th>no_of_special_requests</th>
+                    <th>booking_status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>0</th>
+                    <td>INN00001</td>
+                    <td>2</td>
+                    <td>0</td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>Meal Plan 1</td>
+                    <td>0</td>
+                    <td>Room_Type 1</td>
+                    <td>224</td>
+                    <td>2017</td>
+                    <td>10</td>
+                    <td>2</td>
+                    <td>Offline</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>65.00</td>
+                    <td>0</td>
+                    <td>Not_Canceled</td>
+                  </tr>
+                  <tr>
+                    <th>1</th>
+                    <td>INN00002</td>
+                    <td>2</td>
+                    <td>0</td>
+                    <td>2</td>
+                    <td>3</td>
+                    <td>Not Selected</td>
+                    <td>0</td>
+                    <td>Room_Type 1</td>
+                    <td>5</td>
+                    <td>2018</td>
+                    <td>11</td>
+                    <td>6</td>
+                    <td>Online</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>106.68</td>
+                    <td>1</td>
+                    <td>Not_Canceled</td>
+                  </tr>
+                  <tr>
+                    <th>2</th>
+                    <td>INN00003</td>
+                    <td>1</td>
+                    <td>0</td>
+                    <td>2</td>
+                    <td>1</td>
+                    <td>Meal Plan 1</td>
+                    <td>0</td>
+                    <td>Room_Type 1</td>
+                    <td>1</td>
+                    <td>2018</td>
+                    <td>2</td>
+                    <td>28</td>
+                    <td>Online</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>60.00</td>
+                    <td>0</td>
+                    <td>Canceled</td>
+                  </tr>
+                  <tr>
+                    <th>3</th>
+                    <td>INN00004</td>
+                    <td>2</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>2</td>
+                    <td>Meal Plan 1</td>
+                    <td>0</td>
+                    <td>Room_Type 1</td>
+                    <td>211</td>
+                    <td>2018</td>
+                    <td>5</td>
+                    <td>20</td>
+                    <td>Online</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>100.00</td>
+                    <td>0</td>
+                    <td>Canceled</td>
+                  </tr>
+                  <tr>
+                    <th>4</th>
+                    <td>INN00005</td>
+                    <td>2</td>
+                    <td>0</td>
+                    <td>1</td>
+                    <td>1</td>
+                    <td>Not Selected</td>
+                    <td>0</td>
+                    <td>Room_Type 1</td>
+                    <td>48</td>
+                    <td>2018</td>
+                    <td>4</td>
+                    <td>11</td>
+                    <td>Online</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>94.50</td>
+                    <td>0</td>
+                    <td>Canceled</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[3]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="nb">round</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="s1">&#39;market_segment_type&#39;</span><span class="p">),</span><span class="mi">2</span><span class="p">)</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+
+
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child jp-OutputArea-executeResult">
+
+          <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[3]:</div>
+
+
+
+          <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+            data-mime-type="text/html">
+            <div class="table-container">
+              <table class="dataframe">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>arrival_date</th>
+                    <th>arrival_month</th>
+                    <th>arrival_year</th>
+                    <th>avg_price_per_room</th>
+                    <th>lead_time</th>
+                    <th>no_of_adults</th>
+                    <th>no_of_children</th>
+                    <th>no_of_previous_bookings_not_canceled</th>
+                    <th>no_of_previous_cancellations</th>
+                    <th>no_of_special_requests</th>
+                    <th>no_of_week_nights</th>
+                    <th>no_of_weekend_nights</th>
+                    <th>repeated_guest</th>
+                    <th>required_car_parking_space</th>
+                  </tr>
+                  <tr>
+                    <th>market_segment_type</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>Aviation</th>
+                    <td>15.36</td>
+                    <td>7.12</td>
+                    <td>2018.00</td>
+                    <td>100.70</td>
+                    <td>5.49</td>
+                    <td>1.02</td>
+                    <td>0.00</td>
+                    <td>0.21</td>
+                    <td>0.04</td>
+                    <td>0.00</td>
+                    <td>2.86</td>
+                    <td>1.16</td>
+                    <td>0.13</td>
+                    <td>0.05</td>
+                  </tr>
+                  <tr>
+                    <th>Complementary</th>
+                    <td>15.02</td>
+                    <td>7.72</td>
+                    <td>2017.64</td>
+                    <td>3.14</td>
+                    <td>12.04</td>
+                    <td>1.48</td>
+                    <td>0.13</td>
+                    <td>2.48</td>
+                    <td>0.21</td>
+                    <td>0.88</td>
+                    <td>1.24</td>
+                    <td>0.33</td>
+                    <td>0.32</td>
+                    <td>0.08</td>
+                  </tr>
+                  <tr>
+                    <th>Corporate</th>
+                    <td>15.70</td>
+                    <td>7.10</td>
+                    <td>2017.75</td>
+                    <td>82.91</td>
+                    <td>21.82</td>
+                    <td>1.23</td>
+                    <td>0.01</td>
+                    <td>2.07</td>
+                    <td>0.17</td>
+                    <td>0.22</td>
+                    <td>1.49</td>
+                    <td>0.43</td>
+                    <td>0.30</td>
+                    <td>0.09</td>
+                  </tr>
+                  <tr>
+                    <th>Offline</th>
+                    <td>15.40</td>
+                    <td>7.57</td>
+                    <td>2017.72</td>
+                    <td>91.63</td>
+                    <td>122.87</td>
+                    <td>1.78</td>
+                    <td>0.02</td>
+                    <td>0.01</td>
+                    <td>0.01</td>
+                    <td>0.20</td>
+                    <td>2.18</td>
+                    <td>0.73</td>
+                    <td>0.01</td>
+                    <td>0.00</td>
+                  </tr>
+                  <tr>
+                    <th>Online</th>
+                    <td>15.69</td>
+                    <td>7.38</td>
+                    <td>2017.87</td>
+                    <td>112.26</td>
+                    <td>75.33</td>
+                    <td>1.94</td>
+                    <td>0.15</td>
+                    <td>0.01</td>
+                    <td>0.01</td>
+                    <td>0.84</td>
+                    <td>2.29</td>
+                    <td>0.89</td>
+                    <td>0.00</td>
+                    <td>0.04</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[4]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="nb">round</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="s1">&#39;market_segment_type&#39;</span><span class="p">),</span><span class="mi">2</span><span class="p">)</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+
+
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child jp-OutputArea-executeResult">
+
+          <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[4]:</div>
+
+
+
+          <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+            data-mime-type="text/html">
+            <div class="table-container">
+              <table class="dataframe">
+                <thead>
+                  <tr>
+                    <th>market_segment_type</th>
+                    <th>Aviation</th>
+                    <th>Complementary</th>
+                    <th>Corporate</th>
+                    <th>Offline</th>
+                    <th>Online</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>arrival_date</th>
+                    <td>15.36</td>
+                    <td>15.02</td>
+                    <td>15.70</td>
+                    <td>15.40</td>
+                    <td>15.69</td>
+                  </tr>
+                  <tr>
+                    <th>arrival_month</th>
+                    <td>7.12</td>
+                    <td>7.72</td>
+                    <td>7.10</td>
+                    <td>7.57</td>
+                    <td>7.38</td>
+                  </tr>
+                  <tr>
+                    <th>arrival_year</th>
+                    <td>2018.00</td>
+                    <td>2017.64</td>
+                    <td>2017.75</td>
+                    <td>2017.72</td>
+                    <td>2017.87</td>
+                  </tr>
+                  <tr>
+                    <th>avg_price_per_room</th>
+                    <td>100.70</td>
+                    <td>3.14</td>
+                    <td>82.91</td>
+                    <td>91.63</td>
+                    <td>112.26</td>
+                  </tr>
+                  <tr>
+                    <th>lead_time</th>
+                    <td>5.49</td>
+                    <td>12.04</td>
+                    <td>21.82</td>
+                    <td>122.87</td>
+                    <td>75.33</td>
+                  </tr>
+                  <tr>
+                    <th>no_of_adults</th>
+                    <td>1.02</td>
+                    <td>1.48</td>
+                    <td>1.23</td>
+                    <td>1.78</td>
+                    <td>1.94</td>
+                  </tr>
+                  <tr>
+                    <th>no_of_children</th>
+                    <td>0.00</td>
+                    <td>0.13</td>
+                    <td>0.01</td>
+                    <td>0.02</td>
+                    <td>0.15</td>
+                  </tr>
+                  <tr>
+                    <th>no_of_previous_bookings_not_canceled</th>
+                    <td>0.21</td>
+                    <td>2.48</td>
+                    <td>2.07</td>
+                    <td>0.01</td>
+                    <td>0.01</td>
+                  </tr>
+                  <tr>
+                    <th>no_of_previous_cancellations</th>
+                    <td>0.04</td>
+                    <td>0.21</td>
+                    <td>0.17</td>
+                    <td>0.01</td>
+                    <td>0.01</td>
+                  </tr>
+                  <tr>
+                    <th>no_of_special_requests</th>
+                    <td>0.00</td>
+                    <td>0.88</td>
+                    <td>0.22</td>
+                    <td>0.20</td>
+                    <td>0.84</td>
+                  </tr>
+                  <tr>
+                    <th>no_of_week_nights</th>
+                    <td>2.86</td>
+                    <td>1.24</td>
+                    <td>1.49</td>
+                    <td>2.18</td>
+                    <td>2.29</td>
+                  </tr>
+                  <tr>
+                    <th>no_of_weekend_nights</th>
+                    <td>1.16</td>
+                    <td>0.33</td>
+                    <td>0.43</td>
+                    <td>0.73</td>
+                    <td>0.89</td>
+                  </tr>
+                  <tr>
+                    <th>repeated_guest</th>
+                    <td>0.13</td>
+                    <td>0.32</td>
+                    <td>0.30</td>
+                    <td>0.01</td>
+                    <td>0.00</td>
+                  </tr>
+                  <tr>
+                    <th>required_car_parking_space</th>
+                    <td>0.05</td>
+                    <td>0.08</td>
+                    <td>0.09</td>
+                    <td>0.00</td>
+                    <td>0.04</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[5]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="nb">round</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> 
+               <span class="n">index</span><span class="o">=</span><span class="s1">&#39;type_of_meal_plan&#39;</span><span class="p">,</span> 
+               <span class="n">values</span> <span class="o">=</span> <span class="s1">&#39;avg_price_per_room&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(),</span><span class="mi">2</span><span class="p">)</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+
+
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child jp-OutputArea-executeResult">
+
+          <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[5]:</div>
+
+
+
+          <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+            data-mime-type="text/html">
+            <div class="table-container">
+              <table class="dataframe">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>avg_price_per_room</th>
+                  </tr>
+                  <tr>
+                    <th>type_of_meal_plan</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>Meal Plan 1</th>
+                    <td>103.59</td>
+                  </tr>
+                  <tr>
+                    <th>Meal Plan 2</th>
+                    <td>115.31</td>
+                  </tr>
+                  <tr>
+                    <th>Meal Plan 3</th>
+                    <td>41.20</td>
+                  </tr>
+                  <tr>
+                    <th>Not Selected</th>
+                    <td>94.91</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[6]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> 
+               <span class="n">index</span><span class="o">=</span><span class="s1">&#39;market_segment_type&#39;</span><span class="p">,</span> 
+               <span class="n">values</span> <span class="o">=</span> <span class="s1">&#39;room_type_reserved&#39;</span><span class="p">,</span>
+              <span class="n">aggfunc</span> <span class="o">=</span> <span class="s1">&#39;nunique&#39;</span><span class="p">)</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+
+
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child jp-OutputArea-executeResult">
+
+          <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[6]:</div>
+
+
+
+          <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+            data-mime-type="text/html">
+            <div class="table-container">
+              <table class="dataframe">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>room_type_reserved</th>
+                  </tr>
+                  <tr>
+                    <th>market_segment_type</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>Aviation</th>
+                    <td>2</td>
+                  </tr>
+                  <tr>
+                    <th>Complementary</th>
+                    <td>7</td>
+                  </tr>
+                  <tr>
+                    <th>Corporate</th>
+                    <td>7</td>
+                  </tr>
+                  <tr>
+                    <th>Offline</th>
+                    <td>7</td>
+                  </tr>
+                  <tr>
+                    <th>Online</th>
+                    <td>7</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[7]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">df_mod</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span><span class="n">data</span><span class="p">,</span>
+              <span class="n">index</span> <span class="o">=</span> <span class="s1">&#39;market_segment_type&#39;</span><span class="p">,</span>
+              <span class="n">aggfunc</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;room_type_reserved&#39;</span><span class="p">:</span> <span class="s1">&#39;count&#39;</span><span class="p">,</span>
+                         <span class="s1">&#39;lead_time&#39;</span><span class="p">:</span><span class="s1">&#39;max&#39;</span><span class="p">,</span>
+                         <span class="s1">&#39;avg_price_per_room&#39;</span><span class="p">:</span> <span class="s1">&#39;mean&#39;</span><span class="p">}),</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">df_mod</span> <span class="o">=</span> <span class="n">df_mod</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="n">df_mod</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+
+
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child jp-OutputArea-executeResult">
+
+          <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[7]:</div>
+
+
+
+          <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+            data-mime-type="text/html">
+            <div class="table-container">
+              <table class="dataframe">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>market_segment_type</th>
+                    <th>avg_price_per_room</th>
+                    <th>lead_time</th>
+                    <th>room_type_reserved</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>0</th>
+                    <td>Aviation</td>
+                    <td>100.70</td>
+                    <td>23</td>
+                    <td>125</td>
+                  </tr>
+                  <tr>
+                    <th>1</th>
+                    <td>Complementary</td>
+                    <td>3.14</td>
+                    <td>386</td>
+                    <td>391</td>
+                  </tr>
+                  <tr>
+                    <th>2</th>
+                    <td>Corporate</td>
+                    <td>82.91</td>
+                    <td>297</td>
+                    <td>2017</td>
+                  </tr>
+                  <tr>
+                    <th>3</th>
+                    <td>Offline</td>
+                    <td>91.63</td>
+                    <td>443</td>
+                    <td>10528</td>
+                  </tr>
+                  <tr>
+                    <th>4</th>
+                    <td>Online</td>
+                    <td>112.26</td>
+                    <td>443</td>
+                    <td>23214</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[8]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="nb">round</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> 
+               <span class="n">index</span> <span class="o">=</span> <span class="s1">&#39;market_segment_type&#39;</span><span class="p">,</span> 
+               <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;booking_status&#39;</span><span class="p">,</span><span class="s1">&#39;arrival_year&#39;</span><span class="p">],</span> 
+               <span class="n">values</span> <span class="o">=</span> <span class="s1">&#39;avg_price_per_room&#39;</span><span class="p">,</span>
+               <span class="n">aggfunc</span> <span class="o">=</span> <span class="s1">&#39;mean&#39;</span><span class="p">,</span>
+               <span class="n">fill_value</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(),</span><span class="mi">2</span><span class="p">)</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+
+
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child jp-OutputArea-executeResult">
+
+          <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[8]:</div>
+
+
+
+          <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+            data-mime-type="text/html">
+            <div class="table-container">
+              <table class="dataframe">
+                <thead>
+                  <tr>
+                    <th>booking_status</th>
+                    <th colspan="2" halign="left">Canceled</th>
+                    <th colspan="2" halign="left">Not_Canceled</th>
+                  </tr>
+                  <tr>
+                    <th>arrival_year</th>
+                    <th>2017</th>
+                    <th>2018</th>
+                    <th>2017</th>
+                    <th>2018</th>
+                  </tr>
+                  <tr>
+                    <th>market_segment_type</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>Aviation</th>
+                    <td>0.00</td>
+                    <td>102.24</td>
+                    <td>0.00</td>
+                    <td>100.06</td>
+                  </tr>
+                  <tr>
+                    <th>Complementary</th>
+                    <td>0.00</td>
+                    <td>0.00</td>
+                    <td>2.45</td>
+                    <td>3.52</td>
+                  </tr>
+                  <tr>
+                    <th>Corporate</th>
+                    <td>84.27</td>
+                    <td>98.23</td>
+                    <td>76.48</td>
+                    <td>83.03</td>
+                  </tr>
+                  <tr>
+                    <th>Offline</th>
+                    <td>97.67</td>
+                    <td>101.35</td>
+                    <td>86.85</td>
+                    <td>88.12</td>
+                  </tr>
+                  <tr>
+                    <th>Online</th>
+                    <td>91.06</td>
+                    <td>116.12</td>
+                    <td>99.37</td>
+                    <td>113.18</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[9]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="nb">round</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> 
+               <span class="n">index</span> <span class="o">=</span> <span class="s1">&#39;market_segment_type&#39;</span><span class="p">,</span> 
+               <span class="n">columns</span> <span class="o">=</span> <span class="s1">&#39;booking_status&#39;</span><span class="p">,</span> 
+               <span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;no_of_weekend_nights&#39;</span><span class="p">,</span><span class="s1">&#39;arrival_month&#39;</span><span class="p">],</span>
+               <span class="n">aggfunc</span> <span class="o">=</span> <span class="s1">&#39;mean&#39;</span><span class="p">,</span>
+               <span class="n">fill_value</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(),</span><span class="mi">2</span><span class="p">)</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+
+
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child jp-OutputArea-executeResult">
+
+          <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[9]:</div>
+
+
+
+          <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+            data-mime-type="text/html">
+            <div class="table-container">
+              <table class="dataframe">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th colspan="2" halign="left">arrival_month</th>
+                    <th colspan="2" halign="left">no_of_weekend_nights</th>
+                  </tr>
+                  <tr>
+                    <th>booking_status</th>
+                    <th>Canceled</th>
+                    <th>Not_Canceled</th>
+                    <th>Canceled</th>
+                    <th>Not_Canceled</th>
+                  </tr>
+                  <tr>
+                    <th>market_segment_type</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>Aviation</th>
+                    <td>6.62</td>
+                    <td>7.33</td>
+                    <td>2.19</td>
+                    <td>0.73</td>
+                  </tr>
+                  <tr>
+                    <th>Complementary</th>
+                    <td>0.00</td>
+                    <td>7.72</td>
+                    <td>0.00</td>
+                    <td>0.33</td>
+                  </tr>
+                  <tr>
+                    <th>Corporate</th>
+                    <td>6.63</td>
+                    <td>7.16</td>
+                    <td>0.39</td>
+                    <td>0.43</td>
+                  </tr>
+                  <tr>
+                    <th>Offline</th>
+                    <td>7.46</td>
+                    <td>7.62</td>
+                    <td>0.75</td>
+                    <td>0.72</td>
+                  </tr>
+                  <tr>
+                    <th>Online</th>
+                    <td>7.36</td>
+                    <td>7.39</td>
+                    <td>0.95</td>
+                    <td>0.85</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[10]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="nb">round</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> 
+               <span class="n">index</span> <span class="o">=</span> <span class="s1">&#39;market_segment_type&#39;</span><span class="p">,</span> 
+               <span class="n">columns</span> <span class="o">=</span> <span class="s1">&#39;booking_status&#39;</span><span class="p">,</span>  
+               <span class="n">values</span> <span class="o">=</span> <span class="s1">&#39;lead_time&#39;</span><span class="p">,</span>
+               <span class="n">aggfunc</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span><span class="s1">&#39;max&#39;</span><span class="p">],</span>
+               <span class="n">fill_value</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(),</span><span class="mi">2</span><span class="p">)</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+
+
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child jp-OutputArea-executeResult">
+
+          <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[10]:</div>
+
+
+
+          <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+            data-mime-type="text/html">
+            <div class="table-container">
+              <table class="dataframe">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th colspan="2" halign="left">mean</th>
+                    <th colspan="2" halign="left">max</th>
+                  </tr>
+                  <tr>
+                    <th>booking_status</th>
+                    <th>Canceled</th>
+                    <th>Not_Canceled</th>
+                    <th>Canceled</th>
+                    <th>Not_Canceled</th>
+                  </tr>
+                  <tr>
+                    <th>market_segment_type</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>Aviation</th>
+                    <td>7.59</td>
+                    <td>4.60</td>
+                    <td>23</td>
+                    <td>21</td>
+                  </tr>
+                  <tr>
+                    <th>Complementary</th>
+                    <td>0.00</td>
+                    <td>12.04</td>
+                    <td>0</td>
+                    <td>386</td>
+                  </tr>
+                  <tr>
+                    <th>Corporate</th>
+                    <td>55.77</td>
+                    <td>17.66</td>
+                    <td>276</td>
+                    <td>297</td>
+                  </tr>
+                  <tr>
+                    <th>Offline</th>
+                    <td>209.71</td>
+                    <td>85.75</td>
+                    <td>443</td>
+                    <td>386</td>
+                  </tr>
+                  <tr>
+                    <th>Online</th>
+                    <td>115.73</td>
+                    <td>52.11</td>
+                    <td>443</td>
+                    <td>351</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[11]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">df_mod</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> 
+               <span class="n">index</span> <span class="o">=</span> <span class="s1">&#39;market_segment_type&#39;</span><span class="p">,</span> 
+               <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;booking_status&#39;</span><span class="p">,</span><span class="s1">&#39;arrival_year&#39;</span><span class="p">],</span> 
+               <span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;lead_time&#39;</span><span class="p">,</span><span class="s1">&#39;no_of_weekend_nights&#39;</span><span class="p">],</span>
+               <span class="n">aggfunc</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;median&#39;</span><span class="p">,</span><span class="s1">&#39;max&#39;</span><span class="p">],</span>
+               <span class="n">fill_value</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">df_mod</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+
+
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child jp-OutputArea-executeResult">
+
+          <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[11]:</div>
+
+
+
+          <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+            data-mime-type="text/html">
+            <div class="table-container">
+              <table class="dataframe">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th colspan="8" halign="left">median</th>
+                    <th colspan="8" halign="left">max</th>
+                  </tr>
+                  <tr>
+                    <th></th>
+                    <th colspan="4" halign="left">lead_time</th>
+                    <th colspan="4" halign="left">no_of_weekend_nights</th>
+                    <th colspan="4" halign="left">lead_time</th>
+                    <th colspan="4" halign="left">no_of_weekend_nights</th>
+                  </tr>
+                  <tr>
+                    <th>booking_status</th>
+                    <th colspan="2" halign="left">Canceled</th>
+                    <th colspan="2" halign="left">Not_Canceled</th>
+                    <th colspan="2" halign="left">Canceled</th>
+                    <th colspan="2" halign="left">Not_Canceled</th>
+                    <th colspan="2" halign="left">Canceled</th>
+                    <th colspan="2" halign="left">Not_Canceled</th>
+                    <th colspan="2" halign="left">Canceled</th>
+                    <th colspan="2" halign="left">Not_Canceled</th>
+                  </tr>
+                  <tr>
+                    <th>arrival_year</th>
+                    <th>2017</th>
+                    <th>2018</th>
+                    <th>2017</th>
+                    <th>2018</th>
+                    <th>2017</th>
+                    <th>2018</th>
+                    <th>2017</th>
+                    <th>2018</th>
+                    <th>2017</th>
+                    <th>2018</th>
+                    <th>2017</th>
+                    <th>2018</th>
+                    <th>2017</th>
+                    <th>2018</th>
+                    <th>2017</th>
+                    <th>2018</th>
+                  </tr>
+                  <tr>
+                    <th>market_segment_type</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>Aviation</th>
+                    <td>0</td>
+                    <td>5</td>
+                    <td>0</td>
+                    <td>3</td>
+                    <td>0</td>
+                    <td>1</td>
+                    <td>0</td>
+                    <td>0.5</td>
+                    <td>0</td>
+                    <td>23</td>
+                    <td>0</td>
+                    <td>21</td>
+                    <td>0</td>
+                    <td>5</td>
+                    <td>0</td>
+                    <td>3</td>
+                  </tr>
+                  <tr>
+                    <th>Complementary</th>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>1</td>
+                    <td>3</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0.0</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>88</td>
+                    <td>386</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>2</td>
+                    <td>4</td>
+                  </tr>
+                  <tr>
+                    <th>Corporate</th>
+                    <td>4</td>
+                    <td>36</td>
+                    <td>7</td>
+                    <td>7</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0.0</td>
+                    <td>87</td>
+                    <td>276</td>
+                    <td>86</td>
+                    <td>297</td>
+                    <td>6</td>
+                    <td>6</td>
+                    <td>3</td>
+                    <td>4</td>
+                  </tr>
+                  <tr>
+                    <th>Offline</th>
+                    <td>117</td>
+                    <td>239</td>
+                    <td>59</td>
+                    <td>67</td>
+                    <td>0</td>
+                    <td>1</td>
+                    <td>0</td>
+                    <td>1.0</td>
+                    <td>273</td>
+                    <td>443</td>
+                    <td>327</td>
+                    <td>386</td>
+                    <td>2</td>
+                    <td>5</td>
+                    <td>2</td>
+                    <td>4</td>
+                  </tr>
+                  <tr>
+                    <th>Online</th>
+                    <td>96</td>
+                    <td>100</td>
+                    <td>16</td>
+                    <td>41</td>
+                    <td>1</td>
+                    <td>1</td>
+                    <td>1</td>
+                    <td>1.0</td>
+                    <td>296</td>
+                    <td>443</td>
+                    <td>327</td>
+                    <td>351</td>
+                    <td>5</td>
+                    <td>7</td>
+                    <td>4</td>
+                    <td>6</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

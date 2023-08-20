@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Valores Atipicos y Residuos</title>
+  <link rel="shortcut icon" href="../../assets/images/python-logo.png" type="image/x-icon">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+  <link rel="stylesheet" href="python_css/python_new_posts.css" />
+</head>
+
+<body class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
+  <header>
+    <a href="../../index.html" class="logo">
+      <img src="../../assets/images/python-logo.png" alt="python-logo">
+      Volver al Inicio
+    </a>
+    <nav>
+      <a href="facetgrid_de_seaborn.html" class="nav-link">Anterior </a>
+      <a href="pivot_table_analysis.html" class="nav-link">Siguiente</a>
+    </nav>
+  </header>
+  <p style="font-size: medium;">
+    <strong>10 de Enero del 2023
+    </strong> | Jhonatan Montilla
+  </p>
+  <div class="jp-Cell-inputWrapper">
+    <div class="jp-InputPrompt jp-InputArea-prompt">
+    </div>
+    <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+      <h2 id="Valores">
+        Valores Atípicos, Apalancamiento, Residuos y Observaciones Influyentes.
+      </h2>
+      <h3 id="observaci">
+        ¿Qué hace que una observación sea "Inusual"?.
+      </h3>
+      <p>
+        En la ciencia de datos, una tarea común es la detección de anomalías, es decir, comprender si una observación es "inusual". En primer lugar, ¿qué significa ser inusual? En este artículo vamos a inspeccionar tres formas diferentes en las que una observación puede ser inusual: puede tener características inusuales, puede que no se ajuste bien al modelo o puede ser particularmente influyente en el entrenamiento del modelo. Veremos que en la
+        regresión lineal la última característica es un subproducto de las dos primeras.
+      </p>
+      <p>
+        Es importante destacar que ser inusual no es necesariamente malo. Las observaciones que tienen características diferentes de todas las demás a menudo contienen más información. También esperamos que algunas observaciones no se ajusten bien al modelo, de lo contrario, el modelo probablemente esté sesgado (estamos sobreajustando). Sin embargo, es más probable que las observaciones “inusuales” sean generadas por un proceso de generación de datos diferente. Los casos extremos incluyen error de medición o fraude, pero otros casos pueden tener más matices, como usuarios genuinos con características o comportamientos raros. El conocimiento del dominio siempre es el rey y descartar observaciones solo por razones estadísticas nunca es prudente.
+      </p>
+      <p>
+        Dicho esto, echemos un vistazo a algunas formas diferentes en las que las observaciones pueden ser "inusuales".
+      </p>
+      <h3 id="Un-ejemplo-sencillo">
+        Un ejemplo sencillo
+      </h3>
+      <p>
+        Supongamos que fuéramos una plataforma en línea peer-to-peer y estuviéramos interesados ​​en saber si hay algo sospechoso en nuestro negocio. Tenemos información sobre cuánto tiempo pasan nuestros usuarios en la plataforma y el valor total de sus transacciones. ¿Algunos usuarios sospechan?
+      </p>
+      <p>
+        Primero, echemos un vistazo a los datos. Importo el proceso de generación de datos dgp_p2p() de src.dgp y algunas funciones de trazado y bibliotecas de src.utils. Para incluir no solo código, sino también resultados como datos y tablas, utilizo Deepnote, un entorno de cuaderno colaborativo basado en web similar a Jupyter.
+      </p>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[1]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="o">%</span><span class="k">run</span> dgp.py
+<span class="o">%</span><span class="k">run</span> utils.py
+
+<span class="c1"># from src.utils import *</span>
+<span class="c1"># from src.dgp import dgp_p2p</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[2]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">dgp_p2p</span><span class="p">()</span><span class="o">.</span><span class="n">generate_data</span><span class="p">()</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[2]:</div>
+          <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+            data-mime-type="text/html">
+            <div class="table-container">
+              <table class="dataframe">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>Horas</th>
+                    <th>Transacciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>0</th>
+                    <td>2.6</td>
+                    <td>8.30</td>
+                  </tr>
+                  <tr>
+                    <th>1</th>
+                    <td>2.0</td>
+                    <td>8.00</td>
+                  </tr>
+                  <tr>
+                    <th>2</th>
+                    <td>7.0</td>
+                    <td>21.00</td>
+                  </tr>
+                  <tr>
+                    <th>3</th>
+                    <td>6.7</td>
+                    <td>18.00</td>
+                  </tr>
+                  <tr>
+                    <th>4</th>
+                    <td>1.2</td>
+                    <td>3.82</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell-inputWrapper">
+    <div class="jp-InputPrompt jp-InputArea-prompt">
+    </div>
+    <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+      <p>
+        Contamos con información de 50 usuarios para los cuales observamos horas de permanencia en la plataforma y monto total de transacciones. Como solo tenemos dos variables, podemos inspeccionarlas fácilmente usando un diagrama de dispersión.
+      </p>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[3]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">,</span>
+                <span class="n">x</span><span class="o">=</span><span class="s1">&#39;Horas&#39;</span><span class="p">,</span>
+                <span class="n">y</span><span class="o">=</span><span class="s1">&#39;Transacciones&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Diagrama de dispersión de datos&#39;</span><span class="p">);</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/valores_atipicos_residuos/image_0001.jpg">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell-inputWrapper">
+    <div class="jp-InputPrompt jp-InputArea-prompt">
+    </div>
+    <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+      <p>
+        La relación entre horas y transacciones parece seguir una clara relación lineal. Si ajustamos un modelo lineal, observamos un ajuste particularmente ajustado.
+      </p>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[4]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s1">&#39;Horas ~ Transacciones&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span><span class="o">.</span><span class="n">tables</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[4]:</div>
+          <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+            data-mime-type="text/html">
+            <table class="simpletable">
+              <tr>
+                <td></td>
+                <th>coef</th>
+                <th>std err</th>
+                <th>t</th>
+                <th>P>|t|</th>
+                <th>[0.025</th>
+                <th>0.975]</th>
+              </tr>
+              <tr>
+                <th>Intercept</th>
+                <td> -0.0975</td>
+                <td> 0.084</td>
+                <td> -1.157</td>
+                <td> 0.253</td>
+                <td> -0.267</td>
+                <td> 0.072</td>
+              </tr>
+              <tr>
+                <th>Transacciones</th>
+                <td> 0.3452</td>
+                <td> 0.009</td>
+                <td> 39.660</td>
+                <td> 0.000</td>
+                <td> 0.328</td>
+                <td> 0.363</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell-inputWrapper">
+    <div class="jp-InputPrompt jp-InputArea-prompt">
+    </div>
+    <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+      <h3 id="Aprovechar">
+        Aprovechar
+      </h3>
+      <p>
+        La primera métrica que vamos a utilizar para evaluar las observaciones "inusuales" es el apalancamiento. El objetivo del apalancamiento es capturar cuánto es diferente un solo punto con respecto a otros puntos de datos. Estos puntos de datos a menudo se denominan valores atípicos y existe una cantidad casi infinita de algoritmos y reglas generales para marcarlos. Sin embargo, la idea es la misma: marcar las observaciones que son inusuales en
+        términos de características.
+      </p>
+      <p>
+        Algebraicamente, el apalancamiento de la observación i es el elemento iₜₕ de la matriz de diseño X’(X’X)⁻¹X. Entre las muchas propiedades de los apalancamientos, está el hecho de que no son negativos y sus valores suman la dimensión de X (en nuestro caso 1).
+      </p>
+      <p>
+        Calculemos el apalancamiento de las observaciones en nuestro conjunto de datos. También marcamos las observaciones que tienen apalancamientos inusuales (que definimos arbitrariamente como más de dos desviaciones estándar del apalancamiento promedio).
+      </p>
+      <p>
+        Tracemos la distribución de los valores de apalancamiento en nuestros datos.
+      </p>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[5]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Horas&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Transacciones&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;Apalancamiento&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diagonal</span><span class="p">(</span><span class="n">X</span> <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">X</span><span class="p">)</span> <span class="o">@</span> <span class="n">X</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;Alto_Apalancamiento&#39;</span><span class="p">]</span> <span class="o">=</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;Apalancamiento&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Apalancamiento&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Apalancamiento&#39;</span><span class="p">]))</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[6]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">fix</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">,</span>
+             <span class="n">x</span><span class="o">=</span><span class="s1">&#39;Apalancamiento&#39;</span><span class="p">,</span>
+             <span class="n">hue</span><span class="o">=</span><span class="s1">&#39;Alto_Apalancamiento&#39;</span><span class="p">,</span>
+             <span class="n">alpha</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+             <span class="n">bins</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+             <span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">)</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Distribución de Apalancamientos&#39;</span><span class="p">);</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">,</span>
+                <span class="n">x</span><span class="o">=</span><span class="s1">&#39;Horas&#39;</span><span class="p">,</span>
+                <span class="n">y</span><span class="o">=</span><span class="s1">&#39;Transacciones&#39;</span><span class="p">,</span>
+                <span class="n">hue</span><span class="o">=</span><span class="s1">&#39;Alto_Apalancamiento&#39;</span><span class="p">,</span>
+                <span class="n">ax</span><span class="o">=</span><span class="n">ax2</span><span class="p">)</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Diagrama de Dispersión de Datos&#39;</span><span class="p">);</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/valores_atipicos_residuos/image_0002.jpg">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell-inputWrapper">
+    <div class="jp-InputPrompt jp-InputArea-prompt">
+    </div>
+    <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+      <p>
+        Como podemos ver, la distribución está sesgada, con dos observaciones que tienen un apalancamiento inusualmente alto. De hecho, en el diagrama de dispersión, estas dos observaciones están ligeramente separadas del resto de la distribución.
+      </p>
+      <p>
+        ¿Son malas noticias? Eso depende. Los valores atípicos no son un problema per se. En realidad, si son observaciones genuinas, pueden contener mucha más información que otras observaciones. Por otro lado, también es más probable que no sean observaciones genuinas (p. ej., fraude, error de medición, etc.) o que sean inherentemente diferentes de las demás (p. ej., usuarios profesionales frente a aficionados). En cualquier caso, es posible que deseemos investigar más a fondo y utilizar tanta información específica del contexto como
+        podamos.
+      </p>
+      <ul>
+        <li>
+          Nunca se deben abandonar las observaciones solo por razones estadísticas.
+        </li>
+      </ul>
+      <p>
+        Es importante destacar que el hecho de que una observación tenga un alto apalancamiento nos brinda información sobre las características del modelo, pero nada sobre el modelo en sí. ¿Son estos usuarios simplemente diferentes o también se comportan de manera diferente?
+      </p>
+      <h3 id="Derechos-residuales-de-autor">
+        Derechos residuales de autor
+      </h3>
+      <p>
+        Hasta ahora solo hemos hablado de características inusuales, pero ¿qué pasa con el comportamiento inusual? Esto es lo que miden los residuos de la regresión.
+      </p>
+      <p>
+        Los residuos de regresión son la diferencia entre los valores de resultado previstos y los valores de resultado observados. En cierto sentido, capturan lo que el modelo no puede explicar: cuanto mayor sea el residuo de una observación, más inusual es en el sentido de que el modelo no puede explicarlo.
+      </p>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[7]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">Y_hat</span> <span class="o">=</span> <span class="n">X</span> <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">X</span><span class="p">)</span> <span class="o">@</span> <span class="n">X</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">Y</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[8]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Datos&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y_hat</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Predicción&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">vlines</span><span class="p">(</span><span class="n">X</span><span class="p">,</span>
+           <span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">Y_hat</span><span class="p">),</span>
+           <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span><span class="n">Y_hat</span><span class="p">),</span>
+           <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Residuos&quot;</span><span class="p">);</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Predicción de Regresión y Residuos&quot;</span><span class="p">);</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/valores_atipicos_residuos/image_0003.jpg">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell-inputWrapper">
+    <div class="jp-InputPrompt jp-InputArea-prompt">
+    </div>
+    <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+      <p>
+        Dos observaciones tienen residuos particularmente altos. Esto significa que para estas observaciones, el modelo no es bueno para predecir los resultados observados.
+      </p>
+      <p>
+        ¿Son malas noticias? De nuevo, no necesariamente. Es probable que un modelo que se ajuste demasiado bien a las observaciones esté sesgado. Sin embargo, aún puede ser importante comprender por qué algunos usuarios tienen una relación diferente entre las horas dedicadas y las transacciones totales. Como de costumbre, el conocimiento del dominio es clave.
+      </p>
+      <p>
+        Hasta ahora, hemos analizado observaciones con características "inusuales" y comportamiento "inusual", en términos de un modelo. Pero, ¿de dónde viene el modelo? ¿Cuánto de nuestro modelo está impulsado por un puñado de observaciones? ¿Cuáles?
+      </p>
+      <h3 id="Influencia">
+        Influencia
+      </h3>
+      <p>
+        El concepto de influencia y funciones de influencia se desarrolló precisamente para responder a esta pregunta: ¿qué son las observaciones influyentes? Esta pregunta fue muy popular en los años 80 y perdió atractivo durante mucho tiempo hasta hace poco, debido a la creciente necesidad de explicar modelos complejos de aprendizaje automático e IA.
+      </p>
+      <p>
+        Como puede ver, existe una estrecha conexión tanto con el apalancamiento hᵢᵢ como con los residuos eᵢ: la influencia está aumentando en ambos. De hecho, en la regresión lineal, las observaciones con alto apalancamiento son observaciones que son atípicas y tienen residuos altos. Ninguna de las dos condiciones por sí sola es suficiente para que una observación influya en el modelo.
+      </p>
+      <p>
+        Podemos verlo mejor en los datos.
+      </p>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[9]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Residuos&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">Y</span> <span class="o">-</span> <span class="n">X</span> <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">X</span><span class="p">)</span> <span class="o">@</span> <span class="n">X</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">Y</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;Alto_Residuos&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Residuos&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Residuos&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Residuos&#39;</span><span class="p">]))</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[10]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Influencia&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">X</span><span class="p">)</span> <span class="o">@</span> <span class="n">X</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="o">.</span><span class="n">T</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">Y</span> <span class="o">-</span> <span class="n">Y_hat</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;Alta_Influencia&#39;</span><span class="p">]</span> <span class="o">=</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;Influencia&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Influencia&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Influencia&#39;</span><span class="p">]))</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[11]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">fix</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">,</span>
+             <span class="n">x</span><span class="o">=</span><span class="s1">&#39;Influencia&#39;</span><span class="p">,</span>
+             <span class="n">hue</span><span class="o">=</span><span class="s1">&#39;Alta_Influencia&#39;</span><span class="p">,</span>
+             <span class="n">alpha</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+             <span class="n">bins</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+             <span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">)</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Distribución de Influencias&#39;</span><span class="p">);</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">,</span>
+                <span class="n">x</span><span class="o">=</span><span class="s1">&#39;Horas&#39;</span><span class="p">,</span>
+                <span class="n">y</span><span class="o">=</span><span class="s1">&#39;Transacciones&#39;</span><span class="p">,</span>
+                <span class="n">hue</span><span class="o">=</span><span class="s1">&#39;Alta_Influencia&#39;</span><span class="p">,</span>
+                <span class="n">ax</span><span class="o">=</span><span class="n">ax2</span><span class="p">)</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Diagrama de Dispersión de Datos&#39;</span><span class="p">);</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/valores_atipicos_residuos/image_0004.jpg">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell-inputWrapper">
+    <div class="jp-InputPrompt jp-InputArea-prompt">
+    </div>
+    <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+      <p>
+        En nuestro conjunto de datos, solo hay una observación con gran influencia y su valor es desproporcionadamente mayor que la influencia de todas las demás observaciones. ¿Lo hubieras adivinado solo a partir del diagrama de dispersión?
+      </p>
+      <p>
+        Ahora podemos trazar todos los puntos "inusuales" en el mismo gráfico. También informo los residuos y el apalancamiento de cada punto en un gráfico separado.
+      </p>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[12]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="k">def</span> <span class="nf">plot_leverage_residuals</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+    <span class="c1"># Hue</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Tipo&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Normal&#39;</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Alto_Residuos&#39;</span><span class="p">],</span> <span class="s1">&#39;Tipo&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Alto_Residuos&#39;</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Alto_Apalancamiento&#39;</span><span class="p">],</span> <span class="s1">&#39;Tipo&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Alto_Apalancamiento&#39;</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Alta_Influencia&#39;</span><span class="p">],</span> <span class="s1">&#39;Tipo&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Alta_Influencia&#39;</span>
+    <span class="c1"># Init figure</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span><span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span> 
+    <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y_hat</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;grey&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;Horas&#39;</span><span class="p">,</span>
+    <span class="n">y</span><span class="o">=</span><span class="s1">&#39;Transacciones&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s1">&#39;Tipo&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Datos&#39;</span><span class="p">)</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;Residuos&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;Apalancamiento&#39;</span><span class="p">,</span>
+    <span class="n">hue</span><span class="o">=</span><span class="s1">&#39;Tipo&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax2</span><span class="p">)</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Métricas&#39;</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">get_legend</span><span class="p">()</span><span class="o">.</span><span class="n">remove</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">1.05</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">),</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper left&#39;</span><span class="p">,</span> <span class="n">borderaxespad</span><span class="o">=</span><span class="mi">0</span><span class="p">);</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[13]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">plot_leverage_residuals</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/valores_atipicos_residuos/image_0005.jpg">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell-inputWrapper">
+    <div class="jp-InputPrompt jp-InputArea-prompt">
+    </div>
+    <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+      <p>
+        Como podemos ver, tenemos un punto con alto apalancamiento y bajo apalancamiento, otro con alto apalancamiento y bajo residual, y solo un punto con alto apalancamiento y alto residual: el único punto influyente.
+      </p>
+      <p>
+        De la gráfica también queda claro por qué ninguna de las dos condiciones por sí sola es suficiente para que una observación influya y distorsione el modelo. El punto naranja tiene un residual alto pero se encuentra justo en el medio de la distribución y por lo tanto no puede inclinar la línea de mejor ajuste. En cambio, el punto verde tiene un gran apalancamiento y se encuentra lejos del centro de la distribución, pero está perfectamente
+        alineado con la línea de ajuste. Eliminarlo no cambiaría nada. En cambio, el punto rojo es diferente de los demás en términos de características y comportamiento y, por lo tanto, inclina la línea de ajuste hacia sí mismo.
+      </p>
+      <h3 id="Conclusi%C3%B3n">
+        Conclusión
+      </h3>
+      <p>
+        En esta publicación, hemos visto un par de formas diferentes en las que las observaciones pueden ser "inusuales": pueden tener características inusuales o un comportamiento inusual. En la regresión lineal, cuando una observación tiene ambas también influye: inclina el modelo hacia sí mismo.
+      </p>
+      <p>
+        En el ejemplo del artículo, nos concentramos en una regresión lineal univariada. Sin embargo, la investigación sobre las funciones de influencia se ha convertido recientemente en un tema candente debido a la necesidad de hacer que los algoritmos de aprendizaje automático de caja negra sean comprensibles. Con modelos con millones de
+        parámetros, miles de millones de observaciones y no linealidades salvajes, puede ser muy difícil establecer si una sola observación es influyente y cómo.
+      </p>
+    </div>
+  </div>
+</body>
+</html>

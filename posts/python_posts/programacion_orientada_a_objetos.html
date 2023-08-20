@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Programación Orientada a Objetos</title>
+  <link rel="shortcut icon" href="../../assets/images/python-logo.png" type="image/x-icon">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+  <link rel="stylesheet" href="python_css/python_new_posts.css" />
+
+</head>
+
+<body class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
+  <header>
+    <a href="../../index.html" class="logo">
+      <img src="../../assets/images/python-logo.png" alt="python-logo">
+      Volver al Inicio
+    </a>
+    <nav>
+      <a href="graficos_con_plotly.html" class="nav-link">Anterior </a>
+      <a href="graficos_estadisticos_con_seaborn.html" class="nav-link">Siguiente</a>
+    </nav>
+  </header>
+  <p style="font-size: medium;">
+    <strong>20 de Octubre del 2022
+    </strong> | Jhonatan Montilla
+  </p>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <h2 id="Programación-Orientada-a-Objetos-en-Python.">
+            Programación Orientada a Objetos en Python.
+          </h2>
+          <p>
+            La Programación Orientada a Objetos (OOP en Python) nos permite diseñar programas usando objetos y clases.
+            Este principio une los datos y las funciones relacionadas. C++, C#, Python y Java son algunos de los
+            lenguajes de programación orientada a objetos. En este artículo, vamos a ver los Principios de OOP con
+            ejemplos de código. En Python, una clase es un modelo para crear objetos. Una clase define los atributos y
+            métodos de sus objetos. Una clase define cómo se verá un objeto de esa clase y cómo se comportará.</p>
+          <h3 id="¿Qué-es-un-Objeto?.">
+            ¿Qué es un Objeto?.
+          </h3>
+          <p>Un objeto es una instancia de una clase. Representa un elemento específico que se crea en función de la
+            definición de clase. Un objeto tiene su propia identidad, estado y comportamiento únicos. Estamos usando la
+            palabra clave class para crear una clase.
+          </p>
+          <h3 id="Constructor.">
+            Constructor.
+          </h3>
+          <p>
+            __ init __ es un método especial. También se le conoce como el constructor de la clase, al que se llama
+            automáticamente cuando se crea un objeto de la clase. Se utiliza para inicializar los atributos del objeto y
+            las configuraciones necesarias. El método __ init __ generalmente toma al menos un parámetro, que es self.
+            Se refiere a la instancia del objeto que se está creando.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="k">class</span> <span class="nc">Person</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">age</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Inicializando atributos &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">age</span> <span class="o">=</span> <span class="n">age</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <h3 id="Creación-de-objeto.">
+            Creación de objeto.
+          </h3>
+          <p>
+            Para crear objetos, necesitamos llamar al constructor, que es el método <strong>init</strong>. Llamando a
+            ClassName() como un método, que esPerson en este caso. Entonces, al hacer esto, estamos llamando al método
+            <strong>init</strong> de la clase Person.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="c1"># Creating two unique objects</span>
+
+<span class="n">person1</span> <span class="o">=</span> <span class="n">Person</span><span class="p">(</span><span class="s2">&quot;John&quot;</span><span class="p">,</span> <span class="mi">25</span><span class="p">)</span>
+<span class="n">person2</span> <span class="o">=</span> <span class="n">Person</span><span class="p">(</span><span class="s2">&quot;Alice&quot;</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <h3 id="Métodos.">
+            Métodos.
+          </h3>
+          <p>
+            Los métodos son funciones que se definen dentro de una clase y se llaman en objetos de esa clase. Tienen
+            acceso a los atributos del objeto y pueden modificarlos. El primer parámetro de un método normalmente se
+            llama self. Para llamar a un método, utiliza la notación de puntos, especificando el objeto seguido del
+            nombre del método.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="k">class</span> <span class="nc">Person</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">age</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Inicializando atributos &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">age</span> <span class="o">=</span> <span class="n">age</span>
+    <span class="k">def</span> <span class="nf">get_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Método &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Name:&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot; Age:&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">age</span><span class="p">)</span>
+<span class="c1"># Creando un objeto único</span>
+<span class="n">person1</span> <span class="o">=</span> <span class="n">Person</span><span class="p">(</span><span class="s2">&quot;John&quot;</span><span class="p">,</span> <span class="mi">25</span><span class="p">)</span>
+<span class="c1"># Llamar a un método con anotación</span>
+<span class="n">person1</span><span class="o">.</span><span class="n">get_info</span><span class="p">()</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+            <pre>Name: John  Age: 25
+</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <h3 id="Métodos-de-clase.">
+            Métodos de clase.
+          </h3>
+          <p>
+            Los métodos de clase se definen utilizando el decorador @classmethod y están vinculados a la clase en lugar
+            de a la instancia de la clase. Tienen acceso a variables de nivel de clase y realizan acciones relacionadas
+            con clases en lugar de objetos individuales. (Para definir una variable de nivel de clase, debe colocarla
+            directamente debajo de la declaración de clase). El primer parámetro de un método de clase normalmente se
+            llama cls, que se refiere a la clase misma. Para llamar a un método de clase en Python, usa el nombre de la
+            clase seguido del nombre del método en notación de puntos. Puedes encontrar más información sobre los
+            decoradores en este artículo.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="k">class</span> <span class="nc">Circle</span><span class="p">:</span>
+<span class="c1"># class-level variables</span>
+    <span class="n">pi</span> <span class="o">=</span> <span class="mf">3.14</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">radius</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="o">=</span> <span class="n">radius</span>
+    <span class="k">def</span> <span class="nf">calculate_area</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Circle</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">change_pi</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">new_pi</span><span class="p">):</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">pi</span> <span class="o">=</span> <span class="n">new_pi</span>
+<span class="c1"># Creación de objetos circulares</span>
+<span class="n">circle1</span> <span class="o">=</span> <span class="n">Circle</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">circle2</span> <span class="o">=</span> <span class="n">Circle</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="c1"># Llamar a un método de instancia</span>
+<span class="n">area1</span> <span class="o">=</span> <span class="n">circle1</span><span class="o">.</span><span class="n">calculate_area</span><span class="p">()</span>
+<span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;area1: &quot;</span><span class="p">,</span><span class="n">area1</span><span class="p">)</span>  <span class="c1"># Salida: 78.5</span>
+<span class="c1"># Llamar a un método de clase</span>
+<span class="n">Circle</span><span class="o">.</span><span class="n">change_pi</span><span class="p">(</span><span class="mf">3.14159</span><span class="p">)</span>
+<span class="n">area2</span> <span class="o">=</span> <span class="n">circle2</span><span class="o">.</span><span class="n">calculate_area</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;area2: &quot;</span><span class="p">,</span><span class="n">area2</span><span class="p">)</span>  <span class="c1"># Salida: 314.159</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+            <pre>area1:  78.5
+area2:  314.159
+</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <h3 id="Métodos-estáticos.">
+            Métodos estáticos.
+          </h3>
+          <p>
+            Los métodos estáticos se definen utilizando el decorador @staticmethod y no están vinculados a la clase sino
+            a la instancia de la clase. No tienen acceso a los atributos del objeto ni a las variables de nivel de
+            clase, ya que son independientes del estado de la clase. Los métodos estáticos generalmente se usan para
+            funciones de utilidad u operaciones que no dependen del contexto de clase o instancia. Son similares a las
+            funciones regulares. Pero se colocan dentro de una clase con fines organizativos.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="k">class</span> <span class="nc">MathUtils</span><span class="p">:</span>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">square</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x</span>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">cube</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x</span>
+<span class="c1"># Llamar directamente a métodos estáticos</span>
+<span class="n">result1</span> <span class="o">=</span> <span class="n">MathUtils</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;5^2: &quot;</span><span class="p">,</span><span class="n">result1</span><span class="p">)</span>  <span class="c1"># Salida: 25</span>
+<span class="n">result2</span> <span class="o">=</span> <span class="n">MathUtils</span><span class="o">.</span><span class="n">cube</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;5^3: &quot;</span><span class="p">,</span><span class="n">result2</span><span class="p">)</span>  <span class="c1"># Salida: 27</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+            <pre>5^2:  25
+5^3:  27
+</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <p>
+            Se puede acceder a los métodos estáticos directamente desde la propia clase utilizando la notación de
+            puntos.
+          </p>
+          <h3 id="Polimorfismo.">
+            Polimorfismo.
+          </h3>
+          <p>
+            El polimorfismo permite que objetos de diferentes tipos sean tratados como objetos de una superclase común.
+            Las subclases tienen acceso a todos los métodos y atributos.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="k">class</span> <span class="nc">Person</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+    <span class="k">def</span> <span class="nf">get_details</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Name: &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Employer</span><span class="p">(</span><span class="n">Person</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">company</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">company</span> <span class="o">=</span> <span class="n">company</span>
+    <span class="k">def</span> <span class="nf">get_details</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Name: &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;, Company: &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">company</span><span class="p">)</span>
+<span class="c1"># Creando objetos de diferentes clases</span>
+<span class="n">person</span> <span class="o">=</span> <span class="n">Person</span><span class="p">(</span><span class="s2">&quot;John&quot;</span><span class="p">)</span>
+<span class="n">employer</span> <span class="o">=</span> <span class="n">Employer</span><span class="p">(</span><span class="s2">&quot;Alice&quot;</span><span class="p">,</span> <span class="s2">&quot;XYZ Corp&quot;</span><span class="p">)</span>
+<span class="c1"># Llamar a la función con diferentes objetos</span>
+<span class="n">person</span><span class="o">.</span><span class="n">get_details</span><span class="p">()</span>  <span class="c1"># Salida: Name: John</span>
+<span class="n">employer</span><span class="o">.</span><span class="n">get_details</span><span class="p">()</span>  <span class="c1"># Salida: Name: Alice, Company: XYZ Corp</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+            <pre>Name:  John
+Name:  Alice , Company:  XYZ Corp
+</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <p>
+            En este ejemplo, sublcassPerson es la superclase de Employer sublcass. La clase de empleador tiene acceso a
+            los atributos de la clase de persona y sus métodos. Además, como puede ver, el método get_details() se
+            anula, lo que significa que se redefine en la subclase.
+          </p>
+          <h3 id="Encapsulación.">
+            Encapsulación.
+          </h3>
+          <p>
+            La encapsulación ayuda a proteger los datos del acceso no autorizado y garantiza un mantenimiento adecuado.
+            Algunos modificadores de acceso comunes utilizados en Python:
+          </p>
+          <ul>
+            <li>
+              <p>
+                <strong>Público:</strong> los miembros públicos (atributos y métodos) son accesibles desde cualquier
+                lugar, tanto dentro como fuera de la clase.
+              </p>
+            </li>
+            <li>
+              <p>
+                <strong>Privado:</strong> los miembros privados se indican mediante guiones bajos dobles (__) como
+                prefijo antes del atributo o nombre del método. Solo se puede acceder a ellos dentro de la clase misma,
+                no desde fuera de la clase.
+              </p>
+            </li>
+            <li>
+              <p>
+                <strong>Protegido:</strong> los miembros protegidos se indican mediante el uso de un solo guión bajo (_)
+                como prefijo antes del atributo o nombre del método. Se puede acceder a ellos dentro de la clase y sus
+                subclases (clases derivadas), pero no desde fuera de la jerarquía de clases. Los miembros privados y
+                protegidos normales son accesibles desde fuera de la clase. Pero esperamos que
+                los usuarios no interfieran con estos miembros.
+              </p>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="k">class</span> <span class="nc">BankAccount</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">account_number</span><span class="p">,</span> <span class="n">balance</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">account_number</span> <span class="o">=</span> <span class="n">account_number</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__balance</span> <span class="o">=</span> <span class="n">balance</span>  <span class="c1"># Atributo privado</span>
+    <span class="k">def</span> <span class="nf">get_balance</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__balance</span>
+    <span class="k">def</span> <span class="nf">deposit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">amount</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__balance</span> <span class="o">+=</span> <span class="n">amount</span>
+    <span class="k">def</span> <span class="nf">withdraw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">amount</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__balance</span> <span class="o">&gt;=</span> <span class="n">amount</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__balance</span> <span class="o">-=</span> <span class="n">amount</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Saldo insuficiente.&quot;</span><span class="p">)</span>
+<span class="c1"># Crear un objeto CuentaBancaria</span>
+<span class="n">account</span> <span class="o">=</span> <span class="n">BankAccount</span><span class="p">(</span><span class="s2">&quot;123456789&quot;</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+<span class="c1"># Acceso a atributos y métodos de llamada</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Saldo: &quot;</span><span class="p">,</span> <span class="n">account</span><span class="o">.</span><span class="n">get_balance</span><span class="p">())</span>  <span class="c1"># Salida: 1000</span>
+<span class="n">account</span><span class="o">.</span><span class="n">deposit</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Saldo: &quot;</span><span class="p">,</span> <span class="n">account</span><span class="o">.</span><span class="n">get_balance</span><span class="p">())</span>  <span class="c1"># Salida: 1500</span>
+<span class="n">account</span><span class="o">.</span><span class="n">withdraw</span><span class="p">(</span><span class="mi">2000</span><span class="p">)</span>  <span class="c1"># Salida: Saldo insuficiente</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+            <pre>Saldo:  1000
+Saldo:  1500
+Saldo insuficiente.
+</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <h3 id="Conclusión.">
+            Conclusión.
+          </h3>
+          <p>
+            Finalmente, la Programación Orientada a Objetos (POO) es un paradigma sólido que permite a los
+            desarrolladores crear y organizar el código de una manera más ordenada y modular. Python, como lenguaje
+            orientado a objetos, ofrece un amplio soporte para los principios de programación orientada a objetos.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

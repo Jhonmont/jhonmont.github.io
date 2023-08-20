@@ -20,7 +20,7 @@
     </a>
     <nav>
       <a href="analisis_valores_atipicos_con_univariante.html" class="nav-link">Anterior </a>
-      <a href="#" class="nav-link">Siguiente</a>
+      <a href="distribuciones_de_probabilidad.html" class="nav-link">Siguiente</a>
     </nav>
   </header>
   <p style="font-size: medium;">
@@ -39,7 +39,9 @@
             Análisis Exploratorio de Datos (Caso 4)
           </h2>
           <p>
-            Realizaremos el análisis del conjunto de datos que contiene seis países diferentes con sus Productos Internos Brutos (PIB) y Expectativas de Vida para los años 2000 a 2015, exploraremos el conjunto de datos, utilizando visualizaciones para comprender mejor la información proporcionada.</p>
+            Realizaremos el análisis del conjunto de datos que contiene seis países diferentes con sus Productos
+            Internos Brutos (PIB) y Expectativas de Vida para los años 2000 a 2015, exploraremos el conjunto de datos,
+            utilizando visualizaciones para comprender mejor la información proporcionada.</p>
           <h3 id="Información-del-conjunto-de-datos">
             Información del conjunto de datos
           </h3>
@@ -65,17 +67,24 @@
             Con esta información, podremos:
           </p>
           <p>
-            Encuentra si hay una correlación entre las variables dadas Conoce la evolución de la Esperanza de Vida y el PIB a lo largo de los años para cada país Comparar la información entre países
+            Encuentra si hay una correlación entre las variables dadas Conoce la evolución de la Esperanza de Vida y el
+            PIB a lo largo de los años para cada país Comparar la información entre países
           </p>
           <h3 id="Análisis">
             Análisis
           </h3>
           <p>
-            Para lograr nuestros objetivos, necesitaremos buscar algunas respuestas dentro de los datos proporcionados, como:
+            Para lograr nuestros objetivos, necesitaremos buscar algunas respuestas dentro de los datos proporcionados,
+            como:
           </p>
           <p>
-            ¿Ha aumentado la esperanza de vida con el tiempo en las seis naciones? ¿Ha aumentado el PIB con el tiempo en las seis naciones? ¿Existe una correlación entre el PIB y la esperanza de vida de un país? ¿Cuál es la esperanza de vida promedio en estas naciones?
-            ¿Cuál es la distribución de esa esperanza de vida? Trabajando con Python y Jupyter Notebook Para este análisis, he usado Jupyter Notebook para escribir códigos de Python y encontrar todas las respuestas a nuestras preguntas previamente definidas. A continuación, traeré los códigos, con algunos comentarios a su alrededor, para mostrar el proceso que he usado durante este EDA.
+            ¿Ha aumentado la esperanza de vida con el tiempo en las seis naciones? ¿Ha aumentado el PIB con el tiempo en
+            las seis naciones? ¿Existe una correlación entre el PIB y la esperanza de vida de un país? ¿Cuál es la
+            esperanza de vida promedio en estas naciones?
+            ¿Cuál es la distribución de esa esperanza de vida? Trabajando con Python y Jupyter Notebook Para este
+            análisis, he usado Jupyter Notebook para escribir códigos de Python y encontrar todas las respuestas a
+            nuestras preguntas previamente definidas. A continuación, traeré los códigos, con algunos comentarios a su
+            alrededor, para mostrar el proceso que he usado durante este EDA.
           </p>
           <h3 id="Importar-bibliotecas-de-Python">
             Importar bibliotecas de Python
@@ -117,10 +126,17 @@
         </div>
         <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
           <h3 id="Cargue-y-limpie-los-datos.">
-            Cargue y limpie los datos.
+            Se cargan y limpian los datos.
           </h3>
           <p>
-            Luego de cargar los datos con la Biblioteca Pandas, decidí reducir el nombre de la columna de “Esperanza de vida al nacer (años)” a sus siglas “LEB”, y cambiar el nombre del país de “Estados Unidos de América” a “USA”, ambas acciones para mejorar la escritura del código. Y finalmente, imprima la información del marco de datos para comprender cómo se configuró el conjunto de datos y si falta información.
+            Luego de cargar las librerías, se cargarán los datos con Pandas, hemos decidido reducir el nombre de la
+            columna de “Esperanza de vida al nacer (años)” a sus siglas “LEB”, y cambiar el nombre del país de “Estados
+            Unidos de América” a “USA”, ambas acciones para mejorar la escritura del código.
+          </p>
+          <p>Podrás descargar el conjunto de datos <strong>"life_expectancy_vs_gdp.csv"</strong> haciendo clic en el enlace directo a nuestro
+            <a class="repository" href="https://github.com/Jhonmont/all_datasets_repository" target="_blank">
+              repositorio.
+            </a>
           </p>
         </div>
       </div>
@@ -185,7 +201,10 @@ memory usage: 3.1+ KB
             Visualice el marco de datos.
           </h3>
           <p>
-            Una de las mejores partes de trabajar con Jupyter para estos análisis es que podemos visualizar rápidamente algunos resultados y tomar decisiones mejores y más rápidas. Por ejemplo, después de ejecutar solo el nombre de la variable, generará automáticamente las primeras y últimas 5 filas del marco de datos y el número total de filas y columnas, sin usar ningún método para hacerlo.
+            Una de las mejores partes de trabajar con Jupyter para estos análisis es que podemos visualizar rápidamente
+            algunos resultados y tomar decisiones mejores y más rápidas. Por ejemplo, después de ejecutar solo el nombre
+            de la variable, generará automáticamente las primeras y últimas 5 filas del marco de datos y el número total
+            de filas y columnas, sin usar ningún método para hacerlo.
           </p>
         </div>
       </div>
@@ -322,7 +341,9 @@ memory usage: 3.1+ KB
         </div>
         <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
           <p>
-            En el mismo paso de comprender el conjunto de datos, imprimí la información de sus variables y conté si todos los países dados tenían la misma cantidad de observaciones, para asegurarme de poder compararlos correctamente.
+            En el mismo paso de comprender el conjunto de datos, imprimí la información de sus variables y conté si
+            todos los países dados tenían la misma cantidad de observaciones, para asegurarme de poder compararlos
+            correctamente.
           </p>
         </div>
       </div>
@@ -466,13 +487,18 @@ Name: Country, dtype: int64</pre>
             Visualización y análisis de datos.
           </h3>
           <p>
-            Después de cargar, limpiar y comprender el conjunto de datos, pude comenzar a crear gráficos para visualizar y analizar correctamente los datos. Buscando las respuestas a todas las preguntas que definí al inicio del proyecto.
+            Después de cargar, limpiar y comprender el conjunto de datos, pude comenzar a crear gráficos para visualizar
+            y analizar correctamente los datos. Buscando las respuestas a todas las preguntas que definí al inicio del
+            proyecto.
           </p>
           <h3 id="Gráficos-de-dispersión-individuales.">
             Gráficos de dispersión individuales.
           </h3>
           <p>
-            El primer objetivo que definí fue “encontrar si existe una correlación entre las variables dadas”, y el mejor gráfico para correlacionar dos variables numéricas es el diagrama de dispersión. Así que tracé 6 gráficos diferentes para analizar la relación entre la esperanza de vida y el PIB para cada país por separado.
+            El primer objetivo que definí fue “encontrar si existe una correlación entre las variables dadas”, y el
+            mejor gráfico para correlacionar dos variables numéricas es el diagrama de dispersión. Así que tracé 6
+            gráficos diferentes para analizar la relación entre la esperanza de vida y el PIB para cada país por
+            separado.
           </p>
         </div>
       </div>
@@ -546,13 +572,19 @@ Name: Country, dtype: int64</pre>
         </div>
         <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
           <p>
-            Análisis: Podemos observar una alta correlación entre el PIB y la Esperanza de Vida al Nacer en los 6 casos. Para todos los países, el Coeficiente de Correlación de Pearson (r) fue superior a 0,9, lo que significa una correlación muy alta y positiva entre las variables. Independientemente de la enorme diferencia en el PIB y la esperanza de vida entre cada país, siempre podemos observar la misma correlación positiva alta.
+            Análisis: Podemos observar una alta correlación entre el PIB y la Esperanza de Vida al Nacer en los 6 casos.
+            Para todos los países, el Coeficiente de Correlación de Pearson (r) fue superior a 0,9, lo que significa una
+            correlación muy alta y positiva entre las variables. Independientemente de la enorme diferencia en el PIB y
+            la esperanza de vida entre cada país, siempre podemos observar la misma correlación positiva alta.
           </p>
           <h3 id="Gráficos-de-líneas-individuales.">
             Gráficos de líneas individuales.
           </h3>
           <p>
-            Además de que los gráficos de líneas son las visualizaciones gráficas más simples y comunes, son extremadamente importantes al analizar la evolución de los datos en una línea de tiempo. Dado que nuestro conjunto de datos estaba dividido por países y años, tuve que trazar esta cuadrícula con la evolución individual del PIB y la esperanza de vida para completar el segundo objetivo.
+            Además de que los gráficos de líneas son las visualizaciones gráficas más simples y comunes, son
+            extremadamente importantes al analizar la evolución de los datos en una línea de tiempo. Dado que nuestro
+            conjunto de datos estaba dividido por países y años, tuve que trazar esta cuadrícula con la evolución
+            individual del PIB y la esperanza de vida para completar el segundo objetivo.
           </p>
         </div>
       </div>
@@ -643,7 +675,8 @@ Name: Country, dtype: int64</pre>
         </div>
         <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
           <p>
-            Análisis: Aquí podemos observar un aumento del PIB y de la Esperanza de Vida a lo largo de los años para cada país por separado. Reforzando la correlación entre esas variables.
+            Análisis: Aquí podemos observar un aumento del PIB y de la Esperanza de Vida a lo largo de los años para
+            cada país por separado. Reforzando la correlación entre esas variables.
           </p>
           <h3 id="Diagramas-de-barras-y-gráficos-de-líneas-agrupados">
             Diagramas de barras y gráficos de líneas agrupados</h3>
@@ -722,7 +755,11 @@ Name: Country, dtype: int64</pre>
         </div>
         <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
           <p>
-            Análisis: Podemos notar una enorme diferencia entre el PIB promedio de Estados Unidos y el resto del grupo. Por ejemplo, los PIB de Zimbabue y Chile parecen ser casi inexistentes en ambos gráficos, dada la escala del gráfico en billones de dólares estadounidenses. Otra observación importante es el crecimiento del PIB chino a lo largo de los años. Comenzando en el 3er lugar y cerca del resto del grupo y creciendo exponencialmente hasta lograr el segundo lugar y divergiendo completamente del grupo inicial, acercándose a los EE. UU.
+            Análisis: Podemos notar una enorme diferencia entre el PIB promedio de Estados Unidos y el resto del grupo.
+            Por ejemplo, los PIB de Zimbabue y Chile parecen ser casi inexistentes en ambos gráficos, dada la escala del
+            gráfico en billones de dólares estadounidenses. Otra observación importante es el crecimiento del PIB chino
+            a lo largo de los años. Comenzando en el 3er lugar y cerca del resto del grupo y creciendo exponencialmente
+            hasta lograr el segundo lugar y divergiendo completamente del grupo inicial, acercándose a los EE. UU.
           </p>
           <h3 id="Comparación-de-grupos-de-esperanza-de-vida">
             Comparación de grupos de esperanza de vida
@@ -791,13 +828,21 @@ Name: Country, dtype: int64</pre>
         </div>
         <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
           <p>
-            Análisis: trazar la esperanza de vida de cada país en el mismo gráfico muestra una gran diferencia entre Zimbabue, que tiene un promedio de 50 años de vida, y los otros países, que tienen un promedio de alrededor de 77 años de vida. Esta distancia es muy alarmante y genera preocupaciones sobre la calidad de vida del país.
+            Análisis: trazar la esperanza de vida de cada país en el mismo gráfico muestra una gran diferencia entre
+            Zimbabue, que tiene un promedio de 50 años de vida, y los otros países, que tienen un promedio de alrededor
+            de 77 años de vida. Esta distancia es muy alarmante y genera preocupaciones sobre la calidad de vida del
+            país.
           </p>
           <h3 id="Diagramas-de-caja-conjugados.">
             Diagramas de caja conjugados.
           </h3>
           <p>
-            Durante la fase de alcance del proyecto, definí los objetivos y algunos análisis que pensé que serían útiles para lograr esos objetivos. Uno de esos análisis fue encontrar la distribución de la variable, pero confieso que analizar solo la distribución no fue tan esclarecedor. Sin embargo, incluso cuando haces algo que no vas a usar, a veces tienes nuevas ideas que pueden ser interesantes. Y mientras graficaba la distribución, pensé que sería bueno dibujar un diagrama de caja con todos los países conjugados y analizar la evolución de todo el grupo por año.
+            Durante la fase de alcance del proyecto, definí los objetivos y algunos análisis que pensé que serían útiles
+            para lograr esos objetivos. Uno de esos análisis fue encontrar la distribución de la variable, pero confieso
+            que analizar solo la distribución no fue tan esclarecedor. Sin embargo, incluso cuando haces algo que no vas
+            a usar, a veces tienes nuevas ideas que pueden ser interesantes. Y mientras graficaba la distribución, pensé
+            que sería bueno dibujar un diagrama de caja con todos los países conjugados y analizar la evolución de todo
+            el grupo por año.
           </p>
         </div>
       </div>
@@ -868,28 +913,45 @@ Name: Country, dtype: int64</pre>
         </div>
         <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
           <p>
-            Análisis: En el primer gráfico, podemos ver un aumento en el PIB mediano hasta 2008. Luego, en 2009 podemos observar una disminución en el PIB general, reflejo de la crisis financiera de 2008, y cierta dificultad de la mediana para volver a la pista hasta el final del gráfico. Además, es notable el valor atípico del límite superior, lo que muestra que Estados Unidos está muy lejos del resto de los países en términos de PIB. Una última observación es que el rango intercuartílico ha aumentado año tras año. Dándonos la falsa sensación de que los demás países se estaban acercando a los EE.UU. Pero cuando analizamos los gráficos individuales, podemos ver que en realidad es el PIB chino el que crece fuera del grupo del límite inferior y se acerca, por sí solo, al PIB estadounidense.
+            Análisis: En el primer gráfico, podemos ver un aumento en el PIB mediano hasta 2008. Luego, en 2009 podemos
+            observar una disminución en el PIB general, reflejo de la crisis financiera de 2008, y cierta dificultad de
+            la mediana para volver a la pista hasta el final del gráfico. Además, es notable el valor atípico del límite
+            superior, lo que muestra que Estados Unidos está muy lejos del resto de los países en términos de PIB. Una
+            última observación es que el rango intercuartílico ha aumentado año tras año. Dándonos la falsa sensación de
+            que los demás países se estaban acercando a los EE.UU. Pero cuando analizamos los gráficos individuales,
+            podemos ver que en realidad es el PIB chino el que crece fuera del grupo del límite inferior y se acerca,
+            por sí solo, al PIB estadounidense.
           </p>
           <p>
-            En el segundo gráfico podemos observar un aumento de la mediana de la Esperanza de Vida a lo largo de los años, así como una disminución del rango intercuartílico. Esto significa que las esperanzas de vida de los países en este conjunto de datos aumentaban y se acercaban cada año. Es notorio por los valores atípicos de límite inferior en este gráfico, que muestran que la esperanza de vida de Zimbabue es muy discordante con el resto de los países en este conjunto de datos.
+            En el segundo gráfico podemos observar un aumento de la mediana de la Esperanza de Vida a lo largo de los
+            años, así como una disminución del rango intercuartílico. Esto significa que las esperanzas de vida de los
+            países en este conjunto de datos aumentaban y se acercaban cada año. Es notorio por los valores atípicos de
+            límite inferior en este gráfico, que muestran que la esperanza de vida de Zimbabue es muy discordante con el
+            resto de los países en este conjunto de datos.
           </p>
           <h3 id="Siempre-hay-algo-más.">
             Siempre hay algo más.
           </h3>
           <p>
-            Una de las partes más interesantes de hacer un análisis exploratorio de datos es que siempre tienes nuevas ideas, piensas en nuevas hipótesis y te preguntas si hay más información oculta dentro de esas observaciones.
+            Una de las partes más interesantes de hacer un análisis exploratorio de datos es que siempre tienes nuevas
+            ideas, piensas en nuevas hipótesis y te preguntas si hay más información oculta dentro de esas
+            observaciones.
           </p>
           <p>
-            Mientras realizaba este análisis y me acercaba a (lo que pensé que sería) el final, obtuve otro avance: &quot;¿qué pasa con la tasa de crecimiento de cada país?&quot;
+            Mientras realizaba este análisis y me acercaba a (lo que pensé que sería) el final, obtuve otro avance:
+            &quot;¿qué pasa con la tasa de crecimiento de cada país?&quot;
           </p>
           <p>
-            Como se vio antes, todos los países crecieron en términos de PIB y Esperanza de Vida. Además, encontramos una correlación positiva entre estos índices. Y, a pesar de las diferencias entre ellos, ¿qué pasa si nos fijamos en su crecimiento individual para este período?
+            Como se vio antes, todos los países crecieron en términos de PIB y Esperanza de Vida. Además, encontramos
+            una correlación positiva entre estos índices. Y, a pesar de las diferencias entre ellos, ¿qué pasa si nos
+            fijamos en su crecimiento individual para este período?
           </p>
           <h3 id="Codifiquemos-un-poco-más">
             Codifiquemos un poco más
           </h3>
           <p>
-            Aquí empiezo creando un nuevo Data Frame con la información que busco, la tasa de crecimiento de cada país para ambas variables.
+            Aquí empiezo creando un nuevo Data Frame con la información que busco, la tasa de crecimiento de cada país
+            para ambas variables.
           </p>
         </div>
       </div>
@@ -986,7 +1048,8 @@ Name: Country, dtype: int64</pre>
             Grafiquen juntos para comparar.
           </h3>
           <p>
-            Los números son geniales, pero son mejores cuando podemos visualizarlos de alguna forma. Por eso dibujo dos gráficos más para ver esta información en conjunto y poder compararlos.
+            Los números son geniales, pero son mejores cuando podemos visualizarlos de alguna forma. Por eso dibujo dos
+            gráficos más para ver esta información en conjunto y poder compararlos.
           </p>
 
         </div>
@@ -1065,21 +1128,29 @@ Name: Country, dtype: int64</pre>
         </div>
         <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
           <p>
-            Análisis: En el primer gráfico, China llama nuestra atención al mostrar un crecimiento del PIB de más del 800 % entre 2000 y 2015, casi 4 veces más que el segundo lugar y 12 veces más que el último. Esto es realmente impresionante, dado que al principio estaban cerca del resto del grupo, como se vio antes. También podemos comentar que China ocupa el segundo lugar en el crecimiento de la Esperanza de Vida, lo que refuerza
+            Análisis: En el primer gráfico, China llama nuestra atención al mostrar un crecimiento del PIB de más del
+            800 % entre 2000 y 2015, casi 4 veces más que el segundo lugar y 12 veces más que el último. Esto es
+            realmente impresionante, dado que al principio estaban cerca del resto del grupo, como se vio antes. También
+            podemos comentar que China ocupa el segundo lugar en el crecimiento de la Esperanza de Vida, lo que refuerza
             el factor de correlación entre esos índices.
           </p>
           <p>
-            En cuanto al crecimiento de la esperanza de vida, Zimbabue ahora llama la atención con un crecimiento del 32% durante 15 años, 5 veces más que China y casi 13 veces más que México. Lo cual es magnífico, especialmente dado que estaba muy lejos del resto del grupo.
+            En cuanto al crecimiento de la esperanza de vida, Zimbabue ahora llama la atención con un crecimiento del
+            32% durante 15 años, 5 veces más que China y casi 13 veces más que México. Lo cual es magnífico,
+            especialmente dado que estaba muy lejos del resto del grupo.
           </p>
           <h3 id="Comentarios">
             Comentarios.
           </h3>
           <p>
-            En este caso de estudio, se mostró nuevamente un EDA sobre un conjunto de datos determinado para nuestro caso particular, sin embargo, esta misma metodología se sugiere usar para cualquier conjunto de datos que se tenga en cualquier otro caso particular.
+            En este caso de estudio, se mostró nuevamente un EDA sobre un conjunto de datos determinado para nuestro
+            caso particular, sin embargo, esta misma metodología se sugiere usar para cualquier conjunto de datos que se
+            tenga en cualquier otro caso particular.
           </p>
         </div>
       </div>
     </div>
   </div>
 </body>
+
 </html>

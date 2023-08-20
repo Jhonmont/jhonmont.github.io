@@ -1,0 +1,3037 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Gráficos Estadísticos con Seaborn</title>
+  <link rel="shortcut icon" href="../../assets/images/python-logo.png" type="image/x-icon">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+  <link rel="stylesheet" href="python_css/python_new_posts.css" />
+
+</head>
+
+<body class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
+  <header>
+    <a href="../../index.html" class="logo">
+      <img src="../../assets/images/python-logo.png" alt="python-logo">
+      Volver al Inicio
+    </a>
+    <nav>
+      <a href="programacion_orientada_a_objetos.html" class="nav-link">Anterior </a>
+      <a href="facetgrid_de_seaborn.html" class="nav-link">Siguiente</a>
+    </nav>
+  </header>
+  <p style="font-size: medium;">
+    <strong>10 de Noviembre del 2022
+    </strong> | Jhonatan Montilla
+  </p>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <h2 id="Visualización">
+            Gráficos Estadísticos con Seaborn
+          </h2>
+          <p>
+            Este caso de estudio tiene como objetivo crear gráficos para respaldar el proceso de ciencia de datos. Las
+            visualizaciones se pueden utilizar durante el análisis exploratorio, antes o después del procesamiento de
+            datos, para construir gráficos estadísticos para el análisis de conjuntos de datos, identificar relaciones
+            de variables o evaluar la distribución de datos.
+          </p>
+          <p>
+            Si bien Matplotlib se puede usar para este propósito, Seaborn es una biblioteca más eficiente y fácil de
+            usar para crear gráficos estadísticos. Por lo tanto, tener la capacidad de crear visualizaciones usando
+            cualquier herramienta es crucial.
+          </p>
+          <p>
+            Visite Jupyter Notebook para explorar los conceptos de visualización de datos con Seaborn. Nota: Las
+            funciones clave, los resultados y los términos están en negrita para facilitar su comprensión.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">stats</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="o">%</span><span class="k">matplotlib</span> inline
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">__version__</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+
+
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child jp-OutputArea-executeResult">
+
+          <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[&nbsp;]:</div>
+
+
+
+
+          <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+            <pre>&#39;0.12.2&#39;</pre>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <h3 id="Comprueba-los-conjuntos-de-datos-de-Seaborn">Comprueba los conjuntos de datos de Seaborn</h3>
+          <p>Experimente todo el potencial de Seaborn con sus conjuntos de datos incorporados.</p>
+          <p>Simplemente llame a get_dataset_names() para obtener una lista completa de todos los conjuntos de datos
+            disponibles para experimentar.</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">get_dataset_names</span><span class="p">()</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+
+
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child jp-OutputArea-executeResult">
+
+          <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[&nbsp;]:</div>
+
+
+
+
+          <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+            <pre>[&#39;anagrams&#39;,
+ &#39;anscombe&#39;,
+ &#39;attention&#39;,
+ &#39;brain_networks&#39;,
+ &#39;car_crashes&#39;,
+ &#39;diamonds&#39;,
+ &#39;dots&#39;,
+ &#39;dowjones&#39;,
+ &#39;exercise&#39;,
+ &#39;flights&#39;,
+ &#39;fmri&#39;,
+ &#39;geyser&#39;,
+ &#39;glue&#39;,
+ &#39;healthexp&#39;,
+ &#39;iris&#39;,
+ &#39;mpg&#39;,
+ &#39;penguins&#39;,
+ &#39;planets&#39;,
+ &#39;seaice&#39;,
+ &#39;taxis&#39;,
+ &#39;tips&#39;,
+ &#39;titanic&#39;]</pre>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <h3 id="Cargar-conjunto-de-datos">Cargar conjunto de datos</h3>
+          <p>Acceda a uno de los conjuntos de datos de la lista completa. Sumerjámonos en el conjunto de datos de iris
+            de renombre mundial para esta demostración.</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">iris</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">load_dataset</span><span class="p">(</span><span class="s2">&quot;iris&quot;</span><span class="p">)</span>
+<span class="n">iris</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child jp-OutputArea-executeResult">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[&nbsp;]:</div>
+          <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+            data-mime-type="text/html">
+            <div class="table-container">
+              <table class="dataframe">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>sepal_length</th>
+                    <th>sepal_width</th>
+                    <th>petal_length</th>
+                    <th>petal_width</th>
+                    <th>species</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>0</th>
+                    <td>5.1</td>
+                    <td>3.5</td>
+                    <td>1.4</td>
+                    <td>0.2</td>
+                    <td>setosa</td>
+                  </tr>
+                  <tr>
+                    <th>1</th>
+                    <td>4.9</td>
+                    <td>3.0</td>
+                    <td>1.4</td>
+                    <td>0.2</td>
+                    <td>setosa</td>
+                  </tr>
+                  <tr>
+                    <th>2</th>
+                    <td>4.7</td>
+                    <td>3.2</td>
+                    <td>1.3</td>
+                    <td>0.2</td>
+                    <td>setosa</td>
+                  </tr>
+                  <tr>
+                    <th>3</th>
+                    <td>4.6</td>
+                    <td>3.1</td>
+                    <td>1.5</td>
+                    <td>0.2</td>
+                    <td>setosa</td>
+                  </tr>
+                  <tr>
+                    <th>4</th>
+                    <td>5.0</td>
+                    <td>3.6</td>
+                    <td>1.4</td>
+                    <td>0.2</td>
+                    <td>setosa</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="nb">type</span><span class="p">(</span><span class="n">iris</span><span class="p">)</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+
+
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child jp-OutputArea-executeResult">
+
+          <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[&nbsp;]:</div>
+
+
+
+
+          <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+            <pre>pandas.core.frame.DataFrame</pre>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <h3 id="Resumen-estadístico">Resumen estadístico</h3>
+          <p>La &quot;función de resumen estadístico&quot; en la biblioteca Seaborn es un método que proporciona un
+            resumen rápido de la distribución de un conjunto de datos.</p>
+          <p>Este resumen generalmente incluye medidas como la media, la mediana, la moda y los cuartiles de los datos,
+            y puede ayudarlo a comprender el patrón general y la distribución de los datos.</p>
+          <p>Al visualizar las estadísticas resumidas, puede identificar tendencias, valores atípicos y otras
+            características importantes en sus datos, que pueden informar un análisis posterior y la toma de decisiones.
+          </p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">iris</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+
+
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child jp-OutputArea-executeResult">
+
+          <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[&nbsp;]:</div>
+
+
+
+          <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+            data-mime-type="text/html">
+            <div class="table-container">
+              <table class="dataframe">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>sepal_length</th>
+                    <th>sepal_width</th>
+                    <th>petal_length</th>
+                    <th>petal_width</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>count</th>
+                    <td>150.000000</td>
+                    <td>150.000000</td>
+                    <td>150.000000</td>
+                    <td>150.000000</td>
+                  </tr>
+                  <tr>
+                    <th>mean</th>
+                    <td>5.843333</td>
+                    <td>3.057333</td>
+                    <td>3.758000</td>
+                    <td>1.199333</td>
+                  </tr>
+                  <tr>
+                    <th>std</th>
+                    <td>0.828066</td>
+                    <td>0.435866</td>
+                    <td>1.765298</td>
+                    <td>0.762238</td>
+                  </tr>
+                  <tr>
+                    <th>min</th>
+                    <td>4.300000</td>
+                    <td>2.000000</td>
+                    <td>1.000000</td>
+                    <td>0.100000</td>
+                  </tr>
+                  <tr>
+                    <th>25%</th>
+                    <td>5.100000</td>
+                    <td>2.800000</td>
+                    <td>1.600000</td>
+                    <td>0.300000</td>
+                  </tr>
+                  <tr>
+                    <th>50%</th>
+                    <td>5.800000</td>
+                    <td>3.000000</td>
+                    <td>4.350000</td>
+                    <td>1.300000</td>
+                  </tr>
+                  <tr>
+                    <th>75%</th>
+                    <td>6.400000</td>
+                    <td>3.300000</td>
+                    <td>5.100000</td>
+                    <td>1.800000</td>
+                  </tr>
+                  <tr>
+                    <th>max</th>
+                    <td>7.900000</td>
+                    <td>4.400000</td>
+                    <td>6.900000</td>
+                    <td>2.500000</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <p>La función de descripción se puede aplicar a una variedad de tipos de gráficos en Seaborn, incluidos
+            histogramas, diagramas de caja, diagramas de violín y otros, para ayudarlo a obtener rápidamente información
+            sobre sus datos.</p>
+          <h3 id="Columnas-del-conjunto-de-datos">Columnas del conjunto de datos</h3>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">iris</span><span class="o">.</span><span class="n">columns</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+
+
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child jp-OutputArea-executeResult">
+
+          <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[&nbsp;]:</div>
+
+
+
+
+          <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+            <pre>Index([&#39;sepal_length&#39;, &#39;sepal_width&#39;, &#39;petal_length&#39;, &#39;petal_width&#39;,
+       &#39;species&#39;],
+      dtype=&#39;object&#39;)</pre>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <h3 id="Gráficos-estadísticos-de-Seaborn">Gráficos estadísticos de Seaborn</h3>
+          <ul>
+            <li>Distplot</li>
+          </ul>
+          <p>La gráfica de distribución de Seaborn, también conocida como gráfica de distribución univariada, se utiliza
+            para visualizar la distribución de una sola variable. Para crear el gráfico, simplemente llame a la función
+            distplot, pasando el nombre de la variable que desea visualizar, como 'sepal_length' del conjunto de datos
+            del iris.</p>
+          <p>Además, puede especificar opciones como habilitar el gráfico de alfombra y ajustar el ajuste de los datos a
+            sus preferencias.</p>
+          <p>El distplot proporciona una representación visual integral de la distribución de sus datos, incluida la
+            tendencia central, la dispersión, la asimetría y cualquier posible valor atípico, lo que le permite obtener
+            una comprensión más profunda de los datos”.</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">iris</span><span class="o">.</span><span class="n">sepal_length</span><span class="p">,</span> <span class="n">rug</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">fit</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">gausshyper</span><span class="p">);</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+
+
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+
+
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/graficos_estadisticos_con_seaborn/image_0001.jpg">
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <h3 id="Parcela-conjunta">Parcela conjunta</h3>
+          <p>El gráfico conjunto de Seaborn es una poderosa herramienta para visualizar distribuciones bivariadas.
+            Combina un gráfico de dispersión con histogramas de las variables en cada eje, lo que proporciona una visión
+            integral de la relación entre dos variables.</p>
+          <p>Este gráfico único puede revelar información importante sobre la distribución de sus datos, incluida la
+            presencia de relaciones positivas o negativas, la distribución de cada variable y la frecuencia de los
+            puntos de datos.</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">jointplot</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="s2">&quot;sepal_length&quot;</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="s2">&quot;petal_length&quot;</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">iris</span><span class="p">);</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+
+
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+
+
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/graficos_estadisticos_con_seaborn/image_0002.jpg">
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <p>Con solo un comando simple, el gráfico conjunto proporciona una manera eficiente y efectiva de obtener
+            información sobre las relaciones entre las variables en sus datos.</p>
+          <h3 id="Parcela-conjunta-hexagonal">Parcela conjunta hexagonal</h3>
+          <p>El hexágono de gráfico conjunto de Seaborn es una variación del gráfico conjunto, que presenta la
+            distribución bivariada en un formato diferente.</p>
+          <p>En lugar de usar puntos para representar puntos de datos individuales, el gráfico hexadecimal usa hexágonos
+            para agrupar y mostrar la densidad de los puntos de datos. Esto puede proporcionar una representación más
+            clara de la relación entre dos variables, particularmente cuando hay una alta densidad de puntos de datos.
+          </p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="k">with</span> <span class="n">sns</span><span class="o">.</span><span class="n">axes_style</span><span class="p">(</span><span class="s2">&quot;white&quot;</span><span class="p">):</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">jointplot</span><span class="p">(</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="s2">&quot;sepal_length&quot;</span><span class="p">,</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="s2">&quot;petal_length&quot;</span><span class="p">,</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">iris</span><span class="p">,</span>
+        <span class="n">kind</span> <span class="o">=</span> <span class="s2">&quot;hex&quot;</span><span class="p">,</span>
+        <span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;k&quot;</span>
+        <span class="p">);</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+
+
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+
+
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/graficos_estadisticos_con_seaborn/image_0003.jpg">
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <p>Además, el diseño del gráfico se puede personalizar fácilmente para adaptarse a sus necesidades
+            específicas, lo que permite un mayor control sobre la apariencia y presentación de sus datos”.</p>
+          <h3 id="Gráfica-conjunta-de-densidad">Gráfica conjunta de densidad</h3>
+          <p>El diagrama de densidad de Seaborn proporciona una representación alternativa de la distribución bivariada
+            al cambiar la visualización de los puntos de datos a una estimación de densidad del kernel (KDE).</p>
+          <p>En lugar de puntos de datos individuales, la gráfica muestra la densidad estimada de los datos. Esto puede
+            proporcionar una representación más fluida de la distribución de los datos y revelar patrones subyacentes
+            que podrían no ser evidentes de inmediato en un diagrama de dispersión.</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">jointplot</span><span class="p">(</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="s2">&quot;sepal_length&quot;</span><span class="p">,</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="s2">&quot;petal_length&quot;</span><span class="p">,</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">iris</span><span class="p">,</span>
+    <span class="n">kind</span> <span class="o">=</span> <span class="s2">&quot;kde&quot;</span>
+    <span class="p">);</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+
+
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+
+
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/graficos_estadisticos_con_seaborn/image_0004.jpg">
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <p>Además, los histogramas de los ejes también se transforman en gráficos de densidad, lo que proporciona una
+            visión más completa de la distribución de cada variable.</p>
+          <h3 id="Personalización-del-gráfico-conjunto-de-densidad">Personalización del gráfico
+            conjunto de densidad</h3>
+          <p>Para mostrar la versatilidad y la capacidad de Seaborn, aquí tenemos un ejemplo de cómo personalizar los
+            parámetros de la gráfica conjunta de densidad anterior.</p>
+          <p>Con la capacidad de ajustar varios aspectos de la gráfica, como el color, el estilo del marcador y la
+            apariencia de la gráfica, Seaborn proporciona una plataforma flexible y sólida para la visualización de
+            datos, lo que le permite crear gráficas que comunican de manera efectiva los conocimientos contenidos en sus
+            datos.</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">g</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">jointplot</span><span class="p">(</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="s2">&quot;sepal_length&quot;</span><span class="p">,</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="s2">&quot;petal_length&quot;</span><span class="p">,</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">iris</span><span class="p">,</span>
+    <span class="n">kind</span> <span class="o">=</span> <span class="s2">&quot;kde&quot;</span><span class="p">,</span>
+    <span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;m&quot;</span>
+    <span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">plot_joint</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">s</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;+&quot;</span><span class="p">)</span>
+<span class="n">g</span><span class="o">.</span><span class="n">ax_joint</span><span class="o">.</span><span class="n">collections</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_alpha</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+
+
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+
+
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/graficos_estadisticos_con_seaborn/image_0005.jpg">
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <h3 id="Pairplot-%E2%80%94-Gráfico-%C3%BAtil-para-pocas-variables">Pairplot &#8212; Gráfico
+            &#250;til para pocas variables</h3>
+          <p>El diagrama de pares de Seaborn proporciona una vista integral de las relaciones entre todas las variables
+            en un conjunto de datos.</p>
+          <p>Al llamar a la función pairplot y pasar el conjunto de datos, Seaborn crea automáticamente diagramas de
+            dispersión e histogramas para todas las combinaciones de variables, mostrando sus relaciones en un solo
+            gráfico.</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">pairplot</span><span class="p">(</span><span class="n">iris</span><span class="p">);</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+
+
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+
+
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/graficos_estadisticos_con_seaborn/image_0006.jpg">
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <p>Este gráfico es una herramienta poderosa para obtener una comprensión general de la distribución de
+            variables en sus datos y puede revelar rápidamente cualquier relación o patrón significativo.</p>
+          <p>Con una entrada mínima por parte del usuario, la función pairplot puede producir un gráfico altamente
+            informativo que es valioso para el análisis exploratorio de datos.</p>
+          <h3 id="Visualizaciones-de-relaciones">Visualizaciones de relaciones</h3>
+          <p>Cargar conjunto de datos</p>
+          <p>Seaborn ofrece una amplia gama de opciones para visualizar datos. Para demostrar esto, exploraremos otro
+            conjunto de datos, el conjunto de datos de &quot;consejos&quot;, que proporciona una gran cantidad de
+            información que espera ser visualizada.</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">tips</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">load_dataset</span><span class="p">(</span><span class="s2">&quot;tips&quot;</span><span class="p">)</span>
+<span class="n">tips</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+
+
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child jp-OutputArea-executeResult">
+
+          <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[&nbsp;]:</div>
+
+
+
+          <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+            data-mime-type="text/html">
+            <div class="table-container">
+              <table class="dataframe">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>total_bill</th>
+                    <th>tip</th>
+                    <th>sex</th>
+                    <th>smoker</th>
+                    <th>day</th>
+                    <th>time</th>
+                    <th>size</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>0</th>
+                    <td>16.99</td>
+                    <td>1.01</td>
+                    <td>Female</td>
+                    <td>No</td>
+                    <td>Sun</td>
+                    <td>Dinner</td>
+                    <td>2</td>
+                  </tr>
+                  <tr>
+                    <th>1</th>
+                    <td>10.34</td>
+                    <td>1.66</td>
+                    <td>Male</td>
+                    <td>No</td>
+                    <td>Sun</td>
+                    <td>Dinner</td>
+                    <td>3</td>
+                  </tr>
+                  <tr>
+                    <th>2</th>
+                    <td>21.01</td>
+                    <td>3.50</td>
+                    <td>Male</td>
+                    <td>No</td>
+                    <td>Sun</td>
+                    <td>Dinner</td>
+                    <td>3</td>
+                  </tr>
+                  <tr>
+                    <th>3</th>
+                    <td>23.68</td>
+                    <td>3.31</td>
+                    <td>Male</td>
+                    <td>No</td>
+                    <td>Sun</td>
+                    <td>Dinner</td>
+                    <td>2</td>
+                  </tr>
+                  <tr>
+                    <th>4</th>
+                    <td>24.59</td>
+                    <td>3.61</td>
+                    <td>Female</td>
+                    <td>No</td>
+                    <td>Sun</td>
+                    <td>Dinner</td>
+                    <td>4</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <h3 id="Tipo-de-verificación">Tipo de verificación</h3>
+          <p>Verificar el tipo de datos de sus variables en Pandas es importante por varias razones. Primero, lo ayuda a
+            comprender la estructura de sus datos e identificar posibles errores o inconsistencias.</p>
+          <p>Por ejemplo, si espera que una columna contenga datos numéricos pero en su lugar se almacena como texto,
+            esto puede causar problemas cuando intente realizar operaciones numéricas en esa columna.</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="nb">type</span><span class="p">(</span><span class="n">tips</span><span class="p">)</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+
+
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child jp-OutputArea-executeResult">
+
+          <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[&nbsp;]:</div>
+
+
+
+
+          <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+            <pre>pandas.core.frame.DataFrame</pre>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">tips</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+
+
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child jp-OutputArea-executeResult">
+
+          <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[&nbsp;]:</div>
+
+
+
+          <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+            data-mime-type="text/html">
+            <div class="table-container">
+              <table class="dataframe">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>total_bill</th>
+                    <th>tip</th>
+                    <th>size</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>count</th>
+                    <td>244.000000</td>
+                    <td>244.000000</td>
+                    <td>244.000000</td>
+                  </tr>
+                  <tr>
+                    <th>mean</th>
+                    <td>19.785943</td>
+                    <td>2.998279</td>
+                    <td>2.569672</td>
+                  </tr>
+                  <tr>
+                    <th>std</th>
+                    <td>8.902412</td>
+                    <td>1.383638</td>
+                    <td>0.951100</td>
+                  </tr>
+                  <tr>
+                    <th>min</th>
+                    <td>3.070000</td>
+                    <td>1.000000</td>
+                    <td>1.000000</td>
+                  </tr>
+                  <tr>
+                    <th>25%</th>
+                    <td>13.347500</td>
+                    <td>2.000000</td>
+                    <td>2.000000</td>
+                  </tr>
+                  <tr>
+                    <th>50%</th>
+                    <td>17.795000</td>
+                    <td>2.900000</td>
+                    <td>2.000000</td>
+                  </tr>
+                  <tr>
+                    <th>75%</th>
+                    <td>24.127500</td>
+                    <td>3.562500</td>
+                    <td>3.000000</td>
+                  </tr>
+                  <tr>
+                    <th>max</th>
+                    <td>50.810000</td>
+                    <td>10.000000</td>
+                    <td>6.000000</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <h3 id="Gráfico-conjunto:-regresión-lineal">Gráfico conjunto: regresión lineal</h3>
+          <p>La gráfica conjunta con regresión lineal en Seaborn es una poderosa herramienta para explorar la relación
+            entre dos variables.</p>
+          <p>Al pasar el argumento &quot;reg&quot; al parámetro &quot;tipo&quot;, el diagrama crea un diagrama de
+            dispersión y ajusta una línea de regresión lineal a los datos, mostrando la fuerza de la relación entre las
+            dos variables.</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">jointplot</span><span class="p">(</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="s2">&quot;total_bill&quot;</span><span class="p">,</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="s2">&quot;tip&quot;</span><span class="p">,</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">tips</span><span class="p">,</span>
+    <span class="n">kind</span> <span class="o">=</span> <span class="s2">&quot;reg&quot;</span>
+    <span class="p">);</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+
+
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+
+
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/graficos_estadisticos_con_seaborn/image_0007.jpg">
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <p>Además, el gráfico también incluye histogramas en los ejes para mostrar la distribución de cada variable y
+            un gráfico de densidad para proporcionar una representación visual de la densidad de los puntos de datos.
+          </p>
+          <p>Esta combinación de características hace que el gráfico conjunto con regresión lineal sea una herramienta
+            increíblemente útil para comprender las relaciones en sus datos y explorar tendencias o patrones
+            potenciales.</p>
+          <h3 id="Lmplot">Lmplot</h3>
+          <p>El lmplot en la biblioteca Seaborn es una herramienta poderosa para visualizar la relación entre dos
+            variables en un diagrama de dispersión con una línea de regresión lineal ajustada.</p>
+          <p>A diferencia del gráfico conjunto, lmplot solo muestra el gráfico de dispersión y la línea de regresión, lo
+            que permite un enfoque más claro en la relación entre las variables.</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">lmplot</span><span class="p">(</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="s2">&quot;total_bill&quot;</span><span class="p">,</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="s2">&quot;tip&quot;</span><span class="p">,</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">tips</span>
+    <span class="p">);</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+
+
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+
+
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/graficos_estadisticos_con_seaborn/image_0008.jpg">
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <p>El lmplot también ofrece una gama de opciones de personalización, incluida la capacidad de controlar la
+            apariencia de los puntos de datos y la línea de regresión.</p>
+          <p>Esta versatilidad hace que lmplot sea una herramienta útil para explorar y comprender las relaciones entre
+            variables en sus datos y para presentar sus resultados de una manera clara y convincente.</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">lmplot</span><span class="p">(</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="s2">&quot;size&quot;</span><span class="p">,</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="s2">&quot;tip&quot;</span><span class="p">,</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">tips</span><span class="p">,</span>
+    <span class="n">x_jitter</span> <span class="o">=</span> <span class="mf">.05</span>
+    <span class="p">);</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+
+
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+
+
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/graficos_estadisticos_con_seaborn/image_0009.jpg">
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <h3 id="Límites">Límites</h3>
+          <p>Este gráfico no solo muestra un diagrama de dispersión con una línea de regresión lineal ajustada, sino que
+            también agrega límites superior e inferior a cada punto de datos, proporcionando una representación visual
+            de la incertidumbre en los datos.</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">lmplot</span><span class="p">(</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="s2">&quot;size&quot;</span><span class="p">,</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="s2">&quot;tip&quot;</span><span class="p">,</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">tips</span><span class="p">,</span>
+    <span class="n">x_estimator</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span>
+    <span class="p">);</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+
+
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+
+
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/graficos_estadisticos_con_seaborn/image_0010.jpg">
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <p>Al visualizar los límites, puede comprender mejor las relaciones entre las variables y tomar decisiones
+            informadas sobre los datos y su análisis.</p>
+          <h3 id="Cargar-conjunto-de-datos">Cargar conjunto de datos</h3>
+          <p>Carguemos otro conjunto de datos de Seaborn:</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">anscombe</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">load_dataset</span><span class="p">(</span><span class="s2">&quot;anscombe&quot;</span><span class="p">)</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <h3 id="Consulta-%E2%80%94-filtro-+-regresión">Consulta &#8212; filtro + regresión</h3>
+          <p>Podemos filtrar los datos del conjunto de datos para trazarlos en un gráfico, creando una especie de
+            consulta.</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">lmplot</span><span class="p">(</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">anscombe</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;dataset == &#39;II&#39;&quot;</span><span class="p">),</span>
+    <span class="n">ci</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">scatter_kws</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;s&quot;</span><span class="p">:</span> <span class="mi">80</span><span class="p">}</span>
+    <span class="p">);</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+
+
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+
+
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/graficos_estadisticos_con_seaborn/image_0011.jpg">
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <h3 id="Ajuste-de-parámetros">Ajuste de parámetros</h3>
+          <p>El ajuste de parámetros en Seaborn te permite personalizar la apariencia de tus gráficos, incluida la línea
+            de regresión.</p>
+          <p>Al realizar ajustes en los parámetros, puede ajustar la visualización de sus datos, lo que facilita la
+            comprensión de las relaciones entre las variables y la identificación de tendencias o patrones en los datos.
+          </p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">lmplot</span><span class="p">(</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">anscombe</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;dataset == &#39;II&#39;&quot;</span><span class="p">),</span>
+    <span class="n">order</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="n">ci</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">scatter_kws</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;s&quot;</span><span class="p">:</span> <span class="mi">80</span><span class="p">}</span>
+    <span class="p">);</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+
+
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+
+
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/graficos_estadisticos_con_seaborn/image_0012.jpg">
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <p>Ya sea que desee cambiar el color de la línea, el estilo del marcador o las etiquetas de los ejes, la
+            capacidad de ajustar los parámetros le brinda la flexibilidad de presentar sus datos de la manera que mejor
+            se adapte a su análisis.</p>
+          <h3 id="Detección-de-valores-atípicos">Detección de valores atípicos</h3>
+          <p>La detección de valores atípicos es crucial, ya que ayuda a identificar puntos de datos que se desvían
+            significativamente del patrón normal de los datos.</p>
+          <p>Al identificar estos valores atípicos, se puede obtener una comprensión más profunda de la distribución de
+            los datos y tomar decisiones informadas basadas en los conocimientos.</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">lmplot</span><span class="p">(</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">anscombe</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;dataset == &#39;III&#39;&quot;</span><span class="p">),</span>
+    <span class="n">ci</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">scatter_kws</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;s&quot;</span><span class="p">:</span> <span class="mi">80</span><span class="p">}</span>
+    <span class="p">);</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+
+
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+
+
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/graficos_estadisticos_con_seaborn/image_0013.jpg">
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <p>En Seaborn, la visualización de valores atípicos es un paso esencial en la exploración del conjunto de
+            datos. Esto se puede lograr a través de varias técnicas, como diagramas de dispersión, diagramas de caja y
+            otros.</p>
+          <h3 id="Relación-no-lineal">Relación no lineal</h3>
+          <p>Podemos visualizar una relación no lineal, donde el cambio en una variable no está proporcionalmente
+            vinculado al cambio en otra variable.</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">lmplot</span><span class="p">(</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="s2">&quot;total_bill&quot;</span><span class="p">,</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="s2">&quot;tip&quot;</span><span class="p">,</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">tips</span><span class="p">,</span>
+    <span class="n">lowess</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="p">);</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+
+
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+
+
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/graficos_estadisticos_con_seaborn/image_0014.jpg">
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <h3 id="Diferentes-piezas-de-información">Diferentes piezas de información</h3>
+          <p>Otro lmplot que muestra varias piezas de información.</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">lmplot</span><span class="p">(</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="s2">&quot;total_bill&quot;</span><span class="p">,</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="s2">&quot;tip&quot;</span><span class="p">,</span>
+    <span class="n">hue</span> <span class="o">=</span> <span class="s2">&quot;smoker&quot;</span><span class="p">,</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">tips</span>
+    <span class="p">);</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+
+
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+
+
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/graficos_estadisticos_con_seaborn/image_0015.jpg">
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <h3 id="Personalizar-gráfico">Personalizar gráfico</h3>
+          <p>La importancia de personalizar las cartas en Seaborn radica en la capacidad de resaltar visualmente las
+            diferencias entre las variables.</p>
+          <p>Al ajustar los parámetros, podemos crear gráficos que comuniquen de manera clara y efectiva la información
+            que queremos transmitir.</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">lmplot</span><span class="p">(</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="s2">&quot;total_bill&quot;</span><span class="p">,</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="s2">&quot;tip&quot;</span><span class="p">,</span>
+    <span class="n">hue</span> <span class="o">=</span> <span class="s2">&quot;smoker&quot;</span><span class="p">,</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">tips</span><span class="p">,</span> <span class="n">markers</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">],</span>
+    <span class="n">palette</span> <span class="o">=</span> <span class="s2">&quot;Set1&quot;</span>
+    <span class="p">);</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+
+
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+
+
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/graficos_estadisticos_con_seaborn/image_0016.jpg">
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <p>La personalización es una herramienta clave en el arsenal de visualización de datos y puede mejorar en gran
+            medida el impacto de un gráfico.</p>
+          <h3 id="%C3%81rea-dividida">&#193;rea dividida</h3>
+          <p>Tenemos la opción de dividir el área de la parcela en múltiples secciones. El área completa de la gráfica
+            se denomina área de la gráfica, y arriba tenemos un solo gráfico en el área de la gráfica, mientras que
+            abajo tenemos dos gráficos en el área de la gráfica.</p>
+          <p>Por ejemplo, examinaremos la variable &quot;punta&quot; en el eje y. Usamos la misma variable para dos
+            gráficos y hacemos un cambio en el parámetro “col”, dividiendo los gráficos en “total_bill” correspondiente
+            a la hora de comer y cenar.</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">lmplot</span><span class="p">(</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="s2">&quot;total_bill&quot;</span><span class="p">,</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="s2">&quot;tip&quot;</span><span class="p">,</span>
+    <span class="n">hue</span> <span class="o">=</span> <span class="s2">&quot;smoker&quot;</span><span class="p">,</span>
+    <span class="n">col</span> <span class="o">=</span> <span class="s2">&quot;time&quot;</span><span class="p">,</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">tips</span>
+    <span class="p">);</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+
+
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+
+
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/graficos_estadisticos_con_seaborn/image_0017.jpg">
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <p>Con estos gráficos, tenemos la capacidad de hacer predicciones basadas en la información que se muestra. Al
+            analizar la relación entre la propina y la factura total, podemos estimar la cantidad de propina esperada
+            durante el almuerzo o la cena.</p>
+          <h3 id="Divide-áreas-con-más-variables">Divide áreas con más variables</h3>
+          <p>Al dividir el área en varios bloques, podemos comprender mejor las tendencias y patrones en los datos y
+            hacer predicciones más informadas. Al incorporar múltiples variables, podemos construir una comprensión más
+            completa de los datos y extraer información más significativa de ellos.</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">lmplot</span><span class="p">(</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="s2">&quot;total_bill&quot;</span><span class="p">,</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="s2">&quot;tip&quot;</span><span class="p">,</span>
+    <span class="n">hue</span> <span class="o">=</span> <span class="s2">&quot;smoker&quot;</span><span class="p">,</span>
+    <span class="n">col</span> <span class="o">=</span> <span class="s2">&quot;time&quot;</span><span class="p">,</span>
+    <span class="n">row</span> <span class="o">=</span> <span class="s2">&quot;sex&quot;</span><span class="p">,</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">tips</span>
+    <span class="p">);</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+
+
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+
+
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/graficos_estadisticos_con_seaborn/image_0018.jpg">
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <ul>
+            <li>Área dividida</li>
+          </ul>
+          <p>Podemos dividir aún más el área de la trama cambiando el parámetro col a días, creando así diferentes
+            bloques de datos para cada día de la semana.</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">lmplot</span><span class="p">(</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="s2">&quot;total_bill&quot;</span><span class="p">,</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="s2">&quot;tip&quot;</span><span class="p">,</span>
+    <span class="n">col</span> <span class="o">=</span> <span class="s2">&quot;day&quot;</span><span class="p">,</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">tips</span><span class="p">,</span>
+    <span class="n">col_wrap</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="p">);</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+
+
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+
+
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/graficos_estadisticos_con_seaborn/image_0019.jpg">
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <h3 id="Dividir-área-horizontal">Dividir área horizontal</h3>
+          <p>En lugar de tener varias parcelas apiladas verticalmente, ahora hemos cambiado la orientación para tenerlas
+            una al lado de la otra.</p>
+          <p>Los días de la semana ahora están todos en una fila, proporcionando una representación visual horizontal
+            con el cambio en los parámetros de col_wrap.</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">lmplot</span><span class="p">(</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="s2">&quot;total_bill&quot;</span><span class="p">,</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="s2">&quot;tip&quot;</span><span class="p">,</span>
+    <span class="n">col</span> <span class="o">=</span> <span class="s2">&quot;day&quot;</span><span class="p">,</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">tips</span><span class="p">,</span>
+    <span class="n">aspect</span> <span class="o">=</span> <span class="mf">.5</span>
+    <span class="p">);</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+
+
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+
+
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/graficos_estadisticos_con_seaborn/image_0020.jpg">
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <h3 id="Trabajar-con-variables-categóricas">Trabajar con variables categóricas</h3>
+          <p>La representación de variables categóricas, o variables que contienen valores de cadena, es un aspecto
+            importante de la visualización de datos.</p>
+          <p>Hasta ahora, hemos explorado gráficos para variables numéricas, pero es igualmente importante analizar
+            visualmente las relaciones entre los datos categóricos y otras variables en nuestro conjunto de datos.
+            diagrama de franjas</p>
+          <p>Ahora nuestro objetivo es identificar la factura total por día de la semana. Dado que el día de la semana
+            es una variable categórica, debe representarse de manera diferente.</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">stripplot</span><span class="p">(</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="s2">&quot;day&quot;</span><span class="p">,</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="s2">&quot;total_bill&quot;</span><span class="p">,</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">tips</span>
+    <span class="p">);</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+
+
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+
+
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/graficos_estadisticos_con_seaborn/image_0021.jpg">
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <h3 id="Personalizar-Stripplot">Personalizar Stripplot</h3>
+          <p>Podemos realizar ligeras personalizaciones en el Stripplot en seaborn. Con estas modificaciones, podemos
+            crear un gráfico más compacto y conciso que el anterior.</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">stripplot</span><span class="p">(</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="s2">&quot;day&quot;</span><span class="p">,</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="s2">&quot;total_bill&quot;</span><span class="p">,</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">tips</span><span class="p">,</span>
+    <span class="n">jitter</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="p">);</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+
+
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+
+
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/graficos_estadisticos_con_seaborn/image_0022.jpg">
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <h3 id="Diagrama-de-enjambre">Diagrama de enjambre</h3>
+          <p>El Seaborn Swarmplot es similar al gráfico anterior, pero representa los puntos de datos de una manera que
+            evita la superposición.</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">swarmplot</span><span class="p">(</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="s2">&quot;day&quot;</span><span class="p">,</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="s2">&quot;total_bill&quot;</span><span class="p">,</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">tips</span>
+    <span class="p">);</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+
+
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+
+
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/graficos_estadisticos_con_seaborn/image_0023.jpg">
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <h3 id="Diagrama-de-caja">Diagrama de caja</h3>
+          <p>El diagrama de caja de Seaborn es un gráfico popular en estadística cuando se trata de variables
+            categóricas. Muestra valores atípicos o valores que se desvían del patrón típico de la representación de
+            datos.</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="s2">&quot;day&quot;</span><span class="p">,</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="s2">&quot;total_bill&quot;</span><span class="p">,</span>
+    <span class="n">hue</span> <span class="o">=</span> <span class="s2">&quot;time&quot;</span><span class="p">,</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">tips</span>
+    <span class="p">);</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+
+
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+
+
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/graficos_estadisticos_con_seaborn/image_0024.jpg">
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <h3 id="Diagrama-de-caja-horizontal">Diagrama de caja horizontal</h3>
+          <p>También podemos ajustar la orientación del diagrama de caja cambiándolo a un diseño horizontal.</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">iris</span><span class="p">,</span>
+    <span class="n">orient</span> <span class="o">=</span> <span class="s2">&quot;h&quot;</span>
+    <span class="p">);</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+
+
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+
+
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/graficos_estadisticos_con_seaborn/image_0025.jpg">
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <h3 id="Trama-de-violín">Trama de violín</h3>
+          <p>El diagrama de violín es un gráfico útil en seaborn para visualizar la distribución de una variable.</p>
+          <p>Es una combinación de un diagrama de caja y un diagrama de densidad kernel, y muestra la densidad de los
+            datos junto con los valores de rango y mediana.</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">violinplot</span><span class="p">(</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="s2">&quot;total_bill&quot;</span><span class="p">,</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="s2">&quot;day&quot;</span><span class="p">,</span>
+    <span class="n">hue</span> <span class="o">=</span> <span class="s2">&quot;time&quot;</span><span class="p">,</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">tips</span>
+    <span class="p">);</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+
+
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+
+
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/graficos_estadisticos_con_seaborn/image_0026.jpg">
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <p>Este tipo de gráfico es particularmente útil para comprender la distribución de datos multimodales o para
+            comparar las distribuciones de diferentes grupos o categorías.</p>
+          <p>Al usar la gráfica de violín, podemos obtener una visión más profunda de la distribución de una variable y
+            tomar decisiones más informadas basadas en nuestro análisis.</p>
+          <h3 id="Personalización-de-la-trama-de-violín">Personalización de la trama de violín</h3>
+          <p>Podemos personalizar un poco la trama del violín para hacer que la forma de los violines sea más estrecha.
+          </p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">violinplot</span><span class="p">(</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="s2">&quot;total_bill&quot;</span><span class="p">,</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="s2">&quot;day&quot;</span><span class="p">,</span>
+    <span class="n">hue</span> <span class="o">=</span> <span class="s2">&quot;time&quot;</span><span class="p">,</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">tips</span><span class="p">,</span>
+    <span class="n">bw</span> <span class="o">=</span> <span class="mf">.1</span><span class="p">,</span>
+    <span class="n">scale</span> <span class="o">=</span> <span class="s2">&quot;count&quot;</span><span class="p">,</span>
+    <span class="n">scale_hue</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="p">);</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+
+
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+
+
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/graficos_estadisticos_con_seaborn/image_0027.jpg">
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <h3 id="Parcela-vertical">Parcela vertical</h3>
+          <p>El diagrama de violín se puede mostrar en una orientación vertical.</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">violinplot</span><span class="p">(</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="s2">&quot;day&quot;</span><span class="p">,</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="s2">&quot;total_bill&quot;</span><span class="p">,</span>
+    <span class="n">hue</span> <span class="o">=</span> <span class="s2">&quot;sex&quot;</span><span class="p">,</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">tips</span><span class="p">,</span>
+    <span class="n">split</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="p">);</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+
+
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+
+
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/graficos_estadisticos_con_seaborn/image_0028.jpg">
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <h3 id="Diagrama-de-barras">Diagrama de barras</h3>
+          <p>Otro gráfico comúnmente utilizado para representar variables categóricas es el gráfico de barras.</p>
+          <p>Los gráficos de barras son un gráfico de uso común para variables categóricas y proporcionan una
+            representación visual de los datos a través de la altura de las barras.</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">barplot</span><span class="p">(</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="s2">&quot;day&quot;</span><span class="p">,</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="s2">&quot;total_bill&quot;</span><span class="p">,</span>
+    <span class="n">hue</span> <span class="o">=</span> <span class="s2">&quot;sex&quot;</span><span class="p">,</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">tips</span>
+    <span class="p">);</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+
+
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+
+
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/graficos_estadisticos_con_seaborn/image_0029.jpg">
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <p>Ayudan a comparar rápidamente diferentes categorías e identificar tendencias y patrones. Además, los
+            gráficos de barras permiten una fácil personalización y se pueden adaptar para adaptarse mejor a los datos
+            que se analizan.</p>
+          <h3 id="Conteo">Conteo</h3>
+          <p>El gráfico de recuento es un gráfico que se utiliza para mostrar el recuento de elementos de cada categoría
+            en una variable categórica. En este caso, se puede utilizar para mostrar el recuento de elementos para cada
+            día de la semana.</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">countplot</span><span class="p">(</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="s2">&quot;day&quot;</span><span class="p">,</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">tips</span><span class="p">,</span>
+    <span class="n">palette</span> <span class="o">=</span> <span class="s2">&quot;Greens_d&quot;</span>
+    <span class="p">);</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+
+
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+
+
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/graficos_estadisticos_con_seaborn/image_0030.jpg">
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <p>Podemos realizar cambios en el gráfico de recuento para mostrar el número de individuos por género por día
+            de la semana en una orientación horizontal.</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">countplot</span><span class="p">(</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="s2">&quot;day&quot;</span><span class="p">,</span>
+    <span class="n">hue</span> <span class="o">=</span> <span class="s2">&quot;sex&quot;</span><span class="p">,</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">tips</span><span class="p">,</span>
+    <span class="n">palette</span> <span class="o">=</span> <span class="s2">&quot;Greens_d&quot;</span>
+    <span class="p">);</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+
+
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+
+
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/graficos_estadisticos_con_seaborn/image_0031.jpg">
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <h3 id="Diagrama-de-conteo-continuo">Diagrama de conteo continuo</h3>
+          <p>Aquí vemos un ejemplo de contar con barras continuas, que se dividen en secciones para cada día de la
+            semana.</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">f</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">countplot</span><span class="p">(</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="s2">&quot;day&quot;</span><span class="p">,</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">tips</span><span class="p">,</span>
+    <span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;c&quot;</span>
+    <span class="p">);</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+
+
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+
+
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/graficos_estadisticos_con_seaborn/image_0032.jpg">
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <h3 id="Diagrama-de-puntos">Diagrama de puntos</h3>
+          <p>El diagrama de puntos es otro tipo de gráfico que se puede usar para representar variables categóricas al
+            mostrar la relación entre el género y el conteo total.</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">pointplot</span><span class="p">(</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="s2">&quot;sex&quot;</span><span class="p">,</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="s2">&quot;total_bill&quot;</span><span class="p">,</span>
+    <span class="n">hue</span> <span class="o">=</span> <span class="s2">&quot;smoker&quot;</span><span class="p">,</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">tips</span>
+    <span class="p">);</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/graficos_estadisticos_con_seaborn/image_0033.jpg">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
