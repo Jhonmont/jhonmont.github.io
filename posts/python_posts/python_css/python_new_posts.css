@@ -180,8 +180,20 @@ nav a {
 nav a:hover,
 header a:hover {
     color: orange;
+    transition: 0.5s;
 }
 
 .repository:hover {
   color: orange;
+  transition: 0.5s;
+}
+
+table tbody tr td a:hover {
+  color: orange;
+  transition: 0.5s;
+}
+
+.jp-RenderedHTMLCommon h3 a:hover {
+  color: orange;
+  transition: 0.5s;
 }

@@ -47,13 +47,10 @@
         Dicho esto, echemos un vistazo a algunas formas diferentes en las que las observaciones pueden ser "inusuales".
       </p>
       <h3 id="Un-ejemplo-sencillo">
-        Un ejemplo sencillo
+        Caso de Estudio
       </h3>
       <p>
-        Supongamos que fuéramos una plataforma en línea peer-to-peer y estuviéramos interesados ​​en saber si hay algo sospechoso en nuestro negocio. Tenemos información sobre cuánto tiempo pasan nuestros usuarios en la plataforma y el valor total de sus transacciones. ¿Algunos usuarios sospechan?
-      </p>
-      <p>
-        Primero, echemos un vistazo a los datos. Importo el proceso de generación de datos dgp_p2p() de src.dgp y algunas funciones de trazado y bibliotecas de src.utils. Para incluir no solo código, sino también resultados como datos y tablas, utilizo Deepnote, un entorno de cuaderno colaborativo basado en web similar a Jupyter.
+        Supongamos que fuéramos una plataforma en línea peer-to-peer y estuviéramos interesados ​​en saber si hay algo sospechoso en nuestro negocio. Tenemos información sobre cuánto tiempo pasan nuestros usuarios en la plataforma y el valor total de sus transacciones.
       </p>
     </div>
   </div>
@@ -161,7 +158,6 @@
                 <span class="n">y</span><span class="o">=</span><span class="s1">&#39;Transacciones&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Diagrama de dispersión de datos&#39;</span><span class="p">);</span>
 </pre>
             </div>
-
           </div>
         </div>
       </div>
@@ -245,7 +241,7 @@
     </div>
     <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
       <h3 id="Aprovechar">
-        Aprovechar
+        Observaciones
       </h3>
       <p>
         La primera métrica que vamos a utilizar para evaluar las observaciones "inusuales" es el apalancamiento. El objetivo del apalancamiento es capturar cuánto es diferente un solo punto con respecto a otros puntos de datos. Estos puntos de datos a menudo se denominan valores atípicos y existe una cantidad casi infinita de algoritmos y reglas generales para marcarlos. Sin embargo, la idea es la misma: marcar las observaciones que son inusuales en
@@ -337,7 +333,7 @@
         Es importante destacar que el hecho de que una observación tenga un alto apalancamiento nos brinda información sobre las características del modelo, pero nada sobre el modelo en sí. ¿Son estos usuarios simplemente diferentes o también se comportan de manera diferente?
       </p>
       <h3 id="Derechos-residuales-de-autor">
-        Derechos residuales de autor
+        Valores Residuales
       </h3>
       <p>
         Hasta ahora solo hemos hablado de características inusuales, pero ¿qué pasa con el comportamiento inusual? Esto es lo que miden los residuos de la regresión.

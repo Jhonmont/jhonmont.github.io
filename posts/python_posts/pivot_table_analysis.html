@@ -4,14 +4,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>Análisis con Tablas Pivote</title>
   <link rel="shortcut icon" href="../../assets/images/python-logo.png" type="image/x-icon">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
   <link rel="stylesheet" href="python_css/python_new_posts.css" />
-
 </head>
-
 <body class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
 <header>
   <a href="../../index.html" class="logo">
@@ -48,12 +45,10 @@
               <pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 </pre>
             </div>
-
           </div>
         </div>
       </div>
     </div>
-
   </div>
   <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
     <div class="jp-Cell-inputWrapper">
@@ -68,7 +63,6 @@
 <span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre>
             </div>
-
           </div>
         </div>
       </div>
@@ -222,18 +216,21 @@
               </table>
             </div>
           </div>
-
         </div>
-
       </div>
-
     </div>
-
   </div>
   <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
     <div class="jp-Cell-inputWrapper">
       <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
       </div>
+      <br><br>
+      <h3>
+        1. Convertir datos de una variable en índice.
+      </h3>
+      <p>
+        Convierte los datos de una variable en valores de índice sumando los datos del resto de variables
+      </p>
       <div class="jp-InputArea jp-Cell-inputArea">
         <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[3]:</div>
         <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
@@ -242,24 +239,16 @@
               <pre><span></span><span class="nb">round</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="s1">&#39;market_segment_type&#39;</span><span class="p">),</span><span class="mi">2</span><span class="p">)</span>
 </pre>
             </div>
-
           </div>
         </div>
       </div>
     </div>
-
     <div class="jp-Cell-outputWrapper">
       <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
       </div>
-
-
       <div class="jp-OutputArea jp-Cell-outputArea">
         <div class="jp-OutputArea-child jp-OutputArea-executeResult">
-
           <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[3]:</div>
-
-
-
           <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
             data-mime-type="text/html">
             <div class="table-container">
@@ -390,18 +379,21 @@
               </table>
             </div>
           </div>
-
         </div>
-
       </div>
-
     </div>
-
   </div>
   <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
     <div class="jp-Cell-inputWrapper">
       <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
       </div>
+      <br><br>
+      <h3>
+        2. Convertir datos de una variable en columnas
+      </h3>
+      <p>
+        Convierte los datos de una variable en columnas y las demás variables en valores de índice sumando sus datos en las nuevas columnas
+      </p>
       <div class="jp-InputArea jp-Cell-inputArea">
         <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[4]:</div>
         <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
@@ -410,24 +402,16 @@
               <pre><span></span><span class="nb">round</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="s1">&#39;market_segment_type&#39;</span><span class="p">),</span><span class="mi">2</span><span class="p">)</span>
 </pre>
             </div>
-
           </div>
         </div>
       </div>
     </div>
-
     <div class="jp-Cell-outputWrapper">
       <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
       </div>
-
-
       <div class="jp-OutputArea jp-Cell-outputArea">
         <div class="jp-OutputArea-child jp-OutputArea-executeResult">
-
           <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[4]:</div>
-
-
-
           <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
             data-mime-type="text/html">
             <div class="table-container">
@@ -559,18 +543,21 @@
               </table>
             </div>
           </div>
-
         </div>
-
       </div>
-
     </div>
-
   </div>
   <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
     <div class="jp-Cell-inputWrapper">
       <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
       </div>
+      <br><br>
+      <h3>
+        3. Suma de datos de una variable
+      </h3>
+      <p>
+        Suma o totaliza los datos de una variable con índice de datos de otra variable
+      </p>
       <div class="jp-InputArea jp-Cell-inputArea">
         <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[5]:</div>
         <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
@@ -581,24 +568,16 @@
                <span class="n">values</span> <span class="o">=</span> <span class="s1">&#39;avg_price_per_room&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(),</span><span class="mi">2</span><span class="p">)</span>
 </pre>
             </div>
-
           </div>
         </div>
       </div>
     </div>
-
     <div class="jp-Cell-outputWrapper">
       <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
       </div>
-
-
       <div class="jp-OutputArea jp-Cell-outputArea">
         <div class="jp-OutputArea-child jp-OutputArea-executeResult">
-
           <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[5]:</div>
-
-
-
           <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
             data-mime-type="text/html">
             <div class="table-container">
@@ -634,18 +613,21 @@
               </table>
             </div>
           </div>
-
         </div>
-
       </div>
-
     </div>
-
   </div>
   <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
     <div class="jp-Cell-inputWrapper">
       <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
       </div>
+      <br><br>
+      <h3>
+        4. Cantidad de datos únicos de una variable
+      </h3>
+      <p>
+        Cuenta la cantidad total de datos únicos de una variable a través de una función de agregación.
+      </p>
       <div class="jp-InputArea jp-Cell-inputArea">
         <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[6]:</div>
         <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
@@ -657,24 +639,16 @@
               <span class="n">aggfunc</span> <span class="o">=</span> <span class="s1">&#39;nunique&#39;</span><span class="p">)</span>
 </pre>
             </div>
-
           </div>
         </div>
       </div>
     </div>
-
     <div class="jp-Cell-outputWrapper">
       <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
       </div>
-
-
       <div class="jp-OutputArea jp-Cell-outputArea">
         <div class="jp-OutputArea-child jp-OutputArea-executeResult">
-
           <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[6]:</div>
-
-
-
           <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
             data-mime-type="text/html">
             <div class="table-container">
@@ -714,18 +688,21 @@
               </table>
             </div>
           </div>
-
         </div>
-
       </div>
-
     </div>
-
   </div>
   <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
     <div class="jp-Cell-inputWrapper">
       <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
       </div>
+      <br><br>
+      <h3>
+        5. Cantidad de datos únicos, valor máximo, y valor promedio de una variable
+      </h3>
+      <p>
+        Calcula la cantidad de total de datos únicos, el valor máximo y el promedio de una o más variables a través de la función de agregación correspondiente. Paso adicional el reinicio del índice.
+      </p>
       <div class="jp-InputArea jp-Cell-inputArea">
         <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[7]:</div>
         <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
@@ -740,24 +717,16 @@
 <span class="n">df_mod</span>
 </pre>
             </div>
-
           </div>
         </div>
       </div>
     </div>
-
     <div class="jp-Cell-outputWrapper">
       <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
       </div>
-
-
       <div class="jp-OutputArea jp-Cell-outputArea">
         <div class="jp-OutputArea-child jp-OutputArea-executeResult">
-
           <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[7]:</div>
-
-
-
           <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
             data-mime-type="text/html">
             <div class="table-container">
@@ -811,18 +780,21 @@
               </table>
             </div>
           </div>
-
         </div>
-
       </div>
-
     </div>
-
   </div>
   <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
     <div class="jp-Cell-inputWrapper">
       <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
       </div>
+      <br><br>
+      <h3>
+        6. Agupación de una variable en columna
+      </h3>
+      <p>
+        Agrupa los datos de una variable en columnas calculando valores de otra variable a través de una función de agregación, suma, promedio, máximo y/o mínimo, reemplazando los valores vacíos con ceros.
+      </p>
       <div class="jp-InputArea jp-Cell-inputArea">
         <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[8]:</div>
         <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
@@ -836,24 +808,16 @@
                <span class="n">fill_value</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(),</span><span class="mi">2</span><span class="p">)</span>
 </pre>
             </div>
-
           </div>
         </div>
       </div>
     </div>
-
     <div class="jp-Cell-outputWrapper">
       <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
       </div>
-
-
       <div class="jp-OutputArea jp-Cell-outputArea">
         <div class="jp-OutputArea-child jp-OutputArea-executeResult">
-
           <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[8]:</div>
-
-
-
           <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
             data-mime-type="text/html">
             <div class="table-container">
@@ -919,18 +883,21 @@
               </table>
             </div>
           </div>
-
         </div>
-
       </div>
-
     </div>
-
   </div>
   <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
     <div class="jp-Cell-inputWrapper">
       <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
       </div>
+      <br><br>
+      <h3>
+        7. Agupación de variables en varias columnas
+      </h3>
+      <p>
+        Agrupa los datos de varias variables en columnas calculando valores de otra variable a través de una función de agregación, suma, promedio, máximo y/o mínimo, reemplazando los valores vacíos con ceros.
+      </p>
       <div class="jp-InputArea jp-Cell-inputArea">
         <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[9]:</div>
         <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
@@ -944,24 +911,16 @@
                <span class="n">fill_value</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(),</span><span class="mi">2</span><span class="p">)</span>
 </pre>
             </div>
-
           </div>
         </div>
       </div>
     </div>
-
     <div class="jp-Cell-outputWrapper">
       <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
       </div>
-
-
       <div class="jp-OutputArea jp-Cell-outputArea">
         <div class="jp-OutputArea-child jp-OutputArea-executeResult">
-
           <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[9]:</div>
-
-
-
           <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
             data-mime-type="text/html">
             <div class="table-container">
@@ -1027,18 +986,21 @@
               </table>
             </div>
           </div>
-
         </div>
-
       </div>
-
     </div>
-
   </div>
   <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
     <div class="jp-Cell-inputWrapper">
       <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
       </div>
+      <br><br>
+      <h3>
+        8. Agupación cáculo de valores de función de agregación en columnas
+      </h3>
+      <p>
+        Agrupa el cáculo de valores suma, promedio, máximo y/o mínimo de una variable en columnas (función de agregación), reemplazando los valores vacíos con ceros.
+      </p>
       <div class="jp-InputArea jp-Cell-inputArea">
         <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[10]:</div>
         <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
@@ -1052,24 +1014,16 @@
                <span class="n">fill_value</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(),</span><span class="mi">2</span><span class="p">)</span>
 </pre>
             </div>
-
           </div>
         </div>
       </div>
     </div>
-
     <div class="jp-Cell-outputWrapper">
       <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
       </div>
-
-
       <div class="jp-OutputArea jp-Cell-outputArea">
         <div class="jp-OutputArea-child jp-OutputArea-executeResult">
-
           <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[10]:</div>
-
-
-
           <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
             data-mime-type="text/html">
             <div class="table-container">
@@ -1135,18 +1089,21 @@
               </table>
             </div>
           </div>
-
         </div>
-
       </div>
-
     </div>
-
   </div>
   <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
     <div class="jp-Cell-inputWrapper">
       <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
       </div>
+      <br><br>
+      <h3>
+        9. Todas las combinaciones anteriores
+      </h3>
+      <p>
+        Se realizan todas las agrupaciones anteriores en una misma tabla pivote.
+      </p>
       <div class="jp-InputArea jp-Cell-inputArea">
         <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[11]:</div>
         <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
@@ -1161,24 +1118,16 @@
 <span class="n">df_mod</span>
 </pre>
             </div>
-
           </div>
         </div>
       </div>
     </div>
-
     <div class="jp-Cell-outputWrapper">
       <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
       </div>
-
-
       <div class="jp-OutputArea jp-Cell-outputArea">
         <div class="jp-OutputArea-child jp-OutputArea-executeResult">
-
           <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[11]:</div>
-
-
-
           <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
             data-mime-type="text/html">
             <div class="table-container">
@@ -1348,6 +1297,14 @@
           </div>
         </div>
       </div>
+      <br><br>
+      <h3>
+        Comentarios finales
+      </h3>
+      <p>
+        Pudimos observar algunas de las configuraciones posibles en el uso de tablas pivote para el análisis de datos en nuestro conjunto de datos. Esperamos que esta publicación haya sido de ayuda para usted.
+      </p>
+      <br><br>
     </div>
   </div>
 </body>
