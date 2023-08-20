@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Análisis Exploratorio 4</title>
+  <link rel="shortcut icon" href="../../assets/images/python-logo.png" type="image/x-icon">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+  <link rel="stylesheet" href="python_css/python_new_posts.css" />
+
+</head>
+
+<body class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
+  <header>
+    <a href="../../index.html" class="logo">
+      <img src="../../assets/images/python-logo.png" alt="python-logo">
+      Volver al Inicio
+    </a>
+    <nav>
+      <a href="analisis_valores_atipicos_con_univariante.html" class="nav-link">Anterior </a>
+      <a href="distribuciones_de_probabilidad.html" class="nav-link">Siguiente</a>
+    </nav>
+  </header>
+  <p style="font-size: medium;">
+    <strong>05 de Agosto del 2022
+    </strong> | Jhonatan Montilla
+  </p>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <h2 id="Análisis-explicativo-de-datos-(EDA)-y-visualización-de-datos-con-Python.">
+            Análisis Exploratorio de Datos (Caso 4)
+          </h2>
+          <p>
+            Realizaremos el análisis del conjunto de datos que contiene seis países diferentes con sus Productos
+            Internos Brutos (PIB) y Expectativas de Vida para los años 2000 a 2015, exploraremos el conjunto de datos,
+            utilizando visualizaciones para comprender mejor la información proporcionada.</p>
+          <h3 id="Información-del-conjunto-de-datos">
+            Información del conjunto de datos
+          </h3>
+          <p>
+            El conjunto de datos proporcionado tiene las siguientes columnas de datos:
+          </p>
+          <ul>
+            <li>
+              País: nación
+            </li>
+            <li>
+              Año: el año de la observación
+            </li>
+            <li>
+              Esperanza de vida al nacer (años): valor de la esperanza de vida en años
+            </li>
+            <li>PIB: Producto Interno Bruto en dólares estadounidenses</li>
+          </ul>
+          <h3 id="Objetivos-del-proyecto">
+            Objetivos del proyecto
+          </h3>
+          <p>
+            Con esta información, podremos:
+          </p>
+          <p>
+            Encuentra si hay una correlación entre las variables dadas Conoce la evolución de la Esperanza de Vida y el
+            PIB a lo largo de los años para cada país Comparar la información entre países
+          </p>
+          <h3 id="Análisis">
+            Análisis
+          </h3>
+          <p>
+            Para lograr nuestros objetivos, necesitaremos buscar algunas respuestas dentro de los datos proporcionados,
+            como:
+          </p>
+          <p>
+            ¿Ha aumentado la esperanza de vida con el tiempo en las seis naciones? ¿Ha aumentado el PIB con el tiempo en
+            las seis naciones? ¿Existe una correlación entre el PIB y la esperanza de vida de un país? ¿Cuál es la
+            esperanza de vida promedio en estas naciones?
+            ¿Cuál es la distribución de esa esperanza de vida? Trabajando con Python y Jupyter Notebook Para este
+            análisis, he usado Jupyter Notebook para escribir códigos de Python y encontrar todas las respuestas a
+            nuestras preguntas previamente definidas. A continuación, traeré los códigos, con algunos comentarios a su
+            alrededor, para mostrar el proceso que he usado durante este EDA.
+          </p>
+          <h3 id="Importar-bibliotecas-de-Python">
+            Importar bibliotecas de Python
+          </h3>
+          <p>
+            Primero, tenemos que importar las librerías que vamos a utilizar durante el desarrollo del proyecto:
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[70]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">stats</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <h3 id="Cargue-y-limpie-los-datos.">
+            Se cargan y limpian los datos.
+          </h3>
+          <p>
+            Luego de cargar las librerías, se cargarán los datos con Pandas, hemos decidido reducir el nombre de la
+            columna de “Esperanza de vida al nacer (años)” a sus siglas “LEB”, y cambiar el nombre del país de “Estados
+            Unidos de América” a “USA”, ambas acciones para mejorar la escritura del código.
+          </p>
+          <p>Podrás descargar el conjunto de datos <strong>"life_expectancy_vs_gdp.csv"</strong> haciendo clic en el enlace directo a nuestro
+            <a class="repository" href="https://github.com/Jhonmont/all_datasets_repository" target="_blank">
+              repositorio.
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[71]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;life_expectancy_vs_gdp.csv&#39;</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Life expectancy at birth (years)&#39;</span><span class="p">:</span> <span class="s1">&#39;LEB&#39;</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;United States&#39;</span><span class="p">,</span> <span class="s1">&#39;USA&#39;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">countries</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Country&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+<span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;tab:blue&#39;</span><span class="p">,</span> <span class="s1">&#39;tab:orange&#39;</span><span class="p">,</span> <span class="s1">&#39;tab:green&#39;</span><span class="p">,</span> <span class="s1">&#39;tab:red&#39;</span><span class="p">,</span> <span class="s1">&#39;tab:purple&#39;</span><span class="p">,</span> <span class="s1">&#39;tab:brown&#39;</span><span class="p">,</span>
+<span class="s1">&#39;tab:pink&#39;</span><span class="p">,</span> <span class="s1">&#39;tab:olive&#39;</span><span class="p">]</span>
+<span class="n">custom_palette</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">([(</span><span class="n">country</span><span class="p">,</span> <span class="n">color</span><span class="p">)</span> <span class="k">for</span> <span class="n">country</span><span class="p">,</span> <span class="n">color</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">countries</span><span class="p">,</span> <span class="n">colors</span><span class="p">)])</span>
+<span class="n">df</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+            <pre>&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
+RangeIndex: 96 entries, 0 to 95
+Data columns (total 4 columns):
+ #   Column   Non-Null Count  Dtype  
+---  ------   --------------  -----  
+ 0   Country  96 non-null     object 
+ 1   Year     96 non-null     int64  
+ 2   LEB      96 non-null     float64
+ 3   GDP      96 non-null     float64
+dtypes: float64(2), int64(1), object(1)
+memory usage: 3.1+ KB
+</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <h3 id="Visualice-el-marco-de-datos.">
+            Visualice el marco de datos.
+          </h3>
+          <p>
+            Una de las mejores partes de trabajar con Jupyter para estos análisis es que podemos visualizar rápidamente
+            algunos resultados y tomar decisiones mejores y más rápidas. Por ejemplo, después de ejecutar solo el nombre
+            de la variable, generará automáticamente las primeras y últimas 5 filas del marco de datos y el número total
+            de filas y columnas, sin usar ningún método para hacerlo.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[72]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">df</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child jp-OutputArea-executeResult">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[72]:</div>
+          <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+            data-mime-type="text/html">
+            <div class="table-container">
+              <table class="dataframe">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>Country</th>
+                    <th>Year</th>
+                    <th>LEB</th>
+                    <th>GDP</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>0</th>
+                    <td>Chile</td>
+                    <td>2000</td>
+                    <td>76.8</td>
+                    <td>2.255210e+10</td>
+                  </tr>
+                  <tr>
+                    <th>1</th>
+                    <td>Chile</td>
+                    <td>2001</td>
+                    <td>76.9</td>
+                    <td>2.377458e+10</td>
+                  </tr>
+                  <tr>
+                    <th>2</th>
+                    <td>Chile</td>
+                    <td>2002</td>
+                    <td>77.4</td>
+                    <td>2.482215e+10</td>
+                  </tr>
+                  <tr>
+                    <th>3</th>
+                    <td>Chile</td>
+                    <td>2003</td>
+                    <td>77.4</td>
+                    <td>2.503393e+10</td>
+                  </tr>
+                  <tr>
+                    <th>4</th>
+                    <td>Chile</td>
+                    <td>2004</td>
+                    <td>77.6</td>
+                    <td>2.663641e+10</td>
+                  </tr>
+                  <tr>
+                    <th>...</th>
+                    <td>...</td>
+                    <td>...</td>
+                    <td>...</td>
+                    <td>...</td>
+                  </tr>
+                  <tr>
+                    <th>91</th>
+                    <td>Zimbabwe</td>
+                    <td>2011</td>
+                    <td>53.3</td>
+                    <td>3.433326e+09</td>
+                  </tr>
+                  <tr>
+                    <th>92</th>
+                    <td>Zimbabwe</td>
+                    <td>2012</td>
+                    <td>55.6</td>
+                    <td>3.647860e+09</td>
+                  </tr>
+                  <tr>
+                    <th>93</th>
+                    <td>Zimbabwe</td>
+                    <td>2013</td>
+                    <td>57.5</td>
+                    <td>3.687255e+09</td>
+                  </tr>
+                  <tr>
+                    <th>94</th>
+                    <td>Zimbabwe</td>
+                    <td>2014</td>
+                    <td>58.8</td>
+                    <td>3.775846e+09</td>
+                  </tr>
+                  <tr>
+                    <th>95</th>
+                    <td>Zimbabwe</td>
+                    <td>2015</td>
+                    <td>59.6</td>
+                    <td>3.886050e+09</td>
+                  </tr>
+                </tbody>
+              </table>
+              <p>96 rows × 4 columns</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <p>
+            En el mismo paso de comprender el conjunto de datos, imprimí la información de sus variables y conté si
+            todos los países dados tenían la misma cantidad de observaciones, para asegurarme de poder compararlos
+            correctamente.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[73]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child jp-OutputArea-executeResult">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[73]:</div>
+          <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+            data-mime-type="text/html">
+            <div class="table-container">
+              <table class="dataframe">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>Year</th>
+                    <th>LEB</th>
+                    <th>GDP</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>count</th>
+                    <td>96.000000</td>
+                    <td>96.000000</td>
+                    <td>9.600000e+01</td>
+                  </tr>
+                  <tr>
+                    <th>mean</th>
+                    <td>2007.500000</td>
+                    <td>72.353125</td>
+                    <td>1.093783e+12</td>
+                  </tr>
+                  <tr>
+                    <th>std</th>
+                    <td>4.633971</td>
+                    <td>10.931759</td>
+                    <td>1.318816e+12</td>
+                  </tr>
+                  <tr>
+                    <th>min</th>
+                    <td>2000.000000</td>
+                    <td>42.000000</td>
+                    <td>2.577216e+09</td>
+                  </tr>
+                  <tr>
+                    <th>25%</th>
+                    <td>2003.750000</td>
+                    <td>74.100000</td>
+                    <td>2.480371e+10</td>
+                  </tr>
+                  <tr>
+                    <th>50%</th>
+                    <td>2007.500000</td>
+                    <td>76.800000</td>
+                    <td>3.951206e+11</td>
+                  </tr>
+                  <tr>
+                    <th>75%</th>
+                    <td>2011.250000</td>
+                    <td>78.625000</td>
+                    <td>2.540505e+12</td>
+                  </tr>
+                  <tr>
+                    <th>max</th>
+                    <td>2015.000000</td>
+                    <td>80.900000</td>
+                    <td>3.885245e+12</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[74]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">Country</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child jp-OutputArea-executeResult">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[74]:</div>
+          <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+            <pre>Chile       16
+China       16
+Germany     16
+Mexico      16
+USA         16
+Zimbabwe    16
+Name: Country, dtype: int64</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <h3 id="Visualización-y-análisis-de-datos.">
+            Visualización y análisis de datos.
+          </h3>
+          <p>
+            Después de cargar, limpiar y comprender el conjunto de datos, pude comenzar a crear gráficos para visualizar
+            y analizar correctamente los datos. Buscando las respuestas a todas las preguntas que definí al inicio del
+            proyecto.
+          </p>
+          <h3 id="Gráficos-de-dispersión-individuales.">
+            Gráficos de dispersión individuales.
+          </h3>
+          <p>
+            El primer objetivo que definí fue “encontrar si existe una correlación entre las variables dadas”, y el
+            mejor gráfico para correlacionar dos variables numéricas es el diagrama de dispersión. Así que tracé 6
+            gráficos diferentes para analizar la relación entre la esperanza de vida y el PIB para cada país por
+            separado.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[75]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="c1"># Define figure grid and its title</span>
+<span class="n">fig</span><span class="p">,</span> <span class="p">((</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">,</span> <span class="n">ax3</span><span class="p">),</span> <span class="p">(</span><span class="n">ax4</span><span class="p">,</span> <span class="n">ax5</span><span class="p">,</span> <span class="n">ax6</span><span class="p">))</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+<span class="n">axs</span> <span class="o">=</span> <span class="p">[</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">,</span> <span class="n">ax3</span><span class="p">,</span> <span class="n">ax4</span><span class="p">,</span> <span class="n">ax5</span><span class="p">,</span> <span class="n">ax6</span><span class="p">]</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;Correlation between GDP and Life Expectancy per Country&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">country</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">axs</span><span class="p">,</span> <span class="n">countries</span><span class="p">)):</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Country&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">country</span><span class="p">]</span>
+    <span class="c1"># Plot each graph separated</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">regplot</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;GDP&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;LEB&#39;</span><span class="p">,</span> <span class="n">ci</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">country</span><span class="p">,</span> <span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">),</span> <span class="n">xycoords</span><span class="o">=</span><span class="s1">&#39;axes fraction&#39;</span><span class="p">,</span>
+    <span class="n">bbox</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">boxstyle</span><span class="o">=</span><span class="s2">&quot;round&quot;</span><span class="p">,</span> <span class="n">fc</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">ec</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">))</span>
+    <span class="c1"># Find and plot Pearson Correlation (r) for each graph</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">pearsonr</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">GDP</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">LEB</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;r = </span><span class="si">{</span><span class="n">r</span><span class="w"> </span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">),</span> <span class="n">xycoords</span><span class="o">=</span><span class="s1">&#39;axes fraction&#39;</span><span class="p">)</span>
+    <span class="c1"># Transform X-axis in Trillion USD and normalize their ticks</span>
+    <span class="n">xticks</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">get_xticks</span><span class="p">()</span>
+    <span class="c1"># xlabels = [tick / 1e12 for tick in xticks]</span>
+    <span class="n">xlabels</span> <span class="o">=</span> <span class="p">[</span><span class="n">tick</span> <span class="o">/</span> <span class="mf">1e10</span> <span class="k">for</span> <span class="n">tick</span> <span class="ow">in</span> <span class="n">xticks</span><span class="p">]</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">ticks</span><span class="o">=</span><span class="n">xticks</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">labels</span><span class="o">=</span><span class="n">xlabels</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="c1"># Transform Y-axis labels in integers</span>
+    <span class="n">yticks</span> <span class="o">=</span> <span class="p">[</span><span class="o">*</span><span class="nb">set</span><span class="p">([</span><span class="nb">round</span><span class="p">(</span><span class="n">tick</span><span class="p">)</span> <span class="k">for</span> <span class="n">tick</span> <span class="ow">in</span> <span class="n">g</span><span class="o">.</span><span class="n">get_yticks</span><span class="p">()])]</span>
+    <span class="n">g</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">yticks</span><span class="o">=</span><span class="n">yticks</span><span class="p">)</span>
+    <span class="c1"># Remove X and Y labels from graphs in the middle</span>
+    <span class="k">if</span> <span class="n">ax</span> <span class="ow">in</span> <span class="p">[</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax4</span><span class="p">]:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Life Expectancy at Birth (years)&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ax</span> <span class="ow">in</span> <span class="p">[</span><span class="n">ax4</span><span class="p">,</span> <span class="n">ax5</span><span class="p">,</span> <span class="n">ax6</span><span class="p">]:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;GDP (Trillion USD)&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/analisis_exploratorio_4/image_0001.jpg">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <p>
+            Análisis: Podemos observar una alta correlación entre el PIB y la Esperanza de Vida al Nacer en los 6 casos.
+            Para todos los países, el Coeficiente de Correlación de Pearson (r) fue superior a 0,9, lo que significa una
+            correlación muy alta y positiva entre las variables. Independientemente de la enorme diferencia en el PIB y
+            la esperanza de vida entre cada país, siempre podemos observar la misma correlación positiva alta.
+          </p>
+          <h3 id="Gráficos-de-líneas-individuales.">
+            Gráficos de líneas individuales.
+          </h3>
+          <p>
+            Además de que los gráficos de líneas son las visualizaciones gráficas más simples y comunes, son
+            extremadamente importantes al analizar la evolución de los datos en una línea de tiempo. Dado que nuestro
+            conjunto de datos estaba dividido por países y años, tuve que trazar esta cuadrícula con la evolución
+            individual del PIB y la esperanza de vida para completar el segundo objetivo.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[76]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="c1"># Define figure grid and its title</span>
+<span class="n">fig</span><span class="p">,</span> <span class="p">((</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">),</span> <span class="p">(</span><span class="n">ax3</span><span class="p">,</span> <span class="n">ax4</span><span class="p">),</span> <span class="p">(</span><span class="n">ax5</span><span class="p">,</span> <span class="n">ax6</span><span class="p">))</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">axs</span> <span class="o">=</span> <span class="p">[</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">,</span> <span class="n">ax3</span><span class="p">,</span> <span class="n">ax4</span><span class="p">,</span> <span class="n">ax5</span><span class="p">,</span> <span class="n">ax6</span><span class="p">]</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;Evolution of Life Expectancy and GDP per Year in each Country&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">country</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">axs</span><span class="p">,</span> <span class="n">countries</span><span class="p">)):</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Country&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">country</span><span class="p">]</span>
+  
+    <span class="c1"># Plot each graph separated</span>
+    <span class="n">g1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">country</span><span class="p">,</span> <span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">),</span> <span class="n">xycoords</span><span class="o">=</span><span class="s1">&#39;axes fraction&#39;</span><span class="p">,</span>
+    <span class="n">bbox</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">boxstyle</span><span class="o">=</span><span class="s2">&quot;round&quot;</span><span class="p">,</span> <span class="n">fc</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">ec</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">))</span>
+    <span class="c1"># Plot Life Expectancy x Year</span>
+    <span class="n">g1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="s1">&#39;Year&#39;</span><span class="p">,</span> <span class="s1">&#39;LEB&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">)</span>
+    <span class="n">g1</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">2000</span><span class="p">,</span> <span class="mi">2016</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+    <span class="c1"># Plot GDP x Year</span>
+    <span class="n">g2</span> <span class="o">=</span> <span class="n">g1</span><span class="o">.</span><span class="n">twinx</span><span class="p">()</span>
+    <span class="n">g2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="s1">&#39;Year&#39;</span><span class="p">,</span> <span class="s1">&#39;GDP&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">)</span>
+    <span class="c1"># Transform LEB-axis labels in integers</span>
+    <span class="n">leb_ticks</span> <span class="o">=</span> <span class="p">[</span><span class="o">*</span><span class="nb">set</span><span class="p">([</span><span class="nb">round</span><span class="p">(</span><span class="n">tick</span><span class="p">)</span> <span class="k">for</span> <span class="n">tick</span> <span class="ow">in</span> <span class="n">g1</span><span class="o">.</span><span class="n">get_yticks</span><span class="p">()])]</span>
+    <span class="n">g1</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">yticks</span><span class="o">=</span><span class="n">leb_ticks</span><span class="p">)</span>
+    <span class="c1"># Transform GDP-axis in Trillion USD and normalize their ticks</span>
+    <span class="n">gdp_ticks</span> <span class="o">=</span> <span class="n">g2</span><span class="o">.</span><span class="n">get_yticks</span><span class="p">()</span>
+    <span class="n">gdp_labels</span> <span class="o">=</span> <span class="p">[</span><span class="n">tick</span> <span class="o">/</span> <span class="mf">1e12</span> <span class="k">for</span> <span class="n">tick</span> <span class="ow">in</span> <span class="n">gdp_ticks</span><span class="p">]</span>
+    <span class="n">gdp_labels</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">tick</span><span class="p">)</span> <span class="k">if</span> <span class="n">tick</span> <span class="o">%</span> <span class="nb">int</span><span class="p">(</span><span class="n">tick</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">tick</span> <span class="k">for</span> <span class="n">tick</span> <span class="ow">in</span> <span class="n">gdp_labels</span><span class="p">]</span>
+    <span class="n">g2</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">yticks</span><span class="o">=</span><span class="n">gdp_ticks</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">yticklabels</span><span class="o">=</span><span class="n">gdp_labels</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="c1"># Set Y labels&#39; colors</span>
+    <span class="n">g1</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
+    <span class="n">g2</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_color</span><span class="p">(</span><span class="n">colors</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
+    <span class="n">g2</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">g2</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_color</span><span class="p">(</span><span class="n">colors</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="c1"># Remove top spine</span>
+    <span class="n">g1</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;top&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">g2</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;top&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="c1"># Set X and Y labels from graphs in the corners</span>
+    <span class="k">if</span> <span class="n">ax</span> <span class="ow">in</span> <span class="p">[</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax3</span><span class="p">,</span> <span class="n">ax5</span><span class="p">]:</span>
+        <span class="n">g1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Life Expectancy at Birth (years)&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">ax</span> <span class="ow">in</span> <span class="p">[</span><span class="n">ax5</span><span class="p">,</span> <span class="n">ax6</span><span class="p">]:</span>
+        <span class="n">g1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Year&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ax</span> <span class="ow">in</span> <span class="p">[</span><span class="n">ax2</span><span class="p">,</span> <span class="n">ax4</span><span class="p">,</span> <span class="n">ax6</span><span class="p">]:</span>
+        <span class="n">g2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;GDP (Trillion USD)&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">ax</span> <span class="ow">in</span> <span class="p">[</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">,</span> <span class="n">ax3</span><span class="p">,</span> <span class="n">ax4</span><span class="p">]:</span>
+        <span class="n">g1</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr">
+          </div>
+        </div>
+        <div class="jp-OutputArea-child">
+
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/analisis_exploratorio_4/image_0002.jpg">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <p>
+            Análisis: Aquí podemos observar un aumento del PIB y de la Esperanza de Vida a lo largo de los años para
+            cada país por separado. Reforzando la correlación entre esas variables.
+          </p>
+          <h3 id="Diagramas-de-barras-y-gráficos-de-líneas-agrupados">
+            Diagramas de barras y gráficos de líneas agrupados</h3>
+          <p>Después de analizar cada país por separado, decidí graficarlos a todos en el mismo gráfico. Para cada
+            bloque de código a continuación, encontrará los promedios trazados en barras y la línea de evolución trazada
+            al costado, tanto para el PIB como para la Esperanza de Vida. Logrando el tercer objetivo definido, que era
+            “comparar las variables entre países”.</p>
+          <h3 id="Comparación-de-grupos-de-PIB.">Comparación de grupos de PIB.</h3>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[77]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="c1"># Define figure grid and its title</span>
+<span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;GDP Averages &amp; Evolution per Year&#39;</span><span class="p">)</span>
+<span class="c1"># Find average GDP for each country</span>
+<span class="n">gdp_means</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;Country&#39;</span><span class="p">)[</span><span class="s1">&#39;GDP&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="c1"># Bar plot</span>
+<span class="n">ax1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">barplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">gdp_means</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">gdp_means</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="n">custom_palette</span><span class="p">)</span>
+<span class="c1"># Change Y-axis&#39; label to Trillion USD</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Average GDP (Trillion USD)&#39;</span><span class="p">)</span>
+<span class="n">yticks</span> <span class="o">=</span> <span class="n">ax1</span><span class="o">.</span><span class="n">get_yticks</span><span class="p">()</span>
+<span class="n">yticklabels</span> <span class="o">=</span> <span class="p">[</span><span class="nb">round</span><span class="p">(</span><span class="n">tick</span> <span class="o">/</span> <span class="mf">1e12</span><span class="p">)</span> <span class="k">for</span> <span class="n">tick</span> <span class="ow">in</span> <span class="n">yticks</span><span class="p">]</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">yticks</span><span class="o">=</span><span class="n">yticks</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">yticklabels</span><span class="o">=</span><span class="n">yticklabels</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="c1"># Include values for each bar</span>
+<span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">ax1</span><span class="o">.</span><span class="n">get_xticklabels</span><span class="p">():</span>
+    <span class="n">xtick</span> <span class="o">=</span> <span class="n">label</span><span class="o">.</span><span class="n">get_position</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">xlabel</span> <span class="o">=</span> <span class="n">label</span><span class="o">.</span><span class="n">get_text</span><span class="p">()</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">xtick</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">gdp_means</span><span class="p">[</span><span class="n">xlabel</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.05e12</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;$</span><span class="si">{</span><span class="n">gdp_means</span><span class="p">[</span><span class="n">xlabel</span><span class="p">]</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">1e12</span><span class="w"> </span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">T&quot;</span><span class="p">,</span>
+    <span class="n">horizontalalignment</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">country</span> <span class="ow">in</span> <span class="n">countries</span><span class="p">:</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Country&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">country</span><span class="p">]</span>
+    <span class="c1"># Plot lines on second graph</span>
+    <span class="n">ax2</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">122</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">Year</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">GDP</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">country</span><span class="p">)</span>
+<span class="c1"># Change Y-axis&#39; labels and tick values</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;GDP (Trillion USD)&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="n">ticks</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">18.5e12</span><span class="p">,</span> <span class="mf">2.5e12</span><span class="p">),</span> <span class="n">labels</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">18.5</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">))</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Year&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">2000</span><span class="p">,</span> <span class="mi">2016</span><span class="p">,</span> <span class="mi">3</span><span class="p">));</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/analisis_exploratorio_4/image_0003.jpg">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <p>
+            Análisis: Podemos notar una enorme diferencia entre el PIB promedio de Estados Unidos y el resto del grupo.
+            Por ejemplo, los PIB de Zimbabue y Chile parecen ser casi inexistentes en ambos gráficos, dada la escala del
+            gráfico en billones de dólares estadounidenses. Otra observación importante es el crecimiento del PIB chino
+            a lo largo de los años. Comenzando en el 3er lugar y cerca del resto del grupo y creciendo exponencialmente
+            hasta lograr el segundo lugar y divergiendo completamente del grupo inicial, acercándose a los EE. UU.
+          </p>
+          <h3 id="Comparación-de-grupos-de-esperanza-de-vida">
+            Comparación de grupos de esperanza de vida
+          </h3>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[78]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="c1"># Define figure grid and its title</span>
+<span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;Life Expectancy Averages &amp; Evolution per Year&#39;</span><span class="p">)</span>
+<span class="c1"># Find average Life Expectancy for each country</span>
+<span class="n">leb_means</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;Country&#39;</span><span class="p">)[</span><span class="s1">&#39;LEB&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="c1"># Bar plot</span>
+<span class="n">ax1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">barplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">leb_means</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">leb_means</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="n">custom_palette</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Average Life Expectancy at Birth (years)&#39;</span><span class="p">)</span>
+<span class="c1"># Include values for each bar</span>
+<span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">ax1</span><span class="o">.</span><span class="n">get_xticklabels</span><span class="p">():</span>
+    <span class="n">xtick</span> <span class="o">=</span> <span class="n">label</span><span class="o">.</span><span class="n">get_position</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">xlabel</span> <span class="o">=</span> <span class="n">label</span><span class="o">.</span><span class="n">get_text</span><span class="p">()</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">xtick</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">leb_means</span><span class="p">[</span><span class="n">xlabel</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">leb_means</span><span class="p">[</span><span class="n">xlabel</span><span class="p">]</span><span class="w"> </span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="n">horizontalalignment</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">)</span>
+<span class="c1"># Line chart</span>
+<span class="k">for</span> <span class="n">country</span> <span class="ow">in</span> <span class="n">countries</span><span class="p">:</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Country&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">country</span><span class="p">]</span>
+    <span class="c1"># Plot lines on second graph</span>
+    <span class="n">ax2</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">122</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">Year</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">LEB</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Life Expectancy at birth (years)&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Year&#39;</span><span class="p">);</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/analisis_exploratorio_4/image_0004.jpg">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <p>
+            Análisis: trazar la esperanza de vida de cada país en el mismo gráfico muestra una gran diferencia entre
+            Zimbabue, que tiene un promedio de 50 años de vida, y los otros países, que tienen un promedio de alrededor
+            de 77 años de vida. Esta distancia es muy alarmante y genera preocupaciones sobre la calidad de vida del
+            país.
+          </p>
+          <h3 id="Diagramas-de-caja-conjugados.">
+            Diagramas de caja conjugados.
+          </h3>
+          <p>
+            Durante la fase de alcance del proyecto, definí los objetivos y algunos análisis que pensé que serían útiles
+            para lograr esos objetivos. Uno de esos análisis fue encontrar la distribución de la variable, pero confieso
+            que analizar solo la distribución no fue tan esclarecedor. Sin embargo, incluso cuando haces algo que no vas
+            a usar, a veces tienes nuevas ideas que pueden ser interesantes. Y mientras graficaba la distribución, pensé
+            que sería bueno dibujar un diagrama de caja con todos los países conjugados y analizar la evolución de todo
+            el grupo por año.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[79]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="c1"># Define figure grid and its title</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;Evolution of GDP &amp; Life Expectancy Distributions per Year&#39;</span><span class="p">)</span>
+<span class="c1"># Box plot: GDP per Year</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">)</span>
+<span class="n">g1</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;Year&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;GDP&#39;</span><span class="p">)</span>
+<span class="n">g1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;GDP (Trillion USD)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
+<span class="c1"># Change Y-axis labels to the Trillion scale</span>
+<span class="n">yticks</span> <span class="o">=</span> <span class="n">g1</span><span class="o">.</span><span class="n">get_yticks</span><span class="p">()</span>
+<span class="n">ylabels</span> <span class="o">=</span> <span class="p">[</span><span class="n">tick</span> <span class="o">/</span> <span class="mf">1e12</span> <span class="k">for</span> <span class="n">tick</span> <span class="ow">in</span> <span class="n">yticks</span><span class="p">]</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">(</span><span class="n">ticks</span><span class="o">=</span><span class="n">yticks</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">labels</span><span class="o">=</span><span class="n">ylabels</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="c1"># Show median values in the graph</span>
+<span class="n">g1_medians</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Year&#39;</span><span class="p">])[</span><span class="s1">&#39;GDP&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">median</span><span class="p">()</span>
+<span class="n">g1_medians</span> <span class="o">=</span> <span class="p">[</span><span class="n">median</span> <span class="o">/</span> <span class="mf">1e12</span> <span class="k">for</span> <span class="n">median</span> <span class="ow">in</span> <span class="n">g1_medians</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">xtick</span> <span class="ow">in</span> <span class="n">g1</span><span class="o">.</span><span class="n">get_xticks</span><span class="p">():</span>
+    <span class="n">g1</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">xtick</span><span class="p">,</span> <span class="n">g1_medians</span><span class="p">[</span><span class="n">xtick</span><span class="p">]</span> <span class="o">*</span> <span class="mf">1.1e12</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">g1_medians</span><span class="p">[</span><span class="n">xtick</span><span class="p">]</span><span class="w"> </span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+    <span class="n">horizontalalignment</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span><span class="n">size</span><span class="o">=</span><span class="s1">&#39;x-small&#39;</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">,</span><span class="n">weight</span><span class="o">=</span><span class="s1">&#39;semibold&#39;</span><span class="p">)</span>
+<span class="c1"># Box plot: Life Expectancy at Birth per Year</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">122</span><span class="p">)</span>
+<span class="n">g2</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;Year&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;LEB&#39;</span><span class="p">)</span>
+<span class="n">g2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Life Expectancy at Birth (years)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
+<span class="c1"># Show median values in the graph</span>
+<span class="n">g2_medians</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Year&#39;</span><span class="p">])[</span><span class="s1">&#39;LEB&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">median</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">xtick</span> <span class="ow">in</span> <span class="n">g2</span><span class="o">.</span><span class="n">get_xticks</span><span class="p">():</span>
+    <span class="n">g2</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">xtick</span><span class="p">,</span> <span class="n">g2_medians</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">xtick</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.3</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">g2_medians</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">xtick</span><span class="p">]</span><span class="w"> </span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+    <span class="n">horizontalalignment</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span><span class="n">size</span><span class="o">=</span><span class="s1">&#39;x-small&#39;</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">,</span><span class="n">weight</span><span class="o">=</span><span class="s1">&#39;semibold&#39;</span><span class="p">);</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/analisis_exploratorio_4/image_0005.jpg">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <p>
+            Análisis: En el primer gráfico, podemos ver un aumento en el PIB mediano hasta 2008. Luego, en 2009 podemos
+            observar una disminución en el PIB general, reflejo de la crisis financiera de 2008, y cierta dificultad de
+            la mediana para volver a la pista hasta el final del gráfico. Además, es notable el valor atípico del límite
+            superior, lo que muestra que Estados Unidos está muy lejos del resto de los países en términos de PIB. Una
+            última observación es que el rango intercuartílico ha aumentado año tras año. Dándonos la falsa sensación de
+            que los demás países se estaban acercando a los EE.UU. Pero cuando analizamos los gráficos individuales,
+            podemos ver que en realidad es el PIB chino el que crece fuera del grupo del límite inferior y se acerca,
+            por sí solo, al PIB estadounidense.
+          </p>
+          <p>
+            En el segundo gráfico podemos observar un aumento de la mediana de la Esperanza de Vida a lo largo de los
+            años, así como una disminución del rango intercuartílico. Esto significa que las esperanzas de vida de los
+            países en este conjunto de datos aumentaban y se acercaban cada año. Es notorio por los valores atípicos de
+            límite inferior en este gráfico, que muestran que la esperanza de vida de Zimbabue es muy discordante con el
+            resto de los países en este conjunto de datos.
+          </p>
+          <h3 id="Siempre-hay-algo-más.">
+            Siempre hay algo más.
+          </h3>
+          <p>
+            Una de las partes más interesantes de hacer un análisis exploratorio de datos es que siempre tienes nuevas
+            ideas, piensas en nuevas hipótesis y te preguntas si hay más información oculta dentro de esas
+            observaciones.
+          </p>
+          <p>
+            Mientras realizaba este análisis y me acercaba a (lo que pensé que sería) el final, obtuve otro avance:
+            &quot;¿qué pasa con la tasa de crecimiento de cada país?&quot;
+          </p>
+          <p>
+            Como se vio antes, todos los países crecieron en términos de PIB y Esperanza de Vida. Además, encontramos
+            una correlación positiva entre estos índices. Y, a pesar de las diferencias entre ellos, ¿qué pasa si nos
+            fijamos en su crecimiento individual para este período?
+          </p>
+          <h3 id="Codifiquemos-un-poco-más">
+            Codifiquemos un poco más
+          </h3>
+          <p>
+            Aquí empiezo creando un nuevo Data Frame con la información que busco, la tasa de crecimiento de cada país
+            para ambas variables.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[80]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">df_growth</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;Year&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;Country&#39;</span><span class="p">)</span>\
+            <span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">gdp_growth</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;GDP&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">x</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+                 <span class="n">leb_growth</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;LEB&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">x</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+<span class="n">display</span><span class="p">(</span><span class="n">df_growth</span><span class="p">)</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output " data-mime-type="text/html">
+            <div class="table-container">
+              <table class="dataframe">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>gdp_growth</th>
+                    <th>leb_growth</th>
+                  </tr>
+                  <tr>
+                    <th>Country</th>
+                    <th></th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>Chile</th>
+                    <td>0.310557</td>
+                    <td>0.037760</td>
+                  </tr>
+                  <tr>
+                    <th>China</th>
+                    <td>2.211223</td>
+                    <td>0.070932</td>
+                  </tr>
+                  <tr>
+                    <th>Germany</th>
+                    <td>1.038317</td>
+                    <td>0.032010</td>
+                  </tr>
+                  <tr>
+                    <th>Mexico</th>
+                    <td>0.432843</td>
+                    <td>0.014946</td>
+                  </tr>
+                  <tr>
+                    <th>USA</th>
+                    <td>0.329850</td>
+                    <td>0.027344</td>
+                  </tr>
+                  <tr>
+                    <th>Zimbabwe</th>
+                    <td>0.507848</td>
+                    <td>0.333333</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <h3 id="Grafiquen-juntos-para-comparar.">
+            Grafiquen juntos para comparar.
+          </h3>
+          <p>
+            Los números son geniales, pero son mejores cuando podemos visualizarlos de alguna forma. Por eso dibujo dos
+            gráficos más para ver esta información en conjunto y poder compararlos.
+          </p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[81]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="c1"># Define figure grid and its title</span>
+<span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;GDP &amp; Life Expectancy Growth Between 2000-2015&#39;</span><span class="p">)</span>
+<span class="c1"># Plot GDP Bar Graph</span>
+<span class="n">ax1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">)</span>
+<span class="n">order</span> <span class="o">=</span>
+<span class="p">[</span><span class="n">country</span> <span class="k">for</span> <span class="n">country</span> <span class="ow">in</span> <span class="n">df_growth</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;gdp_growth&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">]</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">barplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">df_growth</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">df_growth</span><span class="o">.</span><span class="n">gdp_growth</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="n">custom_palette</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="n">order</span><span class="p">)</span>
+<span class="c1"># Set Y-axis&#39; labels to percentage</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Gross Domestic Product (GDP)&#39;</span><span class="p">)</span>
+<span class="n">yticks</span> <span class="o">=</span> <span class="n">ax1</span><span class="o">.</span><span class="n">get_yticks</span><span class="p">()</span>
+<span class="n">ylabels</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">tick</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span><span class="w"> </span><span class="si">:</span><span class="s1">.0f</span><span class="si">}</span><span class="s1">%&#39;</span> <span class="k">for</span> <span class="n">tick</span> <span class="ow">in</span> <span class="n">yticks</span><span class="p">]</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">yticks</span><span class="o">=</span><span class="n">yticks</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">yticklabels</span><span class="o">=</span><span class="n">ylabels</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="c1"># Include values for each bar</span>
+<span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">ax1</span><span class="o">.</span><span class="n">get_xticklabels</span><span class="p">():</span>
+    <span class="n">xtick</span> <span class="o">=</span> <span class="n">label</span><span class="o">.</span><span class="n">get_position</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">xlabel</span> <span class="o">=</span> <span class="n">label</span><span class="o">.</span><span class="n">get_text</span><span class="p">()</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">xtick</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">df_growth</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">xlabel</span><span class="p">,</span> <span class="s1">&#39;gdp_growth&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.05</span><span class="p">,</span>
+    <span class="n">s</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">df_growth</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">xlabel</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;gdp_growth&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span><span class="w"> </span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">,</span> <span class="n">horizontalalignment</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">)</span>
+<span class="c1"># Plot Life Expectancy Bar Graph</span>
+<span class="n">ax2</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">122</span><span class="p">)</span>
+<span class="n">order</span> <span class="o">=</span>
+<span class="p">[</span><span class="n">country</span> <span class="k">for</span> <span class="n">country</span> <span class="ow">in</span> <span class="n">df_growth</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;leb_growth&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">]</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">barplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">df_growth</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">df_growth</span><span class="o">.</span><span class="n">leb_growth</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="n">custom_palette</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="n">order</span><span class="p">)</span>
+<span class="c1"># Set Y-axis&#39; labels to percentage</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Life Expectancy at Birth&#39;</span><span class="p">)</span>
+<span class="n">yticks</span> <span class="o">=</span> <span class="n">ax2</span><span class="o">.</span><span class="n">get_yticks</span><span class="p">()</span>
+<span class="n">ylabels</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">tick</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span><span class="w"> </span><span class="si">:</span><span class="s1">.0f</span><span class="si">}</span><span class="s1">%&#39;</span> <span class="k">for</span> <span class="n">tick</span> <span class="ow">in</span> <span class="n">yticks</span><span class="p">]</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">yticks</span><span class="o">=</span><span class="n">yticks</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">yticklabels</span><span class="o">=</span><span class="n">ylabels</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="c1"># Include values for each bar</span>
+<span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">ax2</span><span class="o">.</span><span class="n">get_xticklabels</span><span class="p">():</span>
+    <span class="n">xtick</span> <span class="o">=</span> <span class="n">label</span><span class="o">.</span><span class="n">get_position</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">xlabel</span> <span class="o">=</span> <span class="n">label</span><span class="o">.</span><span class="n">get_text</span><span class="p">()</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">xtick</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">df_growth</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">xlabel</span><span class="p">,</span> <span class="s1">&#39;leb_growth&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.002</span><span class="p">,</span>
+    <span class="n">s</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">df_growth</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">xlabel</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;leb_growth&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span><span class="w"> </span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">,</span> <span class="n">horizontalalignment</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">);</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/analisis_exploratorio_4/image_0006.jpg">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <p>
+            Análisis: En el primer gráfico, China llama nuestra atención al mostrar un crecimiento del PIB de más del
+            800 % entre 2000 y 2015, casi 4 veces más que el segundo lugar y 12 veces más que el último. Esto es
+            realmente impresionante, dado que al principio estaban cerca del resto del grupo, como se vio antes. También
+            podemos comentar que China ocupa el segundo lugar en el crecimiento de la Esperanza de Vida, lo que refuerza
+            el factor de correlación entre esos índices.
+          </p>
+          <p>
+            En cuanto al crecimiento de la esperanza de vida, Zimbabue ahora llama la atención con un crecimiento del
+            32% durante 15 años, 5 veces más que China y casi 13 veces más que México. Lo cual es magnífico,
+            especialmente dado que estaba muy lejos del resto del grupo.
+          </p>
+          <h3 id="Comentarios">
+            Comentarios.
+          </h3>
+          <p>
+            En este caso de estudio, se mostró nuevamente un EDA sobre un conjunto de datos determinado para nuestro
+            caso particular, sin embargo, esta misma metodología se sugiere usar para cualquier conjunto de datos que se
+            tenga en cualquier otro caso particular.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

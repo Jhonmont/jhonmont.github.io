@@ -1,0 +1,1812 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Detección de Valores Atípicos</title>
+  <link rel="shortcut icon" href="../../assets/images/python-logo.png" type="image/x-icon">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+  <link rel="stylesheet" href="python_css/python_new_posts.css" />
+
+</head>
+
+<body class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
+  <header>
+    <a href="../../index.html" class="logo">
+      <img src="../../assets/images/python-logo.png" alt="python-logo">
+      Volver al Inicio
+    </a>
+    <nav>
+      <a href="analisis_exploratorio_de_datos_avanzado.html" class="nav-link">Anterior </a>
+      <a href="generacion_de_data_sintetica.html" class="nav-link">Siguiente</a>
+    </nav>
+  </header>
+  <p style="font-size: medium;">
+    <strong>15 de Mayo del 2022
+    </strong> | Jhonatan Montilla
+  </p>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <h2
+            id="Detección-de-valores-atípicos-utilizando-el-análisis-de-componentes-principales-y-los-m%C3%A9todos-T2-y-SPE/DmodX-de-Hotelling.">
+            Detección de Valores Atípicos utilizando Análisis de Componentes Principales (PCA)
+          </h2>
+          <p>
+            Gracias a la sensibilidad de PCA, se puede utilizar para detectar valores atípicos en conjuntos de datos multivariados. También haremos uso de los métodos T2 y SPE/DmodX de Hotelling.
+          </p>
+          <p>
+            El Análisis de Componentes Principales (PCA) es una técnica ampliamente utilizada para la reducción de la dimensionalidad mientras se preserva la información relevante. Debido a su sensibilidad, también se puede utilizar para detectar valores atípicos en conjuntos de datos multivariados. La detección de valores atípicos puede proporcionar señales de alerta temprana para condiciones anormales, lo que permite a los expertos identificar y abordar los problemas antes de que se intensifiquen. Sin embargo, la detección de valores atípicos en conjuntos de datos multivariados puede ser un desafío debido a la alta dimensionalidad y la falta de etiquetas. PCA ofrece varias ventajas para la detección de valores atípicos. Describiré los conceptos de detección de valores atípicos mediante PCA. Con un ejemplo práctico, demostraré cómo crear un modelo no supervisado para la detección de valores atípicos para conjuntos de datos categóricos continuos y por separado.
+          </p>
+          <h3 id="Detección-de-valores-atípicos.">
+            Detección de valores atípicos.
+          </h3>
+          <p>
+            Los valores atípicos se pueden modelar en un enfoque univariante o multivariante (Figura 1). En el enfoque
+            univariante, los valores atípicos se detectan utilizando una variable a la vez, para lo cual el análisis de
+            distribución de datos es una excelente manera. Lea más detalles sobre la detección de valores atípicos
+            univariados en la siguiente publicación de blog:
+          </p>
+          <p>
+            El enfoque multivariado utiliza múltiples características y, por lo tanto, puede detectar valores atípicos
+            con relaciones (no) lineales o distribuciones sesgadas. La biblioteca scikit-learn tiene varias soluciones
+            para la detección de valores atípicos multivariados, como el clasificador de una clase, el bosque de
+            aislamiento y el factor local de valores atípicos. En este blog, me centraré en la detección de valores
+            atípicos multivariados mediante el análisis de componentes principales, que tiene sus propias ventajas, como
+            la explicabilidad; los valores atípicos se pueden visualizar ya que confiamos en la reducción de
+            dimensionalidad de PCA en sí.
+          </p>
+          <h3 id="Anomalías-vs.-Novedades.">
+            Anomalías vs. Novedades.
+          </h3>
+          <p>
+            Las anomalías y novedades son observaciones desviadas del comportamiento estándar/esperado. También
+            denominados valores atípicos. Sin embargo, existen algunas diferencias: las anomalías son desviaciones que
+            se han visto antes, generalmente utilizadas para detectar fraude, intrusión o mal funcionamiento. Las
+            novedades son desviaciones que no se han visto antes o que se utilizan para identificar nuevos patrones o
+            eventos. En tales casos, es importante utilizar el conocimiento del dominio. Tanto las anomalías como las
+            novedades pueden ser difíciles de detectar, ya que la definición de lo que es normal o esperado puede ser
+            subjetiva y variar según la aplicación.
+          </p>
+          <h3 id="Análisis-de-componentes-principales-para-la-detección-de-valores-atípicos.">
+            Análisis de componentes principales para la detección de valores atípicos.
+          </h3>
+          <p>
+            El análisis de componentes principales (PCA) es una transformación lineal que reduce la dimensionalidad y
+            busca la dirección en los datos con la mayor variación. Debido a la naturaleza del método, es sensible a
+            variables con diferentes rangos de valores y, por lo tanto, también a valores atípicos. Una ventaja es que
+            permite la visualización de los datos en un diagrama de dispersión de dos o tres dimensiones, lo que
+            facilita la confirmación visual de los valores atípicos detectados. Además, proporciona una buena
+            interpretabilidad de las variables de respuesta. Otra gran ventaja de PCA es que se puede combinar con otros
+            métodos, como diferentes métricas de distancia, para mejorar la precisión de la detección de valores
+            atípicos. Aquí usaré la biblioteca PCA que contiene dos métodos para la detección de valores atípicos: T2 de
+            Hotelling y SPE/DmodX. Para obtener más detalles, lea la publicación de blog sobre el análisis de
+            componentes principales y la biblioteca pca.
+          </p>
+          <h3 id="Detección-de-valores-atípicos-para-variables-aleatorias-continuas.">
+            Detección de valores atípicos para variables aleatorias continuas.
+          </h3>
+          <p>
+            Comencemos con un ejemplo para demostrar el funcionamiento de la detección de valores atípicos utilizando T2
+            de Hotelling y SPE/DmodX para variables aleatorias continuas. Usaré el conjunto de datos de vino de sklearn
+            que contiene 178 muestras, con 13 características y 3 clases de vino.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[11]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">load_wine</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">pca</span> <span class="kn">import</span> <span class="n">pca</span>
+<span class="kn">from</span> <span class="nn">df2onehot</span> <span class="kn">import</span> <span class="n">df2onehot</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[2]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">load_wine</span><span class="p">()</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">target</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">feature_names</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child jp-OutputArea-executeResult">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[2]:</div>
+          <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+            data-mime-type="text/html">
+            <div class="table-container">
+              <table class="dataframe">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>alcohol</th>
+                    <th>malic_acid</th>
+                    <th>ash</th>
+                    <th>alcalinity_of_ash</th>
+                    <th>magnesium</th>
+                    <th>total_phenols</th>
+                    <th>flavanoids</th>
+                    <th>nonflavanoid_phenols</th>
+                    <th>proanthocyanins</th>
+                    <th>color_intensity</th>
+                    <th>hue</th>
+                    <th>od280/od315_of_diluted_wines</th>
+                    <th>proline</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>0</th>
+                    <td>14.23</td>
+                    <td>1.71</td>
+                    <td>2.43</td>
+                    <td>15.6</td>
+                    <td>127.0</td>
+                    <td>2.80</td>
+                    <td>3.06</td>
+                    <td>0.28</td>
+                    <td>2.29</td>
+                    <td>5.64</td>
+                    <td>1.04</td>
+                    <td>3.92</td>
+                    <td>1065.0</td>
+                  </tr>
+                  <tr>
+                    <th>0</th>
+                    <td>13.20</td>
+                    <td>1.78</td>
+                    <td>2.14</td>
+                    <td>11.2</td>
+                    <td>100.0</td>
+                    <td>2.65</td>
+                    <td>2.76</td>
+                    <td>0.26</td>
+                    <td>1.28</td>
+                    <td>4.38</td>
+                    <td>1.05</td>
+                    <td>3.40</td>
+                    <td>1050.0</td>
+                  </tr>
+                  <tr>
+                    <th>0</th>
+                    <td>13.16</td>
+                    <td>2.36</td>
+                    <td>2.67</td>
+                    <td>18.6</td>
+                    <td>101.0</td>
+                    <td>2.80</td>
+                    <td>3.24</td>
+                    <td>0.30</td>
+                    <td>2.81</td>
+                    <td>5.68</td>
+                    <td>1.03</td>
+                    <td>3.17</td>
+                    <td>1185.0</td>
+                  </tr>
+                  <tr>
+                    <th>0</th>
+                    <td>14.37</td>
+                    <td>1.95</td>
+                    <td>2.50</td>
+                    <td>16.8</td>
+                    <td>113.0</td>
+                    <td>3.85</td>
+                    <td>3.49</td>
+                    <td>0.24</td>
+                    <td>2.18</td>
+                    <td>7.80</td>
+                    <td>0.86</td>
+                    <td>3.45</td>
+                    <td>1480.0</td>
+                  </tr>
+                  <tr>
+                    <th>0</th>
+                    <td>13.24</td>
+                    <td>2.59</td>
+                    <td>2.87</td>
+                    <td>21.0</td>
+                    <td>118.0</td>
+                    <td>2.80</td>
+                    <td>2.69</td>
+                    <td>0.39</td>
+                    <td>1.82</td>
+                    <td>4.32</td>
+                    <td>1.04</td>
+                    <td>2.93</td>
+                    <td>735.0</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[3]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">pca</span><span class="p">(</span><span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">detect_outliers</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;ht2&#39;</span><span class="p">,</span> <span class="s1">&#39;spe&#39;</span><span class="p">],</span> <span class="n">n_std</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="n">results</span><span class="p">[</span><span class="s1">&#39;outliers&#39;</span><span class="p">]</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+            <pre>[pca] &gt;Processing dataframe..
+[pca] &gt;Normalizing input data per feature (zero mean and unit variance)..
+[pca] &gt;The PCA reduction is performed to capture [95.0%] explained variance using the
+[13] columns of the input data.
+[pca] &gt;Fit using PCA.
+[pca] &gt;Compute loadings and PCs.
+[pca] &gt;Compute explained variance.
+[pca] &gt;Number of components is [10] that covers the [95.00%] explained variance.
+[pca] &gt;The PCA reduction is performed on the [13] columns of the input dataframe.
+[pca] &gt;Fit using PCA.
+[pca] &gt;Compute loadings and PCs.
+[pca] &gt;Outlier detection using Hotelling T2 test with alpha=[0.05] and n_components=[10]
+[pca] &gt;Multiple test correction applied for Hotelling T2 test: [fdr_bh]
+[pca] &gt;Outlier detection using SPE/DmodX with n_std=[2]
+</pre>
+          </div>
+        </div>
+        <div class="jp-OutputArea-child jp-OutputArea-executeResult">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[3]:</div>
+          <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+            data-mime-type="text/html">
+            <div class="table-container">
+              <table class="dataframe">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>y_proba</th>
+                    <th>p_raw</th>
+                    <th>y_score</th>
+                    <th>y_bool</th>
+                    <th>y_bool_spe</th>
+                    <th>y_score_spe</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>0</th>
+                    <td>0.982875</td>
+                    <td>0.376726</td>
+                    <td>21.351215</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>3.617239</td>
+                  </tr>
+                  <tr>
+                    <th>0</th>
+                    <td>0.982875</td>
+                    <td>0.624371</td>
+                    <td>17.438087</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>2.234477</td>
+                  </tr>
+                  <tr>
+                    <th>0</th>
+                    <td>0.982875</td>
+                    <td>0.589438</td>
+                    <td>17.969195</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>2.719789</td>
+                  </tr>
+                  <tr>
+                    <th>0</th>
+                    <td>0.982875</td>
+                    <td>0.134454</td>
+                    <td>27.028857</td>
+                    <td>False</td>
+                    <td>True</td>
+                    <td>4.659735</td>
+                  </tr>
+                  <tr>
+                    <th>0</th>
+                    <td>0.982875</td>
+                    <td>0.883264</td>
+                    <td>12.861094</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>1.332104</td>
+                  </tr>
+                  <tr>
+                    <th>...</th>
+                    <td>...</td>
+                    <td>...</td>
+                    <td>...</td>
+                    <td>...</td>
+                    <td>...</td>
+                    <td>...</td>
+                  </tr>
+                  <tr>
+                    <th>2</th>
+                    <td>0.982875</td>
+                    <td>0.147396</td>
+                    <td>26.583414</td>
+                    <td>False</td>
+                    <td>True</td>
+                    <td>4.033903</td>
+                  </tr>
+                  <tr>
+                    <th>2</th>
+                    <td>0.982875</td>
+                    <td>0.771408</td>
+                    <td>15.087004</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>3.139750</td>
+                  </tr>
+                  <tr>
+                    <th>2</th>
+                    <td>0.982875</td>
+                    <td>0.244157</td>
+                    <td>23.959708</td>
+                    <td>False</td>
+                    <td>True</td>
+                    <td>3.846217</td>
+                  </tr>
+                  <tr>
+                    <th>2</th>
+                    <td>0.982875</td>
+                    <td>0.333600</td>
+                    <td>22.128104</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>3.312952</td>
+                  </tr>
+                  <tr>
+                    <th>2</th>
+                    <td>0.982875</td>
+                    <td>0.138437</td>
+                    <td>26.888278</td>
+                    <td>False</td>
+                    <td>True</td>
+                    <td>4.238283</td>
+                  </tr>
+                </tbody>
+              </table>
+              <p>178 rows × 6 columns</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <p>
+            Después de ejecutar la función de ajuste, la biblioteca pca calificará la muestra si una muestra es un valor
+            atípico. Para cada muestra, se recopilan múltiples estadísticas, como se muestra en la sección de código a
+            continuación. Las primeras cuatro columnas en el marco de datos (y_proba, p_raw, y_score e y_bool) son
+            valores atípicos detectados mediante el método T2 de Hotelling. Las dos últimas columnas (y_bool_spe y
+            y_score_spe) se basan en el método SPE/DmodX.
+          </p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <p>
+            El T2 de Hotelling calcula las pruebas de chi-cuadrado y los valores P en los n_componentes principales, lo
+            que permite clasificar los valores atípicos de fuerte a débil usando y_proba. Tenga en cuenta que el espacio
+            de búsqueda de valores atípicos abarca las dimensiones PC1 a PC5, ya que se espera que la varianza más alta
+            (y, por lo tanto, los valores atípicos) se observe en los primeros componentes. Tenga en cuenta que la
+            profundidad es opcional en caso de que la varianza no se capture bien en los primeros cinco componentes.
+            Tracemos los valores atípicos y marquémoslos para los conjuntos de datos de vino (Figura 2).
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[4]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">biplot</span><span class="p">(</span><span class="n">SPE</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">hotellingt2</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="n">title</span><span class="o">=</span><span class="s1">&#39;Outliers marked using Hotellings T2 method.&#39;</span><span class="p">)</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+            <pre>[pca] &gt;Plot PC1 vs PC2 with loadings.
+</pre>
+          </div>
+        </div>
+        <div class="jp-OutputArea-child jp-OutputArea-executeResult">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[4]:</div>
+          <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+            <pre>(&lt;Figure size 1500x1000 with 1 Axes&gt;,
+&lt;AxesSubplot:title={&#39;center&#39;:&#39;Outliers marked using Hotellings T2 method.&#39;},
+xlabel=&#39;PC1 (36.1% expl.var)&#39;, ylabel=&#39;PC2 (19.2% expl.var)&#39;&gt;)</pre>
+          </div>
+        </div>
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/analisis_valores_atipicos_con_pca/image_0001.jpg">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[5]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class="highlight hl-ipython3">
+              <pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">biplot3d</span><span class="p">(</span><span class="n">SPE</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">hotellingt2</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+  <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Outliers marked using Hotellings T2 method.&#39;</span><span class="p">)</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+            <pre>[pca] &gt;Plot PC1 vs PC2 vs PC3 with loadings.
+</pre>
+          </div>
+        </div>
+        <div class="jp-OutputArea-child jp-OutputArea-executeResult">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[5]:</div>
+          <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+            <pre>(&lt;Figure size 1500x1000 with 2 Axes&gt;,
+&lt;Axes3D:title={&#39;center&#39;:&#39;Outliers marked using Hotellings T2 method.&#39;},
+xlabel=&#39;PC1 (36.1% expl.var)&#39;, ylabel=&#39;PC2 (19.2% expl.var)&#39;&gt;)
+</pre>
+          </div>
+        </div>
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/analisis_valores_atipicos_con_pca/image_0002.jpg">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[6]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;outliers&#39;</span><span class="p">][</span><span class="s1">&#39;y_bool&#39;</span><span class="p">],</span> <span class="p">:]</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child jp-OutputArea-executeResult">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[6]:</div>
+          <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+            data-mime-type="text/html">
+            <div class="table-container">
+              <table class="dataframe">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>alcohol</th>
+                    <th>malic_acid</th>
+                    <th>ash</th>
+                    <th>alcalinity_of_ash</th>
+                    <th>magnesium</th>
+                    <th>total_phenols</th>
+                    <th>flavanoids</th>
+                    <th>nonflavanoid_phenols</th>
+                    <th>proanthocyanins</th>
+                    <th>color_intensity</th>
+                    <th>hue</th>
+                    <th>od280/od315_of_diluted_wines</th>
+                    <th>proline</th>
+                  </tr>
+                </thead>
+                <tbody>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <p>
+            El método SPE/DmodX calcula la distancia euclidiana entre las muestras individuales y el centro. Podemos
+            visualizar esto con una elipse verde. Una muestra se marca como un valor atípico en función de la media y la
+            covarianza de las dos primeras PC (Figura 3). En otras palabras, cuando está fuera de la elipse.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[7]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">biplot</span><span class="p">(</span><span class="n">SPE</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">hotellingt2</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Outliers marked using SPE/dmodX method.&#39;</span><span class="p">)</span>
+  </pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+            <pre>[pca] &gt;Plot PC1 vs PC2 with loadings.
+</pre>
+          </div>
+        </div>
+        <div class="jp-OutputArea-child jp-OutputArea-executeResult">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[7]:</div>
+          <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+            <pre>(&lt;Figure size 1500x1000 with 1 Axes&gt;,
+&lt;AxesSubplot:title={&#39;center&#39;:&#39;Outliers marked using SPE/dmodX method.&#39;},
+xlabel=&#39;PC1 (36.1% expl.var)&#39;, ylabel=&#39;PC2 (19.2% expl.var)&#39;&gt;)</pre>
+          </div>
+        </div>
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/analisis_valores_atipicos_con_pca/image_0003.jpg">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[8]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">biplot</span><span class="p">(</span><span class="n">SPE</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">hotellingt2</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="n">title</span><span class="o">=</span><span class="s1">&#39;Outliers marked using SPE/dmodX method and Hotelling T2.&#39;</span><span class="p">)</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+            <pre>[pca] &gt;Plot PC1 vs PC2 with loadings.
+</pre>
+          </div>
+        </div>
+        <div class="jp-OutputArea-child jp-OutputArea-executeResult">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[8]:</div>
+          <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+            <pre>(&lt;Figure size 1500x1000 with 1 Axes&gt;,
+&lt;AxesSubplot:title={&#39;center&#39;:&#39;Outliers marked using SPE/dmodX method and Hotelling T2.&#39;}, 
+xlabel=&#39;PC1 (36.1% expl.var)&#39;, ylabel=&#39;PC2 (19.2% expl.var)&#39;&gt;)</pre>
+          </div>
+        </div>
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/analisis_valores_atipicos_con_pca/image_0004.jpg">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[9]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;outliers&#39;</span><span class="p">][</span><span class="s1">&#39;y_bool_spe&#39;</span><span class="p">],</span> <span class="p">:]</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child jp-OutputArea-executeResult">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[9]:</div>
+          <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+            data-mime-type="text/html">
+            <div class="table-container">
+              <table class="dataframe">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>alcohol</th>
+                    <th>malic_acid</th>
+                    <th>ash</th>
+                    <th>alcalinity_of_ash</th>
+                    <th>magnesium</th>
+                    <th>total_phenols</th>
+                    <th>flavanoids</th>
+                    <th>nonflavanoid_phenols</th>
+                    <th>proanthocyanins</th>
+                    <th>color_intensity</th>
+                    <th>hue</th>
+                    <th>od280/od315_of_diluted_wines</th>
+                    <th>proline</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>0</th>
+                    <td>14.37</td>
+                    <td>1.95</td>
+                    <td>2.50</td>
+                    <td>16.8</td>
+                    <td>113.0</td>
+                    <td>3.85</td>
+                    <td>3.49</td>
+                    <td>0.24</td>
+                    <td>2.18</td>
+                    <td>7.8</td>
+                    <td>0.86</td>
+                    <td>3.45</td>
+                    <td>1480.0</td>
+                  </tr>
+                  <tr>
+                    <th>0</th>
+                    <td>14.38</td>
+                    <td>1.87</td>
+                    <td>2.38</td>
+                    <td>12.0</td>
+                    <td>102.0</td>
+                    <td>3.30</td>
+                    <td>3.64</td>
+                    <td>0.29</td>
+                    <td>2.96</td>
+                    <td>7.5</td>
+                    <td>1.20</td>
+                    <td>3.00</td>
+                    <td>1547.0</td>
+                  </tr>
+                  <tr>
+                    <th>0</th>
+                    <td>14.19</td>
+                    <td>1.59</td>
+                    <td>2.48</td>
+                    <td>16.5</td>
+                    <td>108.0</td>
+                    <td>3.30</td>
+                    <td>3.93</td>
+                    <td>0.32</td>
+                    <td>1.86</td>
+                    <td>8.7</td>
+                    <td>1.23</td>
+                    <td>2.82</td>
+                    <td>1680.0</td>
+                  </tr>
+                  <tr>
+                    <th>1</th>
+                    <td>12.00</td>
+                    <td>0.92</td>
+                    <td>2.00</td>
+                    <td>19.0</td>
+                    <td>86.0</td>
+                    <td>2.42</td>
+                    <td>2.26</td>
+                    <td>0.30</td>
+                    <td>1.43</td>
+                    <td>2.5</td>
+                    <td>1.38</td>
+                    <td>3.12</td>
+                    <td>278.0</td>
+                  </tr>
+                  <tr>
+                    <th>1</th>
+                    <td>11.03</td>
+                    <td>1.51</td>
+                    <td>2.20</td>
+                    <td>21.5</td>
+                    <td>85.0</td>
+                    <td>2.46</td>
+                    <td>2.17</td>
+                    <td>0.52</td>
+                    <td>2.01</td>
+                    <td>1.9</td>
+                    <td>1.71</td>
+                    <td>2.87</td>
+                    <td>407.0</td>
+                  </tr>
+                  <tr>
+                    <th>2</th>
+                    <td>13.88</td>
+                    <td>5.04</td>
+                    <td>2.23</td>
+                    <td>20.0</td>
+                    <td>80.0</td>
+                    <td>0.98</td>
+                    <td>0.34</td>
+                    <td>0.40</td>
+                    <td>0.68</td>
+                    <td>4.9</td>
+                    <td>0.58</td>
+                    <td>1.33</td>
+                    <td>415.0</td>
+                  </tr>
+                  <tr>
+                    <th>2</th>
+                    <td>13.17</td>
+                    <td>5.19</td>
+                    <td>2.32</td>
+                    <td>22.0</td>
+                    <td>93.0</td>
+                    <td>1.74</td>
+                    <td>0.63</td>
+                    <td>0.61</td>
+                    <td>1.55</td>
+                    <td>7.9</td>
+                    <td>0.60</td>
+                    <td>1.48</td>
+                    <td>725.0</td>
+                  </tr>
+                  <tr>
+                    <th>2</th>
+                    <td>14.34</td>
+                    <td>1.68</td>
+                    <td>2.70</td>
+                    <td>25.0</td>
+                    <td>98.0</td>
+                    <td>2.80</td>
+                    <td>1.31</td>
+                    <td>0.53</td>
+                    <td>2.70</td>
+                    <td>13.0</td>
+                    <td>0.57</td>
+                    <td>1.96</td>
+                    <td>660.0</td>
+                  </tr>
+                  <tr>
+                    <th>2</th>
+                    <td>13.71</td>
+                    <td>5.65</td>
+                    <td>2.45</td>
+                    <td>20.5</td>
+                    <td>95.0</td>
+                    <td>1.68</td>
+                    <td>0.61</td>
+                    <td>0.52</td>
+                    <td>1.06</td>
+                    <td>7.7</td>
+                    <td>0.64</td>
+                    <td>1.74</td>
+                    <td>740.0</td>
+                  </tr>
+                  <tr>
+                    <th>2</th>
+                    <td>13.27</td>
+                    <td>4.28</td>
+                    <td>2.26</td>
+                    <td>20.0</td>
+                    <td>120.0</td>
+                    <td>1.59</td>
+                    <td>0.69</td>
+                    <td>0.43</td>
+                    <td>1.35</td>
+                    <td>10.2</td>
+                    <td>0.59</td>
+                    <td>1.56</td>
+                    <td>835.0</td>
+                  </tr>
+                  <tr>
+                    <th>2</th>
+                    <td>14.13</td>
+                    <td>4.10</td>
+                    <td>2.74</td>
+                    <td>24.5</td>
+                    <td>96.0</td>
+                    <td>2.05</td>
+                    <td>0.76</td>
+                    <td>0.56</td>
+                    <td>1.35</td>
+                    <td>9.2</td>
+                    <td>0.61</td>
+                    <td>1.60</td>
+                    <td>560.0</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <p>
+            Usando los resultados de ambos métodos, ahora también podemos calcular la superposición. En este caso de
+            uso, hay 5 valores atípicos que se superponen (consulte la sección de código a continuación).
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[12]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">I_overlap</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;outliers&#39;</span><span class="p">][</span><span class="s1">&#39;y_bool&#39;</span><span class="p">],</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;outliers&#39;</span><span class="p">][</span><span class="s1">&#39;y_bool_spe&#39;</span><span class="p">])</span>
+<span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">I_overlap</span><span class="p">,</span> <span class="p">:]</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child jp-OutputArea-executeResult">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[12]:</div>
+          <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+            data-mime-type="text/html">
+            <div class="table-container">
+              <table class="dataframe">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>alcohol</th>
+                    <th>malic_acid</th>
+                    <th>ash</th>
+                    <th>alcalinity_of_ash</th>
+                    <th>magnesium</th>
+                    <th>total_phenols</th>
+                    <th>flavanoids</th>
+                    <th>nonflavanoid_phenols</th>
+                    <th>proanthocyanins</th>
+                    <th>color_intensity</th>
+                    <th>hue</th>
+                    <th>od280/od315_of_diluted_wines</th>
+                    <th>proline</th>
+                  </tr>
+                </thead>
+                <tbody>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <h3 id="Detección-de-valores-atípicos-para-variables-categóricas.">
+            Detección de valores atípicos para variables categóricas.
+          </h3>
+          <p>
+            Para la detección de valores atípicos en variables categóricas, primero debemos discretizar las variables
+            categóricas y hacer que las distancias sean comparables entre sí. Con el conjunto de datos discretizados
+            (one-hot), podemos proceder usando el enfoque PCA y aplicar los métodos T2 y SPE/DmodX de Hotelling. Usaré
+            el conjunto de datos Student Performance [5] para fines de demostración, que contiene 649 muestras y 33
+            variables. Importaremos el conjunto de datos como se muestra en la sección de código a continuación. Puede
+            encontrar más detalles sobre la descripción de la columna aquí. No eliminaré ninguna columna, pero si
+            hubiera una columna de identificador o variables con tipo flotante, las habría eliminado o categorizado en
+            contenedores discretos.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[13]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">pca</span><span class="p">()</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="s1">&#39;student&#39;</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+            <pre>[pca] &gt;Downloading example dataset from github source..
+[pca] &gt;Import dataset [student]
+</pre>
+          </div>
+        </div>
+        <div class="jp-OutputArea-child jp-OutputArea-executeResult">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[13]:</div>
+          <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+            data-mime-type="text/html">
+            <div class="table-container">
+              <table class="dataframe">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>school</th>
+                    <th>sex</th>
+                    <th>age</th>
+                    <th>address</th>
+                    <th>famsize</th>
+                    <th>Pstatus</th>
+                    <th>Medu</th>
+                    <th>Fedu</th>
+                    <th>Mjob</th>
+                    <th>Fjob</th>
+                    <th>...</th>
+                    <th>famrel</th>
+                    <th>freetime</th>
+                    <th>goout</th>
+                    <th>Dalc</th>
+                    <th>Walc</th>
+                    <th>health</th>
+                    <th>absences</th>
+                    <th>G1</th>
+                    <th>G2</th>
+                    <th>G3</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>0</th>
+                    <td>GP</td>
+                    <td>F</td>
+                    <td>18</td>
+                    <td>U</td>
+                    <td>GT3</td>
+                    <td>A</td>
+                    <td>4</td>
+                    <td>4</td>
+                    <td>at_home</td>
+                    <td>teacher</td>
+                    <td>...</td>
+                    <td>4</td>
+                    <td>3</td>
+                    <td>4</td>
+                    <td>1</td>
+                    <td>1</td>
+                    <td>3</td>
+                    <td>4</td>
+                    <td>0</td>
+                    <td>11</td>
+                    <td>11</td>
+                  </tr>
+                  <tr>
+                    <th>1</th>
+                    <td>GP</td>
+                    <td>F</td>
+                    <td>17</td>
+                    <td>U</td>
+                    <td>GT3</td>
+                    <td>T</td>
+                    <td>1</td>
+                    <td>1</td>
+                    <td>at_home</td>
+                    <td>other</td>
+                    <td>...</td>
+                    <td>5</td>
+                    <td>3</td>
+                    <td>3</td>
+                    <td>1</td>
+                    <td>1</td>
+                    <td>3</td>
+                    <td>2</td>
+                    <td>9</td>
+                    <td>11</td>
+                    <td>11</td>
+                  </tr>
+                  <tr>
+                    <th>2</th>
+                    <td>GP</td>
+                    <td>F</td>
+                    <td>15</td>
+                    <td>U</td>
+                    <td>LE3</td>
+                    <td>T</td>
+                    <td>1</td>
+                    <td>1</td>
+                    <td>at_home</td>
+                    <td>other</td>
+                    <td>...</td>
+                    <td>4</td>
+                    <td>3</td>
+                    <td>2</td>
+                    <td>2</td>
+                    <td>3</td>
+                    <td>3</td>
+                    <td>6</td>
+                    <td>12</td>
+                    <td>13</td>
+                    <td>12</td>
+                  </tr>
+                  <tr>
+                    <th>3</th>
+                    <td>GP</td>
+                    <td>F</td>
+                    <td>15</td>
+                    <td>U</td>
+                    <td>GT3</td>
+                    <td>T</td>
+                    <td>4</td>
+                    <td>2</td>
+                    <td>health</td>
+                    <td>services</td>
+                    <td>...</td>
+                    <td>3</td>
+                    <td>2</td>
+                    <td>2</td>
+                    <td>1</td>
+                    <td>1</td>
+                    <td>5</td>
+                    <td>0</td>
+                    <td>14</td>
+                    <td>14</td>
+                    <td>14</td>
+                  </tr>
+                  <tr>
+                    <th>4</th>
+                    <td>GP</td>
+                    <td>F</td>
+                    <td>16</td>
+                    <td>U</td>
+                    <td>GT3</td>
+                    <td>T</td>
+                    <td>3</td>
+                    <td>3</td>
+                    <td>other</td>
+                    <td>other</td>
+                    <td>...</td>
+                    <td>4</td>
+                    <td>3</td>
+                    <td>2</td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>5</td>
+                    <td>0</td>
+                    <td>11</td>
+                    <td>13</td>
+                    <td>13</td>
+                  </tr>
+                </tbody>
+              </table>
+              <p>5 rows × 33 columns</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <p>
+            Las variables deben codificarse en caliente para asegurarse de que las distancias entre las variables sean
+            comparables entre sí. Esto da como resultado 177 columnas para 649 muestras (consulte la sección de código a
+            continuación).
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[14]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">df_hot</span> <span class="o">=</span> <span class="n">df2onehot</span><span class="p">(</span><span class="n">df</span><span class="p">)[</span><span class="s1">&#39;onehot&#39;</span><span class="p">]</span>
+<span class="n">df_hot</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+            <pre>
+[df2onehot] &gt;Auto detecting dtypes.
+</pre>
+          </div>
+        </div>
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr">
+            <pre>100%|██████████| 33/33 [00:00&lt;00:00, 47.40it/s]
+</pre>
+          </div>
+        </div>
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+            <pre>[df2onehot] &gt;Set dtypes in dataframe..
+</pre>
+          </div>
+        </div>
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr">
+            <pre>100%|██████████| 33/33 [00:00&lt;00:00, 47.64it/s]</pre>
+          </div>
+        </div>
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+            <pre>[df2onehot] &gt;Total onehot features: 177
+</pre>
+          </div>
+        </div>
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr">
+            <pre>
+</pre>
+          </div>
+        </div>
+        <div class="jp-OutputArea-child jp-OutputArea-executeResult">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[14]:</div>
+          <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+            data-mime-type="text/html">
+            <div class="table-container">
+              <table class="dataframe">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>school_GP</th>
+                    <th>school_MS</th>
+                    <th>sex_F</th>
+                    <th>sex_M</th>
+                    <th>age_15.0</th>
+                    <th>age_16.0</th>
+                    <th>age_17.0</th>
+                    <th>age_18.0</th>
+                    <th>age_19.0</th>
+                    <th>age_20.0</th>
+                    <th>...</th>
+                    <th>G3_15.0</th>
+                    <th>G3_16.0</th>
+                    <th>G3_17.0</th>
+                    <th>G3_18.0</th>
+                    <th>G3_19.0</th>
+                    <th>G3_5.0</th>
+                    <th>G3_6.0</th>
+                    <th>G3_7.0</th>
+                    <th>G3_8.0</th>
+                    <th>G3_9.0</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>0</th>
+                    <td>True</td>
+                    <td>False</td>
+                    <td>True</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>True</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>...</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>False</td>
+                  </tr>
+                  <tr>
+                    <th>1</th>
+                    <td>True</td>
+                    <td>False</td>
+                    <td>True</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>True</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>...</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>False</td>
+                  </tr>
+                  <tr>
+                    <th>2</th>
+                    <td>True</td>
+                    <td>False</td>
+                    <td>True</td>
+                    <td>False</td>
+                    <td>True</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>...</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>False</td>
+                  </tr>
+                  <tr>
+                    <th>3</th>
+                    <td>True</td>
+                    <td>False</td>
+                    <td>True</td>
+                    <td>False</td>
+                    <td>True</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>...</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>False</td>
+                  </tr>
+                  <tr>
+                    <th>4</th>
+                    <td>True</td>
+                    <td>False</td>
+                    <td>True</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>True</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>...</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>False</td>
+                  </tr>
+                </tbody>
+              </table>
+              <p>5 rows × 177 columns</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <p>
+            Ahora podemos usar el marco de datos one-hot procesado como entrada para pca y detectar valores atípicos.
+            Durante la inicialización, podemos configurar normalize=True para normalizar los datos y necesitamos
+            especificar los métodos de detección de valores atípicos.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[15]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">pca</span><span class="p">(</span><span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">detect_outliers</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;ht2&#39;</span><span class="p">,</span> <span class="s1">&#39;spe&#39;</span><span class="p">],</span>
+            <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
+            <span class="n">n_std</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+            <span class="n">multipletests</span><span class="o">=</span><span class="s1">&#39;fdr_bh&#39;</span><span class="p">)</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">df_hot</span><span class="p">)</span>
+<span class="n">overlapping_outliers</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;outliers&#39;</span><span class="p">][</span><span class="s1">&#39;y_bool&#39;</span><span class="p">],</span>
+                                      <span class="n">results</span><span class="p">[</span><span class="s1">&#39;outliers&#39;</span><span class="p">][</span><span class="s1">&#39;y_bool_spe&#39;</span><span class="p">])</span>
+<span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">overlapping_outliers</span><span class="p">]</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+            <pre>[pca] &gt;Processing dataframe..
+[pca] &gt;Normalizing input data per feature (zero mean and unit variance)..
+[pca] &gt;The PCA reduction is performed to capture [95.0%] explained variance using the
+[177] columns of the input data.
+[pca] &gt;Fit using PCA.
+[pca] &gt;Compute loadings and PCs.
+[pca] &gt;Compute explained variance.
+[pca] &gt;Number of components is [116] that covers the [95.00%] explained variance.
+[pca] &gt;The PCA reduction is performed on the [177] columns of the input dataframe.
+[pca] &gt;Fit using PCA.
+[pca] &gt;Compute loadings and PCs.
+[pca] &gt;Outlier detection using Hotelling T2 test with alpha=[0.05] and n_components=[116]
+[pca] &gt;Multiple test correction applied for Hotelling T2 test: [fdr_bh]
+[pca] &gt;Outlier detection using SPE/DmodX with n_std=[3]
+</pre>
+          </div>
+        </div>
+        <div class="jp-OutputArea-child jp-OutputArea-executeResult">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[15]:</div>
+          <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+            data-mime-type="text/html">
+            <div class="table-container">
+              <table class="dataframe">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>school</th>
+                    <th>sex</th>
+                    <th>age</th>
+                    <th>address</th>
+                    <th>famsize</th>
+                    <th>Pstatus</th>
+                    <th>Medu</th>
+                    <th>Fedu</th>
+                    <th>Mjob</th>
+                    <th>Fjob</th>
+                    <th>...</th>
+                    <th>famrel</th>
+                    <th>freetime</th>
+                    <th>goout</th>
+                    <th>Dalc</th>
+                    <th>Walc</th>
+                    <th>health</th>
+                    <th>absences</th>
+                    <th>G1</th>
+                    <th>G2</th>
+                    <th>G3</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>279</th>
+                    <td>GP</td>
+                    <td>M</td>
+                    <td>22</td>
+                    <td>U</td>
+                    <td>GT3</td>
+                    <td>T</td>
+                    <td>3</td>
+                    <td>1</td>
+                    <td>services</td>
+                    <td>services</td>
+                    <td>...</td>
+                    <td>5</td>
+                    <td>4</td>
+                    <td>5</td>
+                    <td>5</td>
+                    <td>5</td>
+                    <td>1</td>
+                    <td>12</td>
+                    <td>7</td>
+                    <td>8</td>
+                    <td>5</td>
+                  </tr>
+                  <tr>
+                    <th>284</th>
+                    <td>GP</td>
+                    <td>M</td>
+                    <td>18</td>
+                    <td>U</td>
+                    <td>GT3</td>
+                    <td>T</td>
+                    <td>2</td>
+                    <td>1</td>
+                    <td>services</td>
+                    <td>services</td>
+                    <td>...</td>
+                    <td>3</td>
+                    <td>2</td>
+                    <td>5</td>
+                    <td>2</td>
+                    <td>5</td>
+                    <td>5</td>
+                    <td>4</td>
+                    <td>7</td>
+                    <td>8</td>
+                    <td>6</td>
+                  </tr>
+                  <tr>
+                    <th>523</th>
+                    <td>MS</td>
+                    <td>M</td>
+                    <td>18</td>
+                    <td>U</td>
+                    <td>LE3</td>
+                    <td>T</td>
+                    <td>4</td>
+                    <td>4</td>
+                    <td>at_home</td>
+                    <td>health</td>
+                    <td>...</td>
+                    <td>5</td>
+                    <td>5</td>
+                    <td>5</td>
+                    <td>5</td>
+                    <td>5</td>
+                    <td>5</td>
+                    <td>2</td>
+                    <td>5</td>
+                    <td>6</td>
+                    <td>6</td>
+                  </tr>
+                  <tr>
+                    <th>605</th>
+                    <td>MS</td>
+                    <td>F</td>
+                    <td>19</td>
+                    <td>U</td>
+                    <td>GT3</td>
+                    <td>T</td>
+                    <td>1</td>
+                    <td>1</td>
+                    <td>at_home</td>
+                    <td>services</td>
+                    <td>...</td>
+                    <td>5</td>
+                    <td>5</td>
+                    <td>5</td>
+                    <td>2</td>
+                    <td>3</td>
+                    <td>2</td>
+                    <td>0</td>
+                    <td>5</td>
+                    <td>0</td>
+                    <td>0</td>
+                  </tr>
+                  <tr>
+                    <th>610</th>
+                    <td>MS</td>
+                    <td>F</td>
+                    <td>19</td>
+                    <td>R</td>
+                    <td>GT3</td>
+                    <td>A</td>
+                    <td>1</td>
+                    <td>1</td>
+                    <td>at_home</td>
+                    <td>at_home</td>
+                    <td>...</td>
+                    <td>3</td>
+                    <td>5</td>
+                    <td>4</td>
+                    <td>1</td>
+                    <td>4</td>
+                    <td>1</td>
+                    <td>0</td>
+                    <td>8</td>
+                    <td>0</td>
+                    <td>0</td>
+                  </tr>
+                </tbody>
+              </table>
+              <p>5 rows × 33 columns</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <p>
+            La prueba Hotelling T2 detectó 85 valores atípicos y el método SPE/DmodX detectó 6 valores atípicos (Figura
+            4, ver leyenda). El número de valores atípicos que se superponen entre ambos métodos es 5. Podemos hacer un
+            gráfico con la funcionalidad biplot y colorear las muestras en cualquier categoría para una mayor
+            investigación (como la etiqueta de sexo). Los valores atípicos están marcados con x o *. Este es ahora un
+            buen comienzo para una inspección más profunda; en nuestro caso, podemos ver en la Figura 4 que los 5
+            valores atípicos se están alejando de todas las demás muestras. Podemos clasificar los valores atípicos,
+            observar las cargas e investigar más profundamente a estos estudiantes (consulte la sección de código
+            anterior). Para clasificar los valores atípicos, podemos usar y_proba (cuanto más bajo, mejor) para el
+            método Hotelling T2, y y_score_spe, para el método SPE/DmodX. Esta última es la distancia euclidiana de la
+            muestra al centro (por lo tanto, cuanto más grande, mejor).
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[16]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">biplot</span><span class="p">(</span><span class="n">SPE</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+             <span class="n">hotellingt2</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+             <span class="n">jitter</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+             <span class="n">n_feat</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+             <span class="n">legend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+             <span class="n">label</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+             <span class="n">y</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">],</span>
+             <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Student Performance&#39;</span><span class="p">,</span>
+             <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">12</span><span class="p">),</span>
+             <span class="n">color_arrow</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span>
+             <span class="n">fontdict</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;size&#39;</span><span class="p">:</span><span class="mi">16</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">:</span><span class="s1">&#39;k&#39;</span><span class="p">},</span>
+             <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;bwr_r&#39;</span><span class="p">,</span>
+             <span class="n">gradient</span><span class="o">=</span><span class="s1">&#39;#FFFFFF&#39;</span><span class="p">,</span>
+             <span class="p">)</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+            <pre>[pca] &gt;Plot PC1 vs PC2 with loadings.
+</pre>
+          </div>
+        </div>
+        <div class="jp-OutputArea-child jp-OutputArea-executeResult">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[16]:</div>
+          <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+            <pre>(&lt;Figure size 2000x1200 with 1 Axes&gt;,
+&lt;AxesSubplot:title={&#39;center&#39;:&#39;Student Performance&#39;}, xlabel=&#39;PC1 (3.94% expl.var)&#39;, 
+ylabel=&#39;PC2 (2.47% expl.var)&#39;&gt;)</pre>
+          </div>
+        </div>
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/analisis_valores_atipicos_con_pca/image_0005.jpg">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <h3 id="Ultimas-palabras.">
+            Comentarios.
+          </h3>
+          <p>
+            Hemos demostrado cómo usar PCA para la detección de valores atípicos multivariados para variables continuas
+            y categóricas. Con la biblioteca PCA, podemos usar el método T2 de Hotelling y/o el método SPE/DmodX para
+            determinar los valores atípicos candidatos. La interpretación de la contribución de cada variable a los
+            componentes principales se puede recuperar utilizando las cargas y visualizarse con el biplot en el espacio
+            de PC de baja dimensión. Tales conocimientos visuales pueden ayudar a proporcionar intuición sobre los
+            valores atípicos de detección y si requieren un análisis de seguimiento. En general, la detección de valores
+            atípicos puede ser un desafío porque determinar qué se considera normal puede ser subjetivo y variar según
+            la aplicación específica.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

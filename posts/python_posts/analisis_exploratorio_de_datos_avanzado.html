@@ -1,0 +1,1867 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Analisis Exploratorio de Datos Avanzado</title>
+  <link rel="shortcut icon" href="../../assets/images/python-logo.png" type="image/x-icon">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+  <link rel="stylesheet" href="python_css/python_new_posts.css"/>
+
+</head>
+
+<body class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
+	<header>
+        <a href="../../index.html"
+        class="logo">
+          <img src="../../assets/images/python-logo.png" alt="python-logo">
+            Volver al Inicio
+        </a>
+        <nav>
+          <a href="analisis_de_componentes_principales.html" class="nav-link">Anterior </a>
+          <a href="analisis_valores_atipicos_con_pca.html" class="nav-link">Siguiente</a>
+        </nav>
+    </header>
+    <h2 id="An%C3%A1lisis-exploratorio-avanzado-de-datos-(EDA)">
+      Análisis Exploratorio Avanzado de Datos
+    </h2>
+    <p style="font-size: medium;">
+          <strong>10 de Abril del 2022
+          </strong> | Jhonatan Montilla
+    </p>
+  <div class="jp-Cell-inputWrapper">
+    <div class="jp-InputPrompt jp-InputArea-prompt">
+    </div>
+    <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+      <p>
+        Tener una buena idea de un nuevo conjunto de datos no siempre es fácil y lleva tiempo. Sin embargo, un buen y amplio análisis exploratorio de datos (EDA) puede ayudar mucho a comprender su conjunto de datos, tener una idea de cómo están conectadas las cosas y qué se debe hacer para procesar adecuadamente su conjunto de datos.
+      </p>
+      <p>
+        En este artículo, abordaremos múltiples rutinas EDA útiles. Sin embargo, para mantener las cosas breves y compactas, es posible que no siempre profundicemos o expliquemos todas las implicaciones. Pero, en realidad, dedicar suficiente tiempo a un EDA adecuado para comprender completamente su conjunto de datos es una parte clave de cualquier buen proyecto de ciencia de datos. Como regla general, probablemente dedicará el 80 % de su tiempo a la preparación y exploración de datos y solo el 20 % al modelado real de aprendizaje automático.
+      </p>
+      <p>
+        Habiendo dicho todo esto, ¡vamos a sumergirnos en ello!.
+      </p>
+      <h2 id="Investigación-de-estructura,-calidad-y-contenido">
+        Investigación de estructura, calidad y contenido
+      </h2>
+      <p>
+        En general, el enfoque EDA es muy iterativo. Al final de su investigación, puede descubrir algo que requerirá que rehaga todo una vez más. ¡Eso es normal! Pero para imponer al menos un poco de estructura, propongo la siguiente estructura para sus investigaciones:
+      </p>
+      <ol>
+        <li>
+          <strong>Investigación de estructuras</strong>: exploración de la forma general del conjunto de datos, así como los tipos de datos de sus características.
+        </li>
+        <li>
+          <strong>Investigación de calidad</strong>: obtenga una idea de la calidad general del conjunto de datos, con respecto a duplicados, valores faltantes y entradas no deseadas.
+        </li>
+        <li>
+          <strong>Investigación de contenido</strong>: una vez que se comprende la estructura y la calidad del conjunto de datos, podemos continuar y realizar una exploración más profunda de los valores de las características y observar cómo se relacionan las diferentes características entre sí.
+        </li>
+      </ol>
+      <p>
+        Pero primero necesitamos encontrar un conjunto de datos interesante. Avancemos y carguemos el 
+        <a href="https://www.openml.org/d/42803" target="_blank">
+          conjunto de datos de seguridad vial
+        </a>
+        de
+        <a href="https://www.openml.org/search?type=data" target="_blank">
+          OpenML          
+        </a>.
+      </p>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[32]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">fetch_openml</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">missingno</span> <span class="k">as</span> <span class="nn">msno</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[1]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="c1"># Descargar el conjunto de datos de openml</span>
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">fetch_openml</span><span class="p">(</span><span class="n">data_id</span> <span class="o">=</span> <span class="mi">42803</span><span class="p">,</span>
+                       <span class="n">as_frame</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Extraiga la matriz de características X y muestre 5 muestras aleatorias</span>
+<span class="n">df_X</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="s2">&quot;frame&quot;</span><span class="p">]</span>
+<span class="n">df_X</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[1]:</div>
+          <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+            data-mime-type="text/html">
+            <div class="table-container">
+              <table class="dataframe">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>Accident_Index</th>
+                    <th>Vehicle_Reference_df_res</th>
+                    <th>Vehicle_Type</th>
+                    <th>Towing_and_Articulation</th>
+                    <th>Vehicle_Manoeuvre</th>
+                    <th>Vehicle_Location-Restricted_Lane</th>
+                    <th>Junction_Location</th>
+                    <th>Skidding_and_Overturning</th>
+                    <th>Hit_Object_in_Carriageway</th>
+                    <th>Vehicle_Leaving_Carriageway</th>
+                    <th>...</th>
+                    <th>Age_Band_of_Casualty</th>
+                    <th>Casualty_Severity</th>
+                    <th>Pedestrian_Location</th>
+                    <th>Pedestrian_Movement</th>
+                    <th>Car_Passenger</th>
+                    <th>Bus_or_Coach_Passenger</th>
+                    <th>Pedestrian_Road_Maintenance_Worker</th>
+                    <th>Casualty_Type</th>
+                    <th>Casualty_Home_Area_Type</th>
+                    <th>Casualty_IMD_Decile</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>154113</th>
+                    <td>201520T049545</td>
+                    <td>1.0</td>
+                    <td>9.0</td>
+                    <td>0.0</td>
+                    <td>18.0</td>
+                    <td>0.0</td>
+                    <td>1.0</td>
+                    <td>2.0</td>
+                    <td>10.0</td>
+                    <td>2.0</td>
+                    <td>...</td>
+                    <td>5.0</td>
+                    <td>1.0</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>2.0</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>9.0</td>
+                    <td>1.0</td>
+                    <td>5.0</td>
+                  </tr>
+                  <tr>
+                    <th>312648</th>
+                    <td>2015521501818</td>
+                    <td>1.0</td>
+                    <td>9.0</td>
+                    <td>0.0</td>
+                    <td>18.0</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>...</td>
+                    <td>6.0</td>
+                    <td>3.0</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>9.0</td>
+                    <td>1.0</td>
+                    <td>10.0</td>
+                  </tr>
+                  <tr>
+                    <th>228653</th>
+                    <td>2015420033765</td>
+                    <td>5.0</td>
+                    <td>9.0</td>
+                    <td>0.0</td>
+                    <td>18.0</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>...</td>
+                    <td>4.0</td>
+                    <td>3.0</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>2.0</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>9.0</td>
+                    <td>NaN</td>
+                    <td>NaN</td>
+                  </tr>
+                  <tr>
+                    <th>233448</th>
+                    <td>201542I164505</td>
+                    <td>1.0</td>
+                    <td>9.0</td>
+                    <td>0.0</td>
+                    <td>9.0</td>
+                    <td>0.0</td>
+                    <td>7.0</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>...</td>
+                    <td>6.0</td>
+                    <td>3.0</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>5.0</td>
+                    <td>1.0</td>
+                    <td>6.0</td>
+                  </tr>
+                  <tr>
+                    <th>189611</th>
+                    <td>2015320020402</td>
+                    <td>2.0</td>
+                    <td>9.0</td>
+                    <td>0.0</td>
+                    <td>18.0</td>
+                    <td>0.0</td>
+                    <td>8.0</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>...</td>
+                    <td>9.0</td>
+                    <td>3.0</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>9.0</td>
+                    <td>2.0</td>
+                    <td>4.0</td>
+                  </tr>
+                </tbody>
+              </table>
+              <p>5 rows × 67 columns</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell-inputWrapper">
+    <div class="jp-InputPrompt jp-InputArea-prompt">
+    </div>
+    <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+      <h2 id="1.-Investigación-de-estructura">
+        1. Investigación de estructura
+      </h2>
+      <p>
+        Antes de ver el contenido de nuestra matriz de características $X$, veamos primero la estructura general del conjunto de datos. Por ejemplo, ¿cuántas columnas y filas tiene el conjunto de datos?.
+      </p>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[2]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="c1"># Mostrar el tamaño del conjunto de datos</span>
+<span class="n">df_X</span><span class="o">.</span><span class="n">shape</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[2]:</div>
+          <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+            <pre>(363243, 67)</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell-inputWrapper">
+    <div class="jp-InputPrompt jp-InputArea-prompt">
+    </div>
+    <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+      <p>
+        Entonces sabemos que este conjunto de datos tiene 363.243 muestras y 67 características. ¿Y cuántos tipos de datos diferentes contienen estas 67 características?
+      </p>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[4]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="c1"># Cuente cuántas veces está presente cada tipo de datos en el conjunto de datos</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">df_X</span><span class="o">.</span><span class="n">dtypes</span><span class="p">)</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[4]:</div>
+          <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+            <pre>float64    61
+object      6
+dtype: int64</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell-inputWrapper">
+    <div class="jp-InputPrompt jp-InputArea-prompt">
+    </div>
+    <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+      <h3 id="1.1.-Estructura-de-características-no-numéricas">
+        1.1. Estructura de características no numéricas
+      </h3>
+      <p>
+        Los tipos de datos pueden ser numéricos y no numéricos. Primero, echemos un vistazo más de cerca a las entradas <strong>no numéricas</strong>.
+      </p>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[5]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="c1"># Mostrar características no numéricas</span>
+<span class="n">df_X</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">exclude</span> <span class="o">=</span> <span class="s2">&quot;number&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[5]:</div>
+          <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+            data-mime-type="text/html">
+            <div class="table-container">
+              <table class="dataframe">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>Accident_Index</th>
+                    <th>Sex_of_Driver</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Local_Authority_(Highway)</th>
+                    <th>LSOA_of_Accident_Location</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>0</th>
+                    <td>201501BS70001</td>
+                    <td>1.0</td>
+                    <td>12/01/2015</td>
+                    <td>18:45</td>
+                    <td>E09000020</td>
+                    <td>E01002825</td>
+                  </tr>
+                  <tr>
+                    <th>1</th>
+                    <td>201501BS70002</td>
+                    <td>1.0</td>
+                    <td>12/01/2015</td>
+                    <td>07:50</td>
+                    <td>E09000020</td>
+                    <td>E01002820</td>
+                  </tr>
+                  <tr>
+                    <th>2</th>
+                    <td>201501BS70004</td>
+                    <td>1.0</td>
+                    <td>12/01/2015</td>
+                    <td>18:08</td>
+                    <td>E09000020</td>
+                    <td>E01002833</td>
+                  </tr>
+                  <tr>
+                    <th>3</th>
+                    <td>201501BS70005</td>
+                    <td>1.0</td>
+                    <td>13/01/2015</td>
+                    <td>07:40</td>
+                    <td>E09000020</td>
+                    <td>E01002874</td>
+                  </tr>
+                  <tr>
+                    <th>4</th>
+                    <td>201501BS70008</td>
+                    <td>1.0</td>
+                    <td>09/01/2015</td>
+                    <td>07:30</td>
+                    <td>E09000020</td>
+                    <td>E01002814</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell-inputWrapper">
+    <div class="jp-InputPrompt jp-InputArea-prompt">
+    </div>
+    <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+      <p>
+        Aunque <code>Sex_of_Driver</code> es una característica numérica, de alguna manera se almacenó como no numérica. Esto a veces se debe a algún error tipográfico en la grabación de datos. Así que cuidémonos de eso:
+      </p>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[6]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="c1"># Cambia el tipo de datos de &#39;Sex_of_Driver&#39;</span>
+<span class="n">df_X</span><span class="p">[</span><span class="s2">&quot;Sex_of_Driver&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_X</span><span class="p">[</span><span class="s2">&quot;Sex_of_Driver&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;float&quot;</span><span class="p">)</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell-inputWrapper">
+    <div class="jp-InputPrompt jp-InputArea-prompt">
+    </div>
+    <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+      <p>
+        Usando la función <code>.describe()</code> también podemos investigar cuántos valores únicos tiene cada característica no numérica y con qué frecuencia está presente el valor más destacado.
+      </p>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[7]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">df_X</span><span class="o">.</span><span class="n">describe</span><span class="p">(</span><span class="n">exclude</span> <span class="o">=</span> <span class="s2">&quot;number&quot;</span><span class="p">)</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[7]:</div>
+          <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+            data-mime-type="text/html">
+            <div class="table-container">
+              <table class="dataframe">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>Accident_Index</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Local_Authority_(Highway)</th>
+                    <th>LSOA_of_Accident_Location</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>count</th>
+                    <td>363243</td>
+                    <td>319866</td>
+                    <td>319822</td>
+                    <td>319866</td>
+                    <td>298758</td>
+                  </tr>
+                  <tr>
+                    <th>unique</th>
+                    <td>140056</td>
+                    <td>365</td>
+                    <td>1439</td>
+                    <td>204</td>
+                    <td>25979</td>
+                  </tr>
+                  <tr>
+                    <th>top</th>
+                    <td>201543P296025</td>
+                    <td>14/02/2015</td>
+                    <td>17:30</td>
+                    <td>E10000017</td>
+                    <td>E01028497</td>
+                  </tr>
+                  <tr>
+                    <th>freq</th>
+                    <td>1332</td>
+                    <td>2144</td>
+                    <td>2972</td>
+                    <td>8457</td>
+                    <td>1456</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell-inputWrapper">
+    <div class="jp-InputPrompt jp-InputArea-prompt">
+    </div>
+    <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+      <h3 id="1.2.-Estructura-de-características-numéricas">
+        1.2. Estructura de características numéricas
+      </h3>
+      <p>
+        A continuación, echemos un vistazo más de cerca a las características numéricas. Más precisamente, investiguemos cuántos valores únicos tiene cada una de estas características. Este proceso nos dará información sobre la cantidad de características <strong>binarias</strong> (2 valores únicos), <strong>ordinales</strong> (de 3 a ~10 valores únicos) y <strong>continuas</strong> (más de 10 valores únicos) en el conjunto de datos
+      </p>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[8]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="c1"># Para cada característica numérica, calcule el número de entradas únicas</span>
+<span class="n">unique_values</span> <span class="o">=</span> <span class="n">df_X</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">include</span> <span class="o">=</span> <span class="s2">&quot;number&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">()</span>
+
+<span class="c1"># Trazar información con el eje y en escala logarítmica</span>
+<span class="n">unique_values</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">logy</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                       <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
+                       <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Valores únicos por característica&quot;</span><span class="p">);</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/analisis_exploratorio_4_avanzado/image_0001.jpg">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell-inputWrapper">
+    <div class="jp-InputPrompt jp-InputArea-prompt">
+    </div>
+    <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+      <h3 id="1.3.-Conclusión-de-la-investigación-de-la-estructura.">
+        1.3. Conclusión de la investigación de la estructura.
+      </h3>
+      <p>
+        Al final de esta primera investigación, deberíamos tener una mejor comprensión de la estructura general de nuestro conjunto de datos. Número de muestras y funciones, qué tipo de datos tiene cada función y cuántos de ellos son binarios, ordinales, categóricos o continuos. Para obtener una forma alternativa de obtener este tipo de información, también puede usar <code>df_X.info()</code> o <code>df_X.describe()</code>.
+      </p>
+      <h2 id="2.-Investigación-de-calidad">
+        2. Investigación de calidad
+      </h2>
+      <p>
+        Antes de centrarnos en el contenido real almacenado en estas funciones, primero echemos un vistazo a la calidad general del conjunto de datos. El objetivo es tener una vista global del conjunto de datos con respecto a cosas como duplicados, valores faltantes y entradas no deseadas o errores de registro.
+      </p>
+      <h3 id="2.1.-Duplicados">
+        2.1. Duplicados
+      </h3>
+      <p>
+        Los duplicados son entradas que representan el mismo punto de muestra varias veces. Por ejemplo, si una medición fue registrada dos veces por dos personas diferentes. Detectar tales duplicados no siempre es fácil, ya que cada conjunto de datos puede tener un identificador único (por ejemplo, un número de índice o un tiempo de registro que es único para cada nueva muestra) que quizás desee ignorar primero.
+      </p>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[9]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="c1"># Verifique el número de duplicados mientras ignora la función de índice</span>
+<span class="n">n_duplicates</span> <span class="o">=</span> <span class="n">df_X</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Accident_Index&quot;</span><span class="p">],</span>
+                         <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">duplicated</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;pareces tener </span><span class="si">{</span><span class="n">n_duplicates</span><span class="si">}</span><span class="s2"> duplicados en su base de datos.&quot;</span><span class="p">)</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+            <pre>pareces tener 22 duplicados en su base de datos.
+</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell-inputWrapper">
+    <div class="jp-InputPrompt jp-InputArea-prompt">
+    </div>
+    <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+      <p>
+        Para manejar estos duplicados, simplemente puede eliminarlos con <code>.drop_duplicates()</code>.
+      </p>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[10]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="c1">#  Extraiga los nombres de columna de todas las funciones, excepto &#39;Accident_Index&#39;</span>
+<span class="n">columns_to_consider</span> <span class="o">=</span> <span class="n">df_X</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Accident_Index&quot;</span><span class="p">],</span>
+                                <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">columns</span>
+
+<span class="c1"># Eliminar duplicados en función de &#39;columns_to_consider&#39;</span>
+<span class="n">df_X</span> <span class="o">=</span> <span class="n">df_X</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">subset</span> <span class="o">=</span> <span class="n">columns_to_consider</span><span class="p">)</span>
+<span class="n">df_X</span><span class="o">.</span><span class="n">shape</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[10]:</div>
+          <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+            <pre>(363221, 67)</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell-inputWrapper">
+    <div class="jp-InputPrompt jp-InputArea-prompt">
+    </div>
+    <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+      <h3 id="2.2.-Valores-faltantes">
+        2.2. Valores faltantes
+      </h3>
+      <p>
+        Otro problema de calidad que vale la pena investigar son los valores faltantes. Tener algunos valores faltantes es normal. Lo que queremos identificar en esta etapa son grandes agujeros en el conjunto de datos, es decir, muestras o características con muchos valores faltantes.
+      </p>
+      <h3 id="2.2.1.-por-muestra">
+        2.2.1. por muestra
+      </h3>
+      <p>
+        Para ver el número de valores faltantes por muestra, tenemos múltiples opciones. La más directa es simplemente visualizar la salida de <code>df_X.isna()</code>, con algo como esto:
+      </p>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[12]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">df_X</span><span class="o">.</span><span class="n">isna</span><span class="p">(),</span>
+           <span class="n">aspect</span> <span class="o">=</span> <span class="s2">&quot;auto&quot;</span><span class="p">,</span>
+           <span class="n">interpolation</span> <span class="o">=</span> <span class="s2">&quot;nearest&quot;</span><span class="p">,</span>
+           <span class="n">cmap</span> <span class="o">=</span> <span class="s2">&quot;gray&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Número de columna&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Numero de muestra&quot;</span><span class="p">);</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/analisis_exploratorio_4_avanzado/image_0002.jpg">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell-inputWrapper">
+    <div class="jp-InputPrompt jp-InputArea-prompt">
+    </div>
+    <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+      <p>
+        Esta figura muestra en el eje Y cada una de las 360.000 muestras individuales, y en el eje X si alguna de las 67 características contiene un valor faltante. Si bien esta ya es una trama útil, un enfoque aún mejor es usar la biblioteca <a href="https://github.com/ResidentMario/missingno">missingno</a> para obtener una trama como esta:
+      </p>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[15]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">msno</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="n">df_X</span><span class="p">,</span>
+            <span class="n">labels</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="n">sort</span> <span class="o">=</span> <span class="s2">&quot;descending&quot;</span><span class="p">);</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/analisis_exploratorio_4_avanzado/image_0003.jpg">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell-inputWrapper">
+    <div class="jp-InputPrompt jp-InputArea-prompt">
+    </div>
+    <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+      <p>
+        A partir de estos dos gráficos, podemos ver que el conjunto de datos tiene un todo enorme, causado por algunas muestras en las que faltan más del 50% de los valores de las características. Para esas muestras, probablemente no sea una buena idea llenar los valores que faltan con algunos valores de reemplazo.
+      </p>
+      <p>
+        Por lo tanto, sigamos adelante y eliminemos muestras que tengan más del 20% de valores faltantes. El umbral está inspirado en la información de la columna "Integridad de los datos" a la derecha de esta figura.
+      </p>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[16]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">df_X</span> <span class="o">=</span> <span class="n">df_X</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">thresh</span> <span class="o">=</span> <span class="n">df_X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="mf">0.80</span><span class="p">,</span>
+                   <span class="n">axis</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<span class="n">df_X</span><span class="o">.</span><span class="n">shape</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[16]:</div>
+          <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+            <pre>(319790, 67)</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell-inputWrapper">
+    <div class="jp-InputPrompt jp-InputArea-prompt">
+    </div>
+    <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+      <h3 id="2.2.2.-por-característica">
+        2.2.2. por característica
+      </h3>
+      <p>
+        Como siguiente paso, veamos ahora la cantidad de valores faltantes por función. Para esto, podemos usar algunos trucos de <code>pandas</code> para identificar rápidamente la proporción de valores faltantes <strong>por característica</strong>.
+      </p>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[17]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">df_X</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">()</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+    <span class="n">kind</span> <span class="o">=</span> <span class="s2">&quot;bar&quot;</span><span class="p">,</span> <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Porcentaje de valores faltantes por característica&quot;</span><span class="p">,</span>
+    <span class="n">ylabel</span> <span class="o">=</span> <span class="s2">&quot;Proporción de valores perdidos por característica&quot;</span><span class="p">);</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/analisis_exploratorio_4_avanzado/image_0004.jpg">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell-inputWrapper">
+    <div class="jp-InputPrompt jp-InputArea-prompt">
+    </div>
+    <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+      <p>
+        De esta figura podemos ver que la mayoría de las características no contienen valores faltantes. No obstante, características como <code>2nd_Road_Class</code>, <code>Junction_Control</code>, <code>Age_of_Vehicle</code>todavía contienen muchos valores faltantes. Así que sigamos adelante y eliminemos cualquier función con más del
+        15% de valores faltantes.
+      </p>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[18]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">df_X</span> <span class="o">=</span> <span class="n">df_X</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">thresh</span> <span class="o">=</span> <span class="n">df_X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mf">0.85</span><span class="p">,</span>
+                   <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">df_X</span><span class="o">.</span><span class="n">shape</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[18]:</div>
+          <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+            <pre>(319790, 60)</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell-inputWrapper">
+    <div class="jp-InputPrompt jp-InputArea-prompt">
+    </div>
+    <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+      <h3 id="2.2.3.-Peque%C3%B1a-nota-al-margen">
+        2.2.3. Peque&#241;a nota al margen
+      </h3>
+      <p>
+        <strong>Valores faltantes</strong>: no existe un orden estricto para eliminar los valores faltantes. Para algunos conjuntos de datos, abordar primero las características y luego las muestras podrían ser mejores. Además, el umbral en el que decidas para descartar valores faltantes por función o cambios de muestra de un conjunto de datos a otro, y depende de lo que pretende hacer con el conjunto de datos más adelante.
+      </p>
+      <p>
+        <strong>Además</strong>, hasta ahora solo abordamos los grandes agujeros en el conjunto de datos, aún no sabemos cómo llenar los vacíos más pequeños. Este es contenido para otro post.
+      </p>
+      <h3 id="2.3.-Entradas-no-deseadas-y-errores-de-registro">
+        2.3. Entradas no deseadas y errores de registro
+      </h3>
+      <p>
+        Otra fuente de problemas de calidad en un conjunto de datos puede deberse a entradas no deseadas o errores de registro. Es importante distinguir tales muestras de simples valores atípicos. Si bien los valores atípicos son puntos de datos que son inusuales para una determinada distribución de características, <strong>las entradas no deseadas o los errores de registro son muestras que no deberían estar allí en primer lugar</strong>.
+      </p>
+      <p>
+        Por ejemplo, un registro de temperatura de 45 °C en Suiza podría ser un valor atípico (como "muy inusual"), mientras que un registro de 90 °C sería un error. De manera similar, un registro de temperatura desde la cima del Mont Blanc podría ser físicamente posible, pero lo más probable es que no se incluya en un conjunto de datos sobre ciudades suizas.
+      </p>
+      <p>
+        Por supuesto, detectar dichos errores y entradas no deseadas y distinguirlos de los valores atípicos no siempre es sencillo y depende en gran medida del conjunto de datos. Un enfoque para esto es tomar una vista global del conjunto de datos y ver si puede identificar algunos patrones muy inusuales.
+      </p>
+      <h3 id="2.3.1.-Características-numéricas">
+        2.3.1. Características numéricas
+      </h3>
+      <p>
+        Para trazar esta vista global del conjunto de datos, al menos para las características numéricas, puede usar la función <code>.plot()</code> de pandas y combinarla con los siguientes parámetros:
+      </p>
+      <ul>
+        <li>
+          <code>lw=0</code>: <code>lw</code> representa el ancho de línea. <code>0</code> significa que no queremos mostrar ninguna línea
+        </li>
+        <li>
+          <code>marker="."</code>: En lugar de líneas, le decimos a la gráfica que use <code>.</code> como marcadores para cada punto de datos
+        </li>
+        <li>
+          <code>subplots=True</code>: <code>subplots</code> le dice a <code>pandas</code> que trace cada característica en una subtrama separada
+        </li>
+        <li>
+          <code>layout=(-1, 4)</code>: este parámetro le dice a <code>pandas</code> cuántas filas y columnas usar para las subparcelas. <code>-1</code> significa "tantas como sea necesario", mientras que <code>2</code> significa usar 2 columnas por fila.
+        </li>
+        <li>
+          <code>figsize=(15, 30), markersize=1</code>: para asegurarse de que la figura sea lo suficientemente grande, recomendamos tener una altura de figura de aproximadamente el número de características y ajustar el <code>markersize</code> en consecuencia.
+        </li>
+      </ul>
+      <p>
+        Entonces, ¿cómo es esta trama?.
+      </p>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[19]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">df_X</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lw</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+          <span class="n">marker</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span>
+          <span class="n">subplots</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+          <span class="n">layout</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
+          <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span>
+          <span class="n">markersize</span> <span class="o">=</span> <span class="mi">1</span><span class="p">);</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/analisis_exploratorio_4_avanzado/image_0005.jpg">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell-inputWrapper">
+    <div class="jp-InputPrompt jp-InputArea-prompt">
+    </div>
+    <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+      <p>
+        Cada punto en esta figura es una muestra (es decir, una fila) en nuestro conjunto de datos y cada subparcela representa una característica diferente. El eje y muestra el valor de la característica, mientras que el eje x es el índice de la muestra. Este tipo de gráficos pueden brindarle muchas ideas para la limpieza de datos y EDA. Por lo general, tiene sentido invertir tanto tiempo como sea necesario hasta que esté satisfecho con el
+        resultado de esta visualización.
+      </p>
+      <h3 id="2.3.2.-Características-no-numéricas">
+        2.3.2. Características no numéricas
+      </h3>
+      <p>
+        Identificar <strong>entradas no deseadas</strong> o <strong>errores de registro</strong> en características no numéricas es un poco más complicado. Dado que en este punto, solo queremos investigar la calidad general del conjunto de datos. Entonces, lo que podemos hacer es echar un vistazo general a cuántos valores únicos contiene cada una de estas características no numéricas y con qué frecuencia se representa su categoría más frecuente.
+      </p>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[20]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="c1"># Extraer propiedades descriptivas de características no numéricas</span>
+<span class="n">df_X</span><span class="o">.</span><span class="n">describe</span><span class="p">(</span><span class="n">exclude</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;number&quot;</span><span class="p">,</span>
+                         <span class="s2">&quot;datetime&quot;</span><span class="p">])</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[20]:</div>
+          <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+            data-mime-type="text/html">
+            <div class="table-container">
+              <table class="dataframe">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>Accident_Index</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Local_Authority_(Highway)</th>
+                    <th>LSOA_of_Accident_Location</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>count</th>
+                    <td>319790</td>
+                    <td>319790</td>
+                    <td>319746</td>
+                    <td>319790</td>
+                    <td>298693</td>
+                  </tr>
+                  <tr>
+                    <th>unique</th>
+                    <td>123645</td>
+                    <td>365</td>
+                    <td>1439</td>
+                    <td>204</td>
+                    <td>25977</td>
+                  </tr>
+                  <tr>
+                    <th>top</th>
+                    <td>201543P296025</td>
+                    <td>14/02/2015</td>
+                    <td>17:30</td>
+                    <td>E10000017</td>
+                    <td>E01028497</td>
+                  </tr>
+                  <tr>
+                    <th>freq</th>
+                    <td>1332</td>
+                    <td>2144</td>
+                    <td>2969</td>
+                    <td>8457</td>
+                    <td>1456</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell-inputWrapper">
+    <div class="jp-InputPrompt jp-InputArea-prompt">
+    </div>
+    <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+      <p>
+        Hay varias formas de optimizar la investigación de calidad para cada característica no numérica individual. Ninguno de ellos es perfecto, y todos requerirán alguna investigación de seguimiento. Pero con el fin de mostrar una solución de este tipo, lo que podríamos hacer es recorrer todas las características no numéricas y trazar para cada una de ellas el número de ocurrencias por valor único.
+      </p>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[21]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="c1"># Crear objeto de figura con 3 subparcelas</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">ncols</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+                         <span class="n">nrows</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+                         <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+                        <span class="p">)</span>
+<span class="c1"># Identificar características no numéricas</span>
+<span class="n">df_non_numerical</span> <span class="o">=</span> <span class="n">df_X</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">exclude</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;number&quot;</span><span class="p">,</span>
+                                                 <span class="s2">&quot;datetime&quot;</span><span class="p">]</span>
+                                     <span class="p">)</span>
+<span class="c1"># Recorra las funciones y coloque cada subtrama en un objeto de eje matplotlib</span>
+<span class="k">for</span> <span class="n">col</span><span class="p">,</span> <span class="n">ax</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">df_non_numerical</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="n">axes</span><span class="o">.</span><span class="n">ravel</span><span class="p">()):</span>
+    <span class="c1"># Selecciona una sola característica y cuenta el número de ocurrencias por valor único</span>
+    <span class="n">df_non_numerical</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+        <span class="c1"># Traza esta información en una figura con el eje Y a escala logarítmica</span>
+        <span class="n">logy</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="n">col</span><span class="p">,</span>
+        <span class="n">lw</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">marker</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">ax</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">();</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/analisis_exploratorio_4_avanzado/image_0006.jpg">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell-inputWrapper">
+    <div class="jp-InputPrompt jp-InputArea-prompt">
+    </div>
+    <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+      <p>
+        Podemos ver que el accidente más frecuente (es decir, <code>Accident_Index</code>), tuvo más de 100 personas involucradas. Profundizando un poco más (es decir, observando las características individuales de este accidente), pudimos identificar que este accidente ocurrió el 24 de febrero de 2015 a las 11:55 en Cardiff, Reino Unido. Una búsqueda rápida en Internet revela que esta entrada corresponde a un accidente afortunadamente no letal que incluye un minibús lleno de jubilados.
+      </p>
+      <p>
+        La decisión de qué se debe hacer con entradas tan únicas se deja una vez más en manos subjetivas de la persona que analiza el conjunto de datos. Sin ninguna buena justificación del POR QUÉ, y solo con la intención de mostrarle el CÓMO, avancemos y eliminemos los 10 accidentes más frecuentes de este conjunto de datos.
+      </p>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[22]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="c1"># Recopilar valores de entrada de los 10 accidentes más frecuentes</span>
+<span class="n">accident_ids</span> <span class="o">=</span> <span class="n">df_non_numerical</span><span class="p">[</span><span class="s2">&quot;Accident_Index&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">index</span>
+
+<span class="c1"># Elimina accidentes de la lista &#39;accident_ids&#39;</span>
+<span class="n">df_X</span> <span class="o">=</span> <span class="n">df_X</span><span class="p">[</span><span class="o">~</span><span class="n">df_X</span><span class="p">[</span><span class="s2">&quot;Accident_Index&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">accident_ids</span><span class="p">)]</span>
+<span class="n">df_X</span><span class="o">.</span><span class="n">shape</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[22]:</div>
+          <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+            <pre>(317665, 60)</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell-inputWrapper">
+    <div class="jp-InputPrompt jp-InputArea-prompt">
+    </div>
+    <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+      <h3 id="2.4.-Conclusión-de-la-investigación-de-calidad.">
+        2.4. Conclusión de la investigación
+        de calidad.
+      </h3>
+      <p>
+        Al final de esta segunda investigación, deberíamos tener una mejor comprensión de la calidad general de nuestro conjunto de datos. Observamos duplicados, valores faltantes y entradas no deseadas o errores de registro. Es importante señalar que aún no discutimos cómo abordar los valores atípicos o faltantes restantes en el conjunto de datos. Esta es una tarea para la próxima investigación, pero no se tratará en este artículo.
+      </p>
+      <h2 id="3.-Investigación-de-contenido">
+        3. Investigación de contenido
+      </h2>
+      <p>
+        Hasta ahora, solo analizamos la estructura general y la calidad del conjunto de datos. Vayamos ahora un paso más allá y echemos un vistazo al contenido real. En un escenario ideal, tal investigación se haría característica por característica. Pero esto se vuelve muy engorroso una vez que tiene más de 20-30 funciones.
+      </p>
+      <p>
+        Por esta razón (y para que este artículo sea lo más breve posible), exploraremos tres enfoques diferentes que pueden brindarle una descripción general muy rápida del contenido almacenado en cada función y cómo se relacionan.
+      </p>
+      <h3 id="3.1.-Distribución-de-características">
+        3.1. Distribución de características
+      </h3>
+      <p>
+        Observar la distribución de valor de cada característica es una excelente manera de comprender mejor el contenido de sus datos. Además, puede ayudar a guiar su EDA y proporciona mucha información útil con respecto a la limpieza de datos y la transformación de características. La forma más rápida de hacer esto para las características numéricas es usando gráficas de histogramas. Afortunadamente, <code>pandas</code> viene con una función de histograma incorporada que permite trazar múltiples características a la vez.
+      </p>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[23]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="c1"># Traza el histograma para cada característica numérica en una subparcela separada</span>
+<span class="n">df_X</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">bins</span> <span class="o">=</span> <span class="mi">25</span><span class="p">,</span>
+          <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">25</span><span class="p">),</span>
+          <span class="n">layout</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+          <span class="n">edgecolor</span> <span class="o">=</span><span class="s2">&quot;black&quot;</span>
+         <span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">();</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/analisis_exploratorio_4_avanzado/image_0007.jpg">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell-inputWrapper">
+    <div class="jp-InputPrompt jp-InputArea-prompt">
+    </div>
+    <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+      <p>
+        Hay muchas cosas muy interesantes visibles en esta trama. Por ejemplo...
+      </p>
+      <p>
+        <strong>Entrada más frecuente</strong>: algunas características, como <code>Remolque_y_articulación</code> o <code>¿Era_el_vehículo_conducción_a la izquierda?</code> en su mayoría contienen entradas de una sola categoría. Usando la función <code>.mode()</code>, podríamos, por ejemplo, extraer la proporción de la entrada más frecuente para cada función y visualizar esa información.
+      </p>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[24]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="c1"># Recopila para cada característica la entrada más frecuente</span>
+<span class="n">most_frequent_entry</span> <span class="o">=</span> <span class="n">df_X</span><span class="o">.</span><span class="n">mode</span><span class="p">()</span>
+<span class="c1"># Comprueba para cada entrada si contiene la entrada más frecuente</span>
+<span class="n">df_freq</span> <span class="o">=</span> <span class="n">df_X</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="n">most_frequent_entry</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+                  <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span>
+                 <span class="p">)</span>
+<span class="c1"># Calcula la media de la ocurrencia &#39;is_most_frequent&#39;</span>
+<span class="n">df_freq</span> <span class="o">=</span> <span class="n">df_freq</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">ascending</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+<span class="c1"># Muestre las 5 funciones principales con la proporción más alta de contenido de valor singular</span>
+<span class="n">display</span><span class="p">(</span><span class="n">df_freq</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+<span class="c1"># Visualiza la tabla &#39;df_freq&#39;</span>
+<span class="n">df_freq</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">4</span><span class="p">));</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedText jp-OutputArea-output " data-mime-type="text/plain">
+            <pre>Pedestrian_Crossing-Human_Control    0.995259
+Was_Vehicle_Left_Hand_Drive?         0.990137
+Carriageway_Hazards                  0.983646
+Towing_and_Articulation              0.983221
+Vehicle_Location-Restricted_Lane     0.982088
+dtype: float64</pre>
+          </div>
+        </div>
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/analisis_exploratorio_4_avanzado/image_0008.jpg">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell-inputWrapper">
+    <div class="jp-InputPrompt jp-InputArea-prompt">
+    </div>
+    <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+      <p>
+        <strong>Distribuciones de valores sesgados</strong>: Ciertos tipos de características numéricas también pueden mostrar distribuciones fuertemente no gaussianas. En ese caso, es posible que desee pensar en cómo puede transformar estos valores para que tengan una distribución más normal. Por ejemplo, para datos sesgados a la derecha, podría usar una transformación de registro.
+      </p>
+      <h3 id="3.2.-Patrones-de-características">
+        3.2. Patrones de características
+      </h3>
+      <p>
+        El siguiente paso en la lista es la investigación de patrones específicos de características. El objetivo de esta parte es doble:
+      </p>
+      <ol>
+        <li>
+          ¿Podemos identificar patrones particulares dentro de una función que nos ayuden a decidir si es necesario descartar o modificar algunas entradas?
+        </li>
+        <li>
+          ¿Podemos identificar relaciones particulares entre características que nos ayuden a comprender mejor nuestro conjunto de datos?
+        </li>
+      </ol>
+      <p>
+        Pero antes de sumergirnos en estas dos preguntas, echemos un vistazo más de cerca a algunas funciones 'seleccionadas al azar'.
+      </p>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[25]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">df_X</span><span class="p">[[</span><span class="s2">&quot;Location_Northing_OSGR&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;1st_Road_Number&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;Journey_Purpose_of_Driver&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;Pedestrian_Crossing-Physical_Facilities&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lw</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+                                                       <span class="n">marker</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span>
+                                                       <span class="n">subplots</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                                                       <span class="n">layout</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+                                                       <span class="n">markersize</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
+                                                       <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">6</span><span class="p">));</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/analisis_exploratorio_4_avanzado/image_0009.jpg">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell-inputWrapper">
+    <div class="jp-InputPrompt jp-InputArea-prompt">
+    </div>
+    <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+      <p>
+        En la fila superior, podemos ver características con valores continuos (p. ej., aparentemente cualquier número de la recta numérica), mientras que en la fila inferior tenemos características con valores discretos (p. ej., 1, 2, 3 pero no 2,34).
+      </p>
+      <p>
+        Si bien hay muchas maneras de explorar nuestras características para patrones particulares, simplifiquemos nuestra opción al decidir que tratamos las características con menos de 25 características únicas como características <strong>discretas</strong> u <strong>ordinales</strong>, y las otras características como <em> funciones </em>continuas**.
+      </p>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[26]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="c1"># Crea una máscara para identificar características</span>
+<span class="c1"># numéricas con más o menos de 25 características únicas</span>
+<span class="n">cols_continuous</span> <span class="o">=</span> <span class="n">df_X</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">include</span> <span class="o">=</span> <span class="s2">&quot;number&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">25</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell-inputWrapper">
+    <div class="jp-InputPrompt jp-InputArea-prompt">
+    </div>
+    <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+      <h3 id="3.2.1.-Características-continuas">
+        3.2.1. Características continuas
+      </h3>
+      <p>
+        Ahora que tenemos una forma de seleccionar las características continuas, sigamos adelante y usemos el <code>pairplot</code> de seaborn para visualizar las relaciones entre estas características. <strong>Importante tener en cuenta</strong>, la rutina de tramas de pares de Seaborn puede tardar mucho tiempo en crear todas las tramas secundarias. Por lo tanto, recomendamos no usarlo para más de ~ 10 funciones a la vez.
+      </p>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[27]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="c1"># Cree un nuevo marco de datos que solo contenga las características continuas</span>
+<span class="n">df_continuous</span> <span class="o">=</span> <span class="n">df_X</span><span class="p">[</span><span class="n">cols_continuous</span><span class="p">[</span><span class="n">cols_continuous</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">]</span>
+<span class="n">df_continuous</span><span class="o">.</span><span class="n">shape</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[27]:</div>
+          <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+            <pre>(317665, 11)</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell-inputWrapper">
+    <div class="jp-InputPrompt jp-InputArea-prompt">
+    </div>
+    <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+      <p>
+        Dado que en nuestro caso solo tenemos 11 características, podemos continuar con el diagrama de pares. De lo contrario, usar algo como <code>df_continuous.iloc[:, :5]</code> podría ayudar a reducir la cantidad de características para trazar.
+      </p>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[29]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">pairplot</span><span class="p">(</span><span class="n">df_continuous</span><span class="p">,</span>
+             <span class="n">height</span> <span class="o">=</span> <span class="mf">1.5</span><span class="p">,</span>
+             <span class="n">plot_kws</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;s&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">});</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/analisis_exploratorio_4_avanzado/image_0010.jpg">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell-inputWrapper">
+    <div class="jp-InputPrompt jp-InputArea-prompt">
+    </div>
+    <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+      <p>
+        Parece haber una relación extraña entre algunas características en la esquina superior izquierda. <code>Location_Easting_OSGR</code> y <code>Longitude</code>, así como <code>Location_Easting_OSGR</code> y <code>Latitude</code> parecen tener una relación lineal muy fuerte.
+      </p>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[30]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">pairplot</span><span class="p">(</span>
+    <span class="n">df_X</span><span class="p">,</span> <span class="n">plot_kws</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;s&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">},</span>
+    <span class="n">hue</span> <span class="o">=</span> <span class="s2">&quot;Police_Force&quot;</span><span class="p">,</span>
+    <span class="n">palette</span> <span class="o">=</span> <span class="s2">&quot;Spectral&quot;</span><span class="p">,</span>
+    <span class="n">x_vars</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Location_Easting_OSGR&quot;</span><span class="p">,</span> <span class="s2">&quot;Location_Northing_OSGR&quot;</span><span class="p">,</span> <span class="s2">&quot;Longitude&quot;</span><span class="p">],</span>
+    <span class="n">y_vars</span> <span class="o">=</span> <span class="s2">&quot;Latitude&quot;</span>
+<span class="p">);</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/analisis_exploratorio_4_avanzado/image_0011.jpg">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell-inputWrapper">
+    <div class="jp-InputPrompt jp-InputArea-prompt">
+    </div>
+    <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+      <p>
+        Sabiendo que estas características contienen información geográfica, una EDA más profunda con respecto a la geolocalización podría ser fructífera. Sin embargo, por ahora dejaremos la investigación adicional de esta gráfica de pares para el lector curioso y continuaremos con la exploración de las características discretas y ordinales.
+      </p>
+      <h3 id="3.2.2.-Rasgos-discretos-y-ordinales">
+        3.2.2. Rasgos discretos y ordinales
+      </h3>
+      <p>
+        Encontrar patrones en las características discretas u ordinales es un poco más complicado. Pero también aquí, algunos pandas rápidos y trucos marinos pueden ayudarnos a obtener una visión general de nuestro conjunto de datos. Primero, seleccionemos las columnas que queremos investigar.
+      </p>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[31]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="c1"># Cree un nuevo marco de datos que no contenga las características continuas numéricas</span>
+<span class="n">df_discrete</span> <span class="o">=</span> <span class="n">df_X</span><span class="p">[</span><span class="n">cols_continuous</span><span class="p">[</span><span class="o">~</span><span class="n">cols_continuous</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">]</span>
+<span class="n">df_discrete</span><span class="o">.</span><span class="n">shape</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[31]:</div>
+          <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+            <pre>(317665, 44)</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell-inputWrapper">
+    <div class="jp-InputPrompt jp-InputArea-prompt">
+    </div>
+    <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+      <p>
+        Como siempre, hay varias formas de investigar todas estas características. Probemos un ejemplo, usando <code>stripplot()</code> de seaborn junto con un práctico bucle for <code>zip()</code> para subtramas.
+      </p>
+      <p>
+        <strong>Nota</strong>, para distribuir los valores en la dirección del eje y, debemos elegir una característica en particular (con suerte, informativa). Si bien la función 'correcta' puede ayudar a identificar algunos patrones interesantes, por lo general, cualquier función continua debería ser suficiente. El principal interés en este tipo de gráfico es ver cuántas muestras contiene cada valor discreto.
+      </p>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[33]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="c1"># Establecer el número de columnas y filas necesarias para trazar todas las características</span>
+<span class="n">n_cols</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">n_elements</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">df_discrete</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+<span class="n">n_rows</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">n_elements</span> <span class="o">/</span> <span class="n">n_cols</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;int&quot;</span><span class="p">)</span>
+
+<span class="c1"># Especifique y_value para distribuir datos (idealmente, una característica continua)</span>
+<span class="n">y_value</span> <span class="o">=</span> <span class="n">df_X</span><span class="p">[</span><span class="s2">&quot;Age_of_Driver&quot;</span><span class="p">]</span>
+
+<span class="c1"># Cree un objeto de figura con tantas filas y columnas como sea necesario</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">ncols</span> <span class="o">=</span> <span class="n">n_cols</span><span class="p">,</span>
+                         <span class="n">nrows</span> <span class="o">=</span> <span class="n">n_rows</span><span class="p">,</span>
+                         <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="n">n_rows</span> <span class="o">*</span> <span class="mf">2.5</span><span class="p">))</span>
+
+<span class="c1"># Recorra las funciones y coloque cada subtrama en un objeto de eje matplotlib</span>
+<span class="k">for</span> <span class="n">col</span><span class="p">,</span> <span class="n">ax</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">df_discrete</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="n">axes</span><span class="o">.</span><span class="n">ravel</span><span class="p">()):</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">stripplot</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="n">df_X</span><span class="p">,</span>
+                  <span class="n">x</span> <span class="o">=</span> <span class="n">col</span><span class="p">,</span>
+                  <span class="n">y</span> <span class="o">=</span> <span class="n">y_value</span><span class="p">,</span>
+                  <span class="n">ax</span> <span class="o">=</span> <span class="n">ax</span><span class="p">,</span>
+                  <span class="n">palette</span> <span class="o">=</span> <span class="s2">&quot;tab10&quot;</span><span class="p">,</span>
+                  <span class="n">size</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+                  <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.5</span>
+                 <span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">();</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/analisis_exploratorio_4_avanzado/image_0012.jpg">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell-inputWrapper">
+    <div class="jp-InputPrompt jp-InputArea-prompt">
+    </div>
+    <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+      <p>
+        Hay demasiadas cosas para comentar aquí, así que centrémonos en algunas. En particular, centrémonos en 6 características donde los valores aparecen en un patrón particular o donde algunas categorías parecen ser mucho menos frecuentes que otras. Y para agitar un poco las cosas, ahora usemos la función <code>Longitud</code> para estirar los valores sobre el eje y.
+      </p>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[34]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="c1"># Especifique las características de interés</span>
+<span class="n">selected_features</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Vehicle_Reference_df_res&quot;</span><span class="p">,</span>
+                     <span class="s2">&quot;Towing_and_Articulation&quot;</span><span class="p">,</span>
+                     <span class="s2">&quot;Skidding_and_Overturning&quot;</span><span class="p">,</span>
+                     <span class="s2">&quot;Bus_or_Coach_Passenger&quot;</span><span class="p">,</span>
+                     <span class="s2">&quot;Pedestrian_Road_Maintenance_Worker&quot;</span><span class="p">,</span>
+                     <span class="s2">&quot;Age_Band_of_Driver&quot;</span><span class="p">]</span>
+<span class="c1"># Crea una figura con subtramas de 3 x 2</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">ncols</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+                         <span class="n">nrows</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+                         <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+                        <span class="p">)</span>
+<span class="c1"># Recorra estas características y grafique</span>
+<span class="c1"># las entradas de cada característica contra `Latitude`</span>
+<span class="k">for</span> <span class="n">col</span><span class="p">,</span> <span class="n">ax</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">selected_features</span><span class="p">,</span> <span class="n">axes</span><span class="o">.</span><span class="n">ravel</span><span class="p">()):</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">stripplot</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="n">df_X</span><span class="p">,</span>
+                  <span class="n">x</span> <span class="o">=</span> <span class="n">col</span><span class="p">,</span>
+                  <span class="n">y</span> <span class="o">=</span> <span class="n">df_X</span><span class="p">[</span><span class="s2">&quot;Latitude&quot;</span><span class="p">],</span>
+                  <span class="n">ax</span> <span class="o">=</span> <span class="n">ax</span><span class="p">,</span>
+                  <span class="n">palette</span> <span class="o">=</span> <span class="s2">&quot;tab10&quot;</span><span class="p">,</span>
+                  <span class="n">size</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+                  <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.5</span>
+                 <span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">();</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/analisis_exploratorio_4_avanzado/image_0013.jpg">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell-inputWrapper">
+    <div class="jp-InputPrompt jp-InputArea-prompt">
+    </div>
+    <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+      <p>
+        Este tipo de gráficos ya son muy informativos, pero ocultan regiones donde hay muchos puntos de datos a la vez. Por ejemplo, parece haber una alta densidad de puntos en algunas de las parcelas en la latitud 52. Así que echemos un vistazo más de cerca con un gráfico apropiado, como <code>violineplot</code> (o <code>boxenplot</code> o <code>boxplot</code> para el caso). Y para ir un paso más allá, separemos también cada visualización por <code>Urban_or_Rural_Area</code>.
+      </p>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[35]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="c1"># Crea una figura con subtramas de 3 x 2</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">ncols</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+                         <span class="n">nrows</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+                         <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+                        <span class="p">)</span>
+<span class="c1"># Recorra estas características y grafique las</span>
+<span class="c1"># entradas de cada característica contra `Latitude`</span>
+<span class="k">for</span> <span class="n">col</span><span class="p">,</span> <span class="n">ax</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">selected_features</span><span class="p">,</span> <span class="n">axes</span><span class="o">.</span><span class="n">ravel</span><span class="p">()):</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">violinplot</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="n">df_X</span><span class="p">,</span>
+                   <span class="n">x</span> <span class="o">=</span> <span class="n">col</span><span class="p">,</span>
+                   <span class="n">y</span> <span class="o">=</span> <span class="n">df_X</span><span class="p">[</span><span class="s2">&quot;Latitude&quot;</span><span class="p">],</span>
+                   <span class="n">palette</span> <span class="o">=</span> <span class="s2">&quot;Set2&quot;</span><span class="p">,</span>
+                   <span class="n">split</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                   <span class="n">hue</span> <span class="o">=</span> <span class="s2">&quot;Urban_or_Rural_Area&quot;</span><span class="p">,</span>
+                   <span class="n">ax</span> <span class="o">=</span> <span class="n">ax</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">();</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/analisis_exploratorio_4_avanzado/image_0014.jpg">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell-inputWrapper">
+    <div class="jp-InputPrompt jp-InputArea-prompt">
+    </div>
+    <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+      <p>
+        ¡Interesante! Podemos ver que algunos valores en las características son más frecuentes en áreas urbanas que en áreas rurales (y viceversa). Además, como se sospecha, parece haber un pico de alta densidad en la latitud 51,5. Es muy probable que esto se deba a la región más densamente poblada alrededor de Londres (en 51.5074°).
+      </p>
+      <h3 id="3.3.-Relaciones-de-características">
+        3.3. Relaciones de características
+      </h3>
+      <p>
+        Por último, pero no menos importante, echemos un vistazo a las relaciones entre las características. Más precisamente, cómo se correlacionan. La forma más rápida de hacerlo es mediante la función <code>.corr()</code> de pandas. Así que sigamos adelante y calculemos la matriz de correlación característica a característica para todas las características numéricas.
+      </p>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[36]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="c1"># Calcula la correlación de características</span>
+<span class="n">df_corr</span> <span class="o">=</span> <span class="n">df_X</span><span class="o">.</span><span class="n">corr</span><span class="p">(</span><span class="n">method</span> <span class="o">=</span> <span class="s2">&quot;pearson&quot;</span><span class="p">)</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell-inputWrapper">
+    <div class="jp-InputPrompt jp-InputArea-prompt">
+    </div>
+    <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+      <p>
+        <strong>Nota</strong>: Según el conjunto de datos y el tipo de características (por ejemplo, características ordinales o continuas), es posible que desee utilizar el método <code>spearman</code> en lugar del método <code>pearson</code> para calcular la correlación. Mientras que la correlación de <strong>Pearson</strong> evalúa la relación lineal entre dos variables continuas, la correlación de <strong>Spearman</strong> evalúa la
+        relación monótona en función de los valores clasificados para cada función. Y para ayudar con la interpretación de esta matriz de correlación, usemos <code>.heatmap()</code> de seaborn para visualizarla.
+      </p>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[37]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="c1"># Crear etiquetas para la matriz de correlación</span>
+<span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">df_corr</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">0.75</span><span class="p">,</span>
+                  <span class="s2">&quot;S&quot;</span><span class="p">,</span>
+                  <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">df_corr</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">,</span>
+                           <span class="s2">&quot;M&quot;</span><span class="p">,</span>
+                           <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">df_corr</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">0.25</span><span class="p">,</span>
+                                    <span class="s2">&quot;W&quot;</span><span class="p">,</span>
+                                    <span class="s2">&quot;&quot;</span><span class="p">)</span>
+                          <span class="p">)</span>
+                 <span class="p">)</span>
+<span class="c1"># Trazar matriz de correlación</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">))</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">df_corr</span><span class="p">,</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df_corr</span><span class="p">)),</span>
+            <span class="n">square</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="n">center</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="n">annot</span> <span class="o">=</span> <span class="n">labels</span><span class="p">,</span>
+            <span class="n">fmt</span> <span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
+            <span class="n">linewidths</span> <span class="o">=</span> <span class="mf">.5</span><span class="p">,</span>
+            <span class="n">cmap</span> <span class="o">=</span> <span class="s2">&quot;vlag&quot;</span><span class="p">,</span>
+            <span class="n">cbar_kws</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;shrink&quot;</span><span class="p">:</span> <span class="mf">0.8</span><span class="p">}</span>
+           <span class="p">);</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/analisis_exploratorio_4_avanzado/image_0015.jpg">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell-inputWrapper">
+    <div class="jp-InputPrompt jp-InputArea-prompt">
+    </div>
+    <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+      <p>
+        Esto ya parece muy interesante. Podemos ver algunas correlaciones muy fuertes entre algunas de las características. Ahora, si está interesado en ordenar todas estas correlaciones diferentes, podría hacer algo como esto:
+      </p>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[38]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="c1">#  Creates a mask to remove the diagonal and the upper triangle.</span>
+<span class="n">lower_triangle_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tril</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">df_corr</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span>
+                              <span class="n">k</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;bool&quot;</span><span class="p">)</span>
+
+<span class="c1">#  Apilar todas las correlaciones, después de aplicar la máscara</span>
+<span class="n">df_corr_stacked</span> <span class="o">=</span> <span class="n">df_corr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">lower_triangle_mask</span><span class="p">)</span><span class="o">.</span><span class="n">stack</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">()</span>
+
+<span class="c1">#  Mostrando las correlaciones más bajas y más altas en la matriz de correlación</span>
+<span class="n">display</span><span class="p">(</span><span class="n">df_corr_stacked</span><span class="p">)</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedText jp-OutputArea-output " data-mime-type="text/plain">
+            <pre>Local_Authority_(District)  Longitude                -0.509343
+                            Location_Easting_OSGR    -0.502919
+Police_Force                Longitude                -0.471327
+                            Location_Easting_OSGR    -0.461112
+Speed_limit                 1st_Road_Class           -0.438931
+                                                        ...   
+Age_Band_of_Casualty        Age_of_Casualty           0.974397
+Age_Band_of_Driver          Age_of_Driver             0.979019
+Local_Authority_(District)  Police_Force              0.984819
+Longitude                   Location_Easting_OSGR     0.999363
+Latitude                    Location_Northing_OSGR    0.999974
+Length: 1485, dtype: float64</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell-inputWrapper">
+    <div class="jp-InputPrompt jp-InputArea-prompt">
+    </div>
+    <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+      <p>
+        Como puede ver, la investigación de las correlaciones de características puede ser muy informativa. Pero mirar todo a la vez a veces puede ser más confuso que útil. Por lo tanto, centrarse solo en una característica con algo como <code>df_X.corrwith(df_X["Speed_limit"])</code> podría ser un mejor enfoque.
+      </p>
+      <p>
+        Además, las correlaciones pueden ser engañosas si una característica todavía contiene muchos valores faltantes o valores atípicos extremos. Por lo tanto, siempre es importante asegurarse primero de que su matriz de funciones esté preparada correctamente antes de investigar estas correlaciones.
+      </p>
+      <h3 id="3.4.-Conclusión-de-la-investigación-de-contenido">
+        3.4. Conclusión de la investigación de contenido
+      </h3>
+      <p>
+        Al final de esta tercera investigación, deberíamos tener una mejor comprensión del contenido de nuestro conjunto de datos. Analizamos la distribución de valores, los patrones de características y las correlaciones de características. Sin embargo, estos ciertamente no son todos los pasos posibles de investigación de contenido y limpieza de datos que podría hacer. Los pasos adicionales serían, por ejemplo, la detección y liminación de valores atípicos, la ingeniería y transformación de características, y más.
+      </p>
+      <h2 id="Llevar-el-mensaje-a-casa">
+        Conclusiones Finales 
+      </h2>
+      <p>
+        ¡Un EDA adecuado y detallado lleva tiempo! Es un proceso muy iterativo que a menudo lo hace volver al principio, después de abordar otra falla en el conjunto de datos. ¡Esto es normal! Es la razón por la que a menudo decimos que el 80 % de cualquier proyecto de ciencia de datos es preparación de datos y EDA.
+      </p>
+      <p>
+        Pero también tenga en cuenta que un EDA en profundidad puede consumir mucho tiempo. Y el hecho de que algo parezca interesante no significa que deba darle seguimiento. Recuerde siempre para qué se utilizará el conjunto de datos y adapte sus investigaciones para respaldar ese objetivo. Y a veces también está bien, simplemente hacer una preparación y exploración de datos rápida y sucia. Para que pueda pasar a la parte de modelado de datos con bastante rapidez, y para establecer algunos modelos de referencia preliminares, realice una investigación de resultados informativos.
+      </p>
+    </div>
+  </div>
+</body>
+</html>

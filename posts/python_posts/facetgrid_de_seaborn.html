@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FacetGrid de Seaborn</title>
+  <link rel="shortcut icon" href="../../assets/images/python-logo.png" type="image/x-icon">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+  <link rel="stylesheet" href="python_css/python_new_posts.css" />
+</head>
+<body class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
+  <header>
+    <a href="../../index.html" class="logo">
+      <img src="../../assets/images/python-logo.png" alt="python-logo">
+      Volver al Inicio
+    </a>
+    <nav>
+      <a href="graficos_estadisticos_con_seaborn.html" class="nav-link">Anterior </a>
+      <a href="valores_atipicos_residuos.html" class="nav-link">Siguiente</a>
+    </nav>
+  </header>
+  <p style="font-size: medium;">
+    <strong>20 de Diciembre del 2022
+    </strong> | Jhonatan Montilla
+  </p>
+  <div class="jp-Cell-inputWrapper">
+    <div class="jp-InputPrompt jp-InputArea-prompt">
+    </div>
+    <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+      <h2 id="FacetGrid-Seaborn">
+        FacetGrid de Seaborn
+      </h2>
+      <p>
+        Es posible que hayas intentado utilizar gráficos con FacetGrid, son hermosos, flexibles pero pueden ser
+        difíciles de configurar, si eres analista de datos o científico de datos, necesitas compartir información y, a
+        veces, debe hacerlo rápidamente, en esta publicación obtendrás muchas visualizaciones geniales usando Seaborn, y
+        Pyplot (Matplotlib) y algunos trucos para mejorarlas. Usaremos datos aleatorios para el artículo, y usted puede
+        crear algunos rápidamente usando una combinación de enteros aleatorios y variables categóricas aleatorias, para
+        variables categóricas, usaré random.choice y para numeral random.randint
+      </p>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[1]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[2]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">days</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Mon&#39;</span><span class="p">,</span> <span class="s1">&#39;Tue&#39;</span><span class="p">,</span> <span class="s1">&#39;Wed&#39;</span><span class="p">,</span> <span class="s1">&#39;Thu&#39;</span><span class="p">,</span> <span class="s1">&#39;Fri&#39;</span><span class="p">,</span> <span class="s1">&#39;Sat&#39;</span><span class="p">,</span> <span class="s1">&#39;Sun&#39;</span><span class="p">]</span>
+<span class="n">months</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Jan&#39;</span><span class="p">,</span> <span class="s1">&#39;Feb&#39;</span><span class="p">,</span> <span class="s1">&#39;Sept&#39;</span><span class="p">]</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;device_id&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="n">n</span><span class="p">),</span>
+    <span class="s1">&#39;day&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">days</span><span class="p">,</span> <span class="n">n</span><span class="p">),</span>
+    <span class="s1">&#39;month&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">months</span><span class="p">,</span> <span class="n">n</span><span class="p">),</span>
+    <span class="s1">&#39;visits&#39;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">10000</span><span class="p">,</span><span class="n">n</span><span class="p">),</span>
+    <span class="s1">&#39;revenue&#39;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span><span class="mi">100000</span><span class="p">,</span><span class="n">n</span><span class="p">)</span>
+    <span class="p">})</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[3]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[3]:</div>
+          <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult"
+            data-mime-type="text/html">
+            <div class="table-container">
+              <table class="dataframe">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>device_id</th>
+                    <th>day</th>
+                    <th>month</th>
+                    <th>visits</th>
+                    <th>revenue</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>0</th>
+                    <td>2</td>
+                    <td>Thu</td>
+                    <td>Feb</td>
+                    <td>7285</td>
+                    <td>76809</td>
+                  </tr>
+                  <tr>
+                    <th>1</th>
+                    <td>1</td>
+                    <td>Tue</td>
+                    <td>Jan</td>
+                    <td>941</td>
+                    <td>86466</td>
+                  </tr>
+                  <tr>
+                    <th>2</th>
+                    <td>1</td>
+                    <td>Sun</td>
+                    <td>Feb</td>
+                    <td>9993</td>
+                    <td>73944</td>
+                  </tr>
+                  <tr>
+                    <th>3</th>
+                    <td>2</td>
+                    <td>Mon</td>
+                    <td>Feb</td>
+                    <td>1532</td>
+                    <td>15656</td>
+                  </tr>
+                  <tr>
+                    <th>4</th>
+                    <td>2</td>
+                    <td>Fri</td>
+                    <td>Sept</td>
+                    <td>814</td>
+                    <td>47630</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div class="jp-Cell-inputWrapper">
+    <div class="jp-InputPrompt jp-InputArea-prompt">
+    </div>
+    <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+      <h3 id="Define-tu-paleta">
+        Definir una Paleta de Colores
+      </h3>
+      <p>
+        La primera recomendación para crear gráficos que impactarán a tu audiencia es construir tu paleta de colores. Al
+        hacerlo, puede utilizar las pautas gráficas de su empresa y mostrar sus colores. Es sencillo de hacer, defina
+        sus colores usando la codificación HEX establezca esta paleta en seaborn.
+      </p>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[4]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">my_colors</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;#a7bed3&#39;</span><span class="p">,</span><span class="s1">&#39;#ffcaaf&#39;</span><span class="p">,</span><span class="s1">&#39;#f1ffc4&#39;</span><span class="p">,</span><span class="s1">&#39;#c6e2e9&#39;</span><span class="p">,</span><span class="s1">&#39;#dab894&#39;</span><span class="p">]</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">set_palette</span><span class="p">(</span><span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">(</span><span class="n">my_colors</span><span class="p">))</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="jp-Cell-inputWrapper">
+    <div class="jp-InputPrompt jp-InputArea-prompt">
+    </div>
+    <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+      <p>Puede hacer referencia a estos utilizando el parámetro de color de seaborn. Lo veremos en detalle en los
+        siguientes apartados.</p>
+
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[5]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">color</span> <span class="o">=</span> <span class="n">my_colors</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="jp-Cell-inputWrapper">
+    <div class="jp-InputPrompt jp-InputArea-prompt">
+    </div>
+    <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+      <h3 id="Ordenar-el-eje">Ordenar el eje</h3>
+      <p>Seaborn, por defecto, puede pedir un poco al azar, o al menos no a tu gusto. Esto es aún más cierto con
+        FaceGrid cuando se muestran varios gráficos. Afortunadamente, puede forzar los gráficos para que muestren el
+        orden que necesita.</p>
+      <h3 id="Usar-una-lista-definida">Usar una lista definida</h3>
+      <p>Para ordenar el eje del gráfico, puede utilizar el parámetro de orden de Seaborn.</p>
+
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[6]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">FacetGrid</span><span class="p">(</span><span class="n">df</span><span class="p">,</span>
+                   <span class="n">col</span> <span class="o">=</span> <span class="s1">&#39;device_id&#39;</span>
+                  <span class="p">)</span>
+
+<span class="n">ax</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">sns</span><span class="o">.</span><span class="n">countplot</span><span class="p">,</span>
+            <span class="s2">&quot;day&quot;</span><span class="p">,</span>
+            <span class="n">order</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Mon&#39;</span><span class="p">,</span> <span class="s1">&#39;Tue&#39;</span><span class="p">,</span> <span class="s1">&#39;Wed&#39;</span><span class="p">,</span> <span class="s1">&#39;Thu&#39;</span><span class="p">,</span> <span class="s1">&#39;Fri&#39;</span><span class="p">,</span> <span class="s1">&#39;Sat&#39;</span><span class="p">,</span> <span class="s1">&#39;Sun&#39;</span><span class="p">],</span>
+            <span class="n">color</span> <span class="o">=</span> <span class="n">my_colors</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+           <span class="p">);</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">rotation</span> <span class="o">=</span> <span class="mi">45</span><span class="p">)</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="jp-Cell-outputWrapper">
+
+
+      <div class="jp-OutputArea jp-Cell-outputArea">
+
+        <div class="jp-OutputArea-child">
+
+
+          <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[6]:</div>
+
+
+
+
+          <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+            <pre>&lt;seaborn.axisgrid.FacetGrid at 0x1ed666b81c8&gt;</pre>
+          </div>
+
+        </div>
+
+        <div class="jp-OutputArea-child">
+
+
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+
+
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/facetgrid_de_seaborn/image_0001.jpg">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell-inputWrapper">
+    <div class="jp-InputPrompt jp-InputArea-prompt">
+    </div>
+    <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+      <h3 id="Usando-otra-variable">Usando otra variable</h3>
+      <p>A veces no se puede saber el pedido de antemano. Por ejemplo, si desea ordenar por una métrica agregada,
+        digamos la suma de los ingresos.</p>
+      <p>Haremos uso de las variables categóricas para realizar esto:</p>
+      <ul>
+        <li>Primero, cree el nuevo pedido usando GroupBy. En nuestro caso, la suma de los ingresos.</li>
+        <li>Transforma la variable que quieras ordenar en una categoría. En nuestro caso, el día.</li>
+        <li>Luego dale a esta categoría un orden específico.</li>
+        <li>Utilice esta nueva columna como índice de su gráfico.</li>
+      </ul>
+      <p>En el siguiente código, extraje el pedido de la suma de los ingresos por día:</p>
+
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[7]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="c1"># 1) Definición del orden por los resultados de una agregación</span>
+
+<span class="n">order</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="p">[[</span><span class="s1">&#39;day&#39;</span><span class="p">,</span>
+                 <span class="s2">&quot;visits&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;day&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span> <span class="o">=</span> <span class="s2">&quot;visits&quot;</span><span class="p">,</span>
+                                                               <span class="n">ascending</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span>
+            <span class="p">)</span>
+
+<span class="c1"># 2/3) Transformar la variable ordenada en categoría</span>
+
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">],</span> <span class="n">categories</span> <span class="o">=</span> <span class="n">order</span><span class="p">,</span> <span class="n">ordered</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+
+<span class="n">outcome_counts</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;day&#39;</span><span class="p">,</span>
+                             <span class="s1">&#39;device_id&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s1">&#39;count&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+
+<span class="n">by_outcome</span> <span class="o">=</span> <span class="n">outcome_counts</span><span class="o">.</span><span class="n">pivot</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span> <span class="s1">&#39;device_id&#39;</span><span class="p">,</span>
+                                  <span class="n">values</span> <span class="o">=</span> <span class="s1">&#39;count&#39;</span><span class="p">,</span>
+                                  <span class="n">index</span> <span class="o">=</span> <span class="s1">&#39;day&#39;</span>
+                                 <span class="p">)</span>
+
+<span class="c1"># 4) Primer gráfico</span>
+
+<span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="n">ax1</span> <span class="o">=</span> <span class="n">by_outcome</span><span class="o">.</span><span class="n">div</span><span class="p">(</span><span class="n">by_outcome</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
+                     <span class="n">axis</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">stacked</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                                        <span class="n">ax</span> <span class="o">=</span> <span class="n">ax1</span><span class="p">,</span>
+                                        <span class="n">color</span> <span class="o">=</span> <span class="n">my_colors</span>
+                                       <span class="p">);</span>
+
+<span class="c1"># Segundo gráfico</span>
+
+<span class="n">ax2</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+<span class="n">ax2</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s1">&#39;day&#39;</span><span class="p">,</span>
+          <span class="s2">&quot;visits&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;day&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">ax</span> <span class="o">=</span> <span class="n">ax2</span><span class="p">,</span>
+                                                                  <span class="n">legend</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                                                                  <span class="n">color</span> <span class="o">=</span> <span class="n">my_colors</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                                                                 <span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">fig</span><span class="o">.</span><span class="n">figure</span><span class="p">)</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/facetgrid_de_seaborn/image_0002.jpg">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell-inputWrapper">
+    <div class="jp-InputPrompt jp-InputArea-prompt">
+    </div>
+    <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+      <h3 id="Mostrar-gráficos-en-una-cuadrícula">Mostrar gráficos en una cuadrícula</h3>
+      <p>Otra característica útil de seaborn es mostrar múltiples gráficos en una cuadrícula. Esto puede ser
+        particularmente relevante si desea comparar la densidad de numerosas variables o categorías.</p>
+      <p>Puedes hacerlo rápidamente usando la función FacetGrid. En el siguiente ejemplo, podemos analizar rápidamente
+        si el patrón de visitas es similar a lo largo de los días.</p>
+
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[8]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">font_scale</span> <span class="o">=</span> <span class="mf">0.8</span><span class="p">)</span>
+
+<span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">FacetGrid</span><span class="p">(</span><span class="n">df</span><span class="p">,</span>
+                   <span class="n">col</span> <span class="o">=</span> <span class="s1">&#39;day&#39;</span><span class="p">,</span>
+                   <span class="n">col_wrap</span> <span class="o">=</span> <span class="mi">4</span>
+                  <span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">,</span>
+            <span class="s2">&quot;visits&quot;</span><span class="p">,</span>
+            <span class="n">color</span> <span class="o">=</span> <span class="n">my_colors</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="n">kde</span> <span class="o">=</span> <span class="kc">True</span>
+           <span class="p">);</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/facetgrid_de_seaborn/image_0003.jpg">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell-inputWrapper">
+    <div class="jp-InputPrompt jp-InputArea-prompt">
+    </div>
+    <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+      <h3 id="Agregar-cálculos-personalizados-a-un-gráfico">Agregar cálculos personalizados a un
+        gráfico</h3>
+      <p>No todos los gráficos predeterminados de Seaborn satisfarán sus necesidades. Afortunadamente esto no es un
+        problema; ¡Son altamente personalizables!</p>
+      <p>A menudo necesito resaltar la Media o la Mediana de los datos que estoy analizando.</p>
+      <p>Para agregar la media a sus gráficos, puede usar la función personalizada a continuación. Esta pieza de código:
+      </p>
+      <ul>
+        <li>Mostrar el gráfico habitual</li>
+        <li>Calcule la media por gráficos e imprima una línea discontinua</li>
+      </ul>
+
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[9]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="c1"># 1) Muestra la gráfica</span>
+
+<span class="n">sns</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">font_scale</span> <span class="o">=</span> <span class="mf">0.8</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">FacetGrid</span><span class="p">(</span><span class="n">df</span><span class="p">,</span>
+                   <span class="n">col</span> <span class="o">=</span> <span class="s1">&#39;day&#39;</span><span class="p">,</span>
+                   <span class="n">col_wrap</span> <span class="o">=</span> <span class="mi">4</span>
+                  <span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">,</span>
+            <span class="s2">&quot;visits&quot;</span><span class="p">,</span>
+            <span class="n">color</span> <span class="o">=</span> <span class="n">my_colors</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="n">kde</span> <span class="o">=</span> <span class="kc">True</span>
+           <span class="p">)</span>
+<span class="c1"># 2) añadir una línea media/mediana</span>
+<span class="k">def</span> <span class="nf">custom</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">max_y</span> <span class="o">=</span> <span class="p">(</span><span class="nb">max</span><span class="p">([</span><span class="n">h</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">y</span><span class="p">,</span>
+                                                      <span class="n">color</span> <span class="o">=</span> <span class="n">my_colors</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">patches</span><span class="p">]</span>
+               <span class="p">)</span>
+           <span class="p">)</span>
+    <span class="n">ym</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">ym</span><span class="p">,</span>
+                <span class="n">color</span> <span class="o">=</span> <span class="n">my_colors</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                <span class="n">linestyle</span> <span class="o">=</span> <span class="s2">&quot;dashed&quot;</span>
+               <span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;mean: </span><span class="si">{</span><span class="n">y</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                 <span class="n">xy</span> <span class="o">=</span> <span class="p">(</span><span class="n">ym</span><span class="p">,</span>
+                       <span class="n">max_y</span> <span class="o">*</span> <span class="mf">0.9</span>
+                      <span class="p">),</span>
+                 <span class="n">ha</span> <span class="o">=</span> <span class="s2">&quot;right&quot;</span>
+                <span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">custom</span><span class="p">,</span> <span class="s2">&quot;visits&quot;</span><span class="p">)</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-OutputArea jp-Cell-outputArea">
+        <div class="jp-OutputArea-child">
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img src="python_images/facetgrid_de_seaborn/image_0004.jpg">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+     <meta charset="utf-8" />
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+     <title>Distribuciones de Probabilidad</title>
+     <link rel="shortcut icon" href="../../assets/images/python-logo.png" type="image/x-icon">
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+     <link rel="stylesheet" href="python_css/python_new_posts.css" />
+
+</head>
+
+<body class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
+     <header>
+          <a href="../../index.html" class="logo">
+               <img src="../../assets/images/python-logo.png" alt="python-logo">
+               Volver al Inicio
+          </a>
+          <nav>
+               <a href="analisis_exploratorio_4.html" class="nav-link">Anterior </a>
+               <a href="graficos_con_plotly.html" class="nav-link">Siguiente</a>
+          </nav>
+     </header>
+     <p style="font-size: medium;">
+          <strong>20 de Septiembre del 2022
+          </strong> | Jhonatan Montilla
+     </p>
+     <div class="jp-Cell-inputWrapper">
+          <div class="jp-InputPrompt jp-InputArea-prompt">
+          </div>
+          <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+               <h2 id="10-distribuciones-de-probabilidad-que-todo-científico-de-datos-debe-conocer.">
+                    Distribuciones de Probabilidad
+               </h2>
+               <p>
+                    La probabilidad es el concepto central fundamental que se encuentra en la ciencia de datos, y la distribución de probabilidad es el tema principal en probabilidad. Por lo tanto, para dominar la ciencia de datos, ¡debe familiarizarse y sentirse cómodo con esas 10 distribuciones de probabilidad!
+               </p>
+               <h3 id="1.-Distribución-de-Bernoulli:">
+                    1. Distribución de Bernoulli:
+               </h3>
+               <p>
+                    La distribución de Bernoulli es una distribución de probabilidad discreta que toma valor 1 con
+                    probabilidad p y 0 con probabilidad 1-p. Intuitivamente, se puede pensar que tenemos una moneda
+                    sesgada con una probabilidad p de salir adelante y 1-p de cruzar. La implementación de muestra
+                    usando <code>scipy.stats</code> está a continuación:
+               </p>
+          </div>
+     </div>
+     <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+          <div class="jp-Cell-inputWrapper">
+               <div class="jp-InputArea jp-Cell-inputArea">
+                    <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[24]:</div>
+                    <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+                         <div class="CodeMirror cm-s-jupyter">
+                              <div class=" highlight hl-ipython3">
+                                   <pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">bernoulli</span> <span class="c1"># Dist. Bernoulli</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">binom</span> <span class="c1"># Dist. Binomial</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">multinomial</span> <span class="c1"># Dist. Multinomial</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span> <span class="c1"># Dist. Normal</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">poisson</span> <span class="c1"># dist. Poisson</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">expon</span> <span class="c1"># Dist. Exponencial</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">beta</span> <span class="c1"># Dist. Beta</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">gamma</span> <span class="c1"># Dist. Gamma</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">chi2</span> <span class="c1"># Dist Chi2</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">t</span> <span class="c1"># Dist. T de Student</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">stats</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+</pre>
+                              </div>
+                         </div>
+                    </div>
+               </div>
+          </div>
+     </div>
+     <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+          <div class="jp-Cell-inputWrapper">
+               <div class="jp-InputArea jp-Cell-inputArea">
+                    <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[3]:</div>
+                    <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+                         <div class="CodeMirror cm-s-jupyter">
+                              <div class=" highlight hl-ipython3">
+                                   <pre><span></span><span class="c1"># Parámetro de probabilidad especificado</span>
+<span class="n">p</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">)]</span>
+<span class="c1"># Muestra según la distribución de Bernoulli</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">bernoulli</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span> <span class="s2">&quot;ob&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre>
+                              </div>
+                         </div>
+                    </div>
+               </div>
+          </div>
+          <div class="jp-Cell-outputWrapper">
+               <div class="jp-OutputArea jp-Cell-outputArea">
+                    <div class="jp-OutputArea-child">
+                         <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+                         <div class="jp-RenderedImage jp-OutputArea-output ">
+                              <img src="python_images/distribuciones_de_probabilidad/image_0001.jpg">
+                         </div>
+                    </div>
+               </div>
+          </div>
+     </div>
+     <div class="jp-Cell-inputWrapper">
+          <div class="jp-InputPrompt jp-InputArea-prompt">
+          </div>
+          <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+               <h3 id="2.-Distribución-Binomial">
+                    2. Distribución Binomial
+               </h3>
+               <p>
+                    La distribución binomial es una generalización de la distribución de Bernoulli. En la distribución
+                    de Bernoulli, lanzamos la moneda una vez, pero puede pensar en la distribución binomial como
+                    experimentos de lanzamiento de n veces con probabilidad p de ser cara y 1-p de ser cruz cada vez.
+                    También es una variable aleatoria discreta que toma valores de 0 a n, donde n es el número de
+                    experimentos realizados. La probabilidad de obtener un número k se calcula mediante la siguiente
+                    fórmula:
+               </p>
+               <p>
+                    En Python, podemos implementarlo de la siguiente manera:
+               </p>
+          </div>
+     </div>
+     <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+          <div class="jp-Cell-inputWrapper">
+               <div class="jp-InputArea jp-Cell-inputArea">
+                    <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[5]:</div>
+                    <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+                         <div class="CodeMirror cm-s-jupyter">
+                              <div class=" highlight hl-ipython3">
+                                   <pre><span></span><span class="c1"># Parámetro de probabilidad especificado</span>
+<span class="n">p</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">n</span><span class="p">)]</span>
+<span class="c1"># Muestra según distribución Binomial</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">binom</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span> <span class="s2">&quot;ob&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre>
+                              </div>
+                         </div>
+                    </div>
+               </div>
+          </div>
+          <div class="jp-Cell-outputWrapper">
+               <div class="jp-OutputArea jp-Cell-outputArea">
+                    <div class="jp-OutputArea-child">
+                         <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+                         <div class="jp-RenderedImage jp-OutputArea-output ">
+                              <img src="python_images/distribuciones_de_probabilidad/image_0002.jpg">
+                         </div>
+                    </div>
+               </div>
+          </div>
+     </div>
+     <div class="jp-Cell-inputWrapper">
+          <div class="jp-InputPrompt jp-InputArea-prompt">
+          </div>
+          <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+               <h3 id="3.-Distribución-multinomial">
+                    3. Distribución multinomial
+               </h3>
+               <p>
+                    Como sugiere el nombre, la distribución multinomial está relacionada con la distribución binomial:
+                    de hecho, es una generalización de la distribución multinomial. En la distribución Binomial, solo
+                    tenemos 2 resultados posibles. ¿Qué pasa si nuestros experimentos tienen múltiples resultados? Una
+                    analogía es como si la distribución binomial estuviera lanzando una moneda 10 veces, mientras que la
+                    distribución multinomial es como elegir un número al azar de 1,2,3 con la probabilidad de p1, p2,
+                    p3=(1-p1-p2) . Su función de masa de probabilidad se ve así:
+               </p>
+               <p>
+                    Donde n es el número de experimentos y x_i es el resultado del i-ésimo experimento.
+               </p>
+               <p>
+                    Nuevamente, la implementación de python parece útil con la ayuda de <code>scipy.stats</code>:
+               </p>
+          </div>
+     </div>
+     <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+          <div class="jp-Cell-inputWrapper">
+               <div class="jp-InputArea jp-Cell-inputArea">
+                    <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[7]:</div>
+                    <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+                         <div class="CodeMirror cm-s-jupyter">
+                              <div class=" highlight hl-ipython3">
+                                   <pre><span></span><span class="c1"># Parámetro de probabilidad especificado</span>
+<span class="n">p</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.3</span><span class="p">,</span><span class="mf">0.2</span><span class="p">,</span><span class="mf">0.5</span><span class="p">]</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">n</span><span class="p">)]</span>
+<span class="c1"># Muestra según distribución Multinomial</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">multinomial</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span> <span class="s2">&quot;ob&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre>
+                              </div>
+                         </div>
+                    </div>
+               </div>
+          </div>
+          <div class="jp-Cell-outputWrapper">
+               <div class="jp-OutputArea jp-Cell-outputArea">
+                    <div class="jp-OutputArea-child">
+                         <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+                         <div class="jp-RenderedImage jp-OutputArea-output ">
+                              <img src="python_images/distribuciones_de_probabilidad/image_0003.jpg">
+                         </div>
+                    </div>
+               </div>
+          </div>
+     </div>
+     <div class="jp-Cell-inputWrapper">
+          <div class="jp-InputPrompt jp-InputArea-prompt">
+          </div>
+          <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+               <p>
+                    Si compara la imagen de la distribución multinomial y la de la distribución binomial, se verán
+                    similares excepto por cada valor de x, tendremos múltiples resultados aleatorios en el caso de la
+                    distribución multinomial. (¿Por qué hay 3 valores para x = 0 y 2 para x = 8? Bueno, la razón es que
+                    tenemos un valor duplicado para x = 8 y matplotlib no puede mostrarlo).
+               </p>
+               <h3 id="4.-Distribución-Gaussiana">
+                    4. Distribución Gaussiana
+               </h3>
+               <p>
+                    Si hay una distribución más importante que necesita aprender, esa debe ser la distribución de Gauss.
+                    Me puede llevar un semestre entero contarte la magia de esta clase. Desafortunadamente, este no es
+                    el lugar para hacerlo. Debe recordar que la distribución gaussiana incluye 2 parámetros: valor medio
+                    y desviación estándar. Esos dos valores determinarán las perspectivas de comportamiento de la
+                    distribución. El valor medio decidirá dónde se centrará la distribución, mientras que el parámetro
+                    de desviación estándar decidirá qué tan dispersa se verá su distribución. La probabilidad de obtener
+                    x de su experimento se verá así:
+               </p>
+               <p>
+                    Aquí, σ será la desviación estándar y μ será el valor medio.
+               </p>
+               <p>
+                    Nuevamente, se sigue la implementación de Python:
+               </p>
+          </div>
+     </div>
+     <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+          <div class="jp-Cell-inputWrapper">
+               <div class="jp-InputArea jp-Cell-inputArea">
+                    <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[9]:</div>
+                    <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+                         <div class="CodeMirror cm-s-jupyter">
+                              <div class=" highlight hl-ipython3">
+                                   <pre><span></span><span class="n">x1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
+<span class="n">y1</span> <span class="o">=</span> <span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="n">y2</span> <span class="o">=</span> <span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">y3</span> <span class="o">=</span> <span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">y2</span><span class="p">)</span> 
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">y3</span><span class="p">)</span> 
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s2">&quot;Desviación estándar 3&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Desviación estándar 5&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;valor medio de 5&quot;</span><span class="p">],</span>
+           <span class="n">loc</span> <span class="o">=</span> <span class="s1">&#39;upper left&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre>
+                              </div>
+                         </div>
+                    </div>
+               </div>
+          </div>
+          <div class="jp-Cell-outputWrapper">
+               <div class="jp-OutputArea jp-Cell-outputArea">
+                    <div class="jp-OutputArea-child">
+                         <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+                         <div class="jp-RenderedImage jp-OutputArea-output ">
+                              <img src="python_images/distribuciones_de_probabilidad/image_0004.jpg">
+                         </div>
+                    </div>
+               </div>
+          </div>
+     </div>
+     <div class="jp-Cell-inputWrapper">
+          <div class="jp-InputPrompt jp-InputArea-prompt">
+          </div>
+          <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+               <p>
+                    En lugar de dibujar los resultados de los experimentos, decidí mostrarle la forma de la función de
+                    masa de probabilidad de la distribución gaussiana, o simplemente la curva. Es precioso, y veréis
+                    como cambia la distribución con los cambios de parámetros.
+               </p>
+               <h3 id="5.-Distribución-de-Poisson:">
+                    5. Distribución de Poisson:
+               </h3>
+               <p>
+                    La distribución de Poisson es una distribución discreta que describe la cantidad de eventos que
+                    ocurren en un tiempo fijo dada la frecuencia con la que ocurren esos eventos en promedio. Imagina
+                    que estás esperando un autobús. Se sabe que el autobús llega una vez cada 10 minutos en promedio, y
+                    desea saber cuál es la probabilidad de que vea la llegada de 2 autobuses en los próximos 20 minutos.
+                    Aquí es donde la distribución de Poisson puede ayudarlo.
+               </p>
+               <p>
+                    La fórmula para calcular k eventos ocurrirán en la unidad de tiempo futura es la siguiente, donde λ
+                    es la ocurrencia promedio.
+               </p>
+               <p>
+                    La implementación de Python de una distribución de Poisson está aquí:
+               </p>
+          </div>
+     </div>
+     <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+          <div class="jp-Cell-inputWrapper">
+               <div class="jp-InputArea jp-Cell-inputArea">
+                    <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[12]:</div>
+                    <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+                         <div class="CodeMirror cm-s-jupyter">
+                              <div class=" highlight hl-ipython3">
+                                   <pre><span></span><span class="c1"># Parámetro de probabilidad especificado</span>
+<span class="n">mu</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">n</span><span class="p">)]</span>
+<span class="c1"># Muestra según distribución de Poisson</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">poisson</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span> <span class="s2">&quot;ob&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre>
+                              </div>
+                         </div>
+                    </div>
+               </div>
+          </div>
+          <div class="jp-Cell-outputWrapper">
+               <div class="jp-OutputArea jp-Cell-outputArea">
+                    <div class="jp-OutputArea-child">
+                         <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+                         <div class="jp-RenderedImage jp-OutputArea-output ">
+                              <img src="python_images/distribuciones_de_probabilidad/image_0005.jpg">
+                         </div>
+                    </div>
+               </div>
+          </div>
+     </div>
+     <div class="jp-Cell-inputWrapper">
+          <div class="jp-InputPrompt jp-InputArea-prompt">
+          </div>
+          <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+               <p>
+                    El código anterior simula cuántas ocurrencias obtendrá si su promedio es de 2 ocurrencias por unidad
+                    de tiempo. El resultado es el siguiente:
+               </p>
+               <p>
+                    Puede ver que está fuertemente centrado en valores más bajos, pero ocasionalmente obtiene valores
+                    más altos. ¡También se puede aplicar a tu vida! Aunque en promedio, no sucederán demasiadas cosas
+                    buenas en un día, tendremos momentos en nuestras vidas en los que ocasionalmente sucederán muchas
+                    cosas buenas en un día. ¡Asi que preparate!
+               </p>
+               <h3 id="6.-Distribución-exponencial">
+                    6. Distribución exponencial
+               </h3>
+               <p>
+                    La distribución exponencial es en realidad la distribución dual de Poisson. En la distribución
+                    exponencial, nos interesa el valor del tiempo de espera hasta la siguiente ocurrencia, en lugar del
+                    número de ocurrencias. Para el ejemplo de la parada de autobús, ya no nos importa el número de
+                    llegadas en los próximos 20 minutos. Solo nos importa cuándo llegará el próximo autobús.
+               </p>
+               <p>
+                    La probabilidad del tiempo de espera x se puede calcular mediante la fórmula: (nótese que x no puede
+                    ser negativo).
+               </p>
+               <p>
+                    Su implementación en python se puede escribir de la siguiente manera:
+               </p>
+          </div>
+     </div>
+     <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+          <div class="jp-Cell-inputWrapper">
+               <div class="jp-InputArea jp-Cell-inputArea">
+                    <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[15]:</div>
+                    <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+                         <div class="CodeMirror cm-s-jupyter">
+                              <div class=" highlight hl-ipython3">
+                                   <pre><span></span><span class="c1"># Parámetro de probabilidad especificado</span>
+<span class="n">mu</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">n</span><span class="p">)]</span>
+<span class="c1"># Muestra según distribución Exponencial</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">expon</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">scale</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span> <span class="s2">&quot;ob&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre>
+                              </div>
+                         </div>
+                    </div>
+               </div>
+          </div>
+          <div class="jp-Cell-outputWrapper">
+               <div class="jp-OutputArea jp-Cell-outputArea">
+                    <div class="jp-OutputArea-child">
+                         <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+                         <div class="jp-RenderedImage jp-OutputArea-output ">
+                              <img src="python_images/distribuciones_de_probabilidad/image_0006.jpg">
+                         </div>
+                    </div>
+               </div>
+          </div>
+     </div>
+     <div class="jp-Cell-inputWrapper">
+          <div class="jp-InputPrompt jp-InputArea-prompt">
+          </div>
+          <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+               <p>
+                    Aquí, en promedio, esperaremos 2 minutos en promedio, y veremos nuestro tiempo de espera en el
+                    futuro 100 espera el autobús.
+               </p>
+               <p>
+                    Aún así, tendremos algo de mala suerte, pero la mayoría de los casos deberían durar menos de 4
+                    minutos.
+               </p>
+               <h3 id="7.-Distribución-beta">
+                    7. Distribución beta
+               </h3>
+               <p>
+                    La distribución beta es una distribución variable aleatoria continua sobre [0,1] interno. Tiene dos
+                    parámetros α y β. α y β, al igual que la media y la desviación estándar en la distribución
+                    gaussiana, controlan la forma de la distribución. Están relacionados con el tamaño y la media de la
+                    muestra, pero la relación en sí es más complicada que la “igualdad”. La distribución beta se usa a
+                    menudo en la inferencia bayesiana como distribución previa. Los detalles de eso no se pueden
+                    explicar en unas pocas oraciones, pero una descripción general de alto nivel de lo anterior es lo
+                    que espera antes de ejecutar los experimentos aleatorios. Por ejemplo, si vas a ver a un jugador de
+                    fútbol, no debes esperar que pueda marcar más de 5 goles en este partido. Probablemente 0.5–1.5
+                    puede ser un buen rango de conjetura para eso. El anterior puede considerarse como un "rango de
+                    adivinanzas" matemáticamente más riguroso. La función de densidad de probabilidad no es
+                    particularmente importante, por lo que solo se mostrará la implementación:
+               </p>
+          </div>
+     </div>
+     <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+          <div class="jp-Cell-inputWrapper">
+               <div class="jp-InputArea jp-Cell-inputArea">
+                    <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[17]:</div>
+                    <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+                         <div class="CodeMirror cm-s-jupyter">
+                              <div class=" highlight hl-ipython3">
+                                   <pre><span></span><span class="c1"># Parámetro de probabilidad especificado</span>
+<span class="n">a</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">b</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">n</span><span class="p">)]</span>
+<span class="c1"># Muestra según distribución Beta</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">beta</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span> <span class="s2">&quot;ob&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre>
+                              </div>
+                         </div>
+                    </div>
+               </div>
+          </div>
+          <div class="jp-Cell-outputWrapper">
+               <div class="jp-OutputArea jp-Cell-outputArea">
+                    <div class="jp-OutputArea-child">
+                         <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+                         <div class="jp-RenderedImage jp-OutputArea-output ">
+                              <img src="python_images/distribuciones_de_probabilidad/image_0007.jpg">
+                         </div>
+                    </div>
+               </div>
+          </div>
+     </div>
+     <div class="jp-Cell-inputWrapper">
+          <div class="jp-InputPrompt jp-InputArea-prompt">
+          </div>
+          <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+               <p>
+                    Un sorteo aleatorio de muestra según la distribución beta se verá así:
+               </p>
+               <ol>
+                    <li>
+                         Gamma Distribution:
+                    </li>
+               </ol>
+               <p>
+                    Like Beta distribution, Gamma distribution is also two-parameter continuous probability
+                    distribution, and it is also a good model for prior distribution. It is a conjugate prior function
+                    for many distributions: Gaussian distribution, Poisson distribution, etc. Some special case of gamma
+                    distribution includes the Exponential distribution mentioned above and the Chi-square distribution
+                    to be discussed after. Besides that, it also has an interesting link to information theory: among
+                    all some distributions, the Gamma distribution has the maximum entropy. If you are interested in the
+                    details, feel free to explore more!</p>
+               <p>
+                    Again, Python implementation:
+               </p>
+          </div>
+     </div>
+     <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+          <div class="jp-Cell-inputWrapper">
+               <div class="jp-InputArea jp-Cell-inputArea">
+                    <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[19]:</div>
+                    <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+                         <div class="CodeMirror cm-s-jupyter">
+                              <div class=" highlight hl-ipython3">
+                                   <pre><span></span><span class="c1"># Parámetro de probabilidad especificado</span>
+<span class="n">a</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">b</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">n</span><span class="p">)]</span>
+<span class="c1"># Muestra según distribución Gamma</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">gamma</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span> <span class="s2">&quot;ob&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre>
+                              </div>
+                         </div>
+                    </div>
+               </div>
+          </div>
+          <div class="jp-Cell-outputWrapper">
+
+               <div class="jp-OutputArea jp-Cell-outputArea">
+                    <div class="jp-OutputArea-child">
+                         <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+                         <div class="jp-RenderedImage jp-OutputArea-output ">
+                              <img src="python_images/distribuciones_de_probabilidad/image_0008.jpg">
+                         </div>
+                    </div>
+               </div>
+          </div>
+     </div>
+     <div class="jp-Cell-inputWrapper">
+          <div class="jp-InputPrompt jp-InputArea-prompt">
+          </div>
+          <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+               <p>
+                    Puede ver que la distribución Gamma tiene un patrón bastante diferente al de la distribución Beta.
+               </p>
+               <h3 id="9.-Distribución-chi-cuadrado:">
+                    9. Distribución chi-cuadrado:
+               </h3>
+               <p>
+                    La distribución Chi-cuadrado pertenece a una de las distribuciones más importantes y conocidas para
+                    científicos de datos y estadísticos. Aparece en numerosos entornos estadísticos: prueba de
+                    independencia de chi-cuadrado, calidad de ajuste de chi-cuadrado entre los datos y la distribución
+                    propuesta, prueba de razón de verosimilitud, etc. Su importancia no se puede subestimar. Es una
+                    distribución de probabilidad continua en (0, infinito), y también es un caso especial de
+                    distribución Gamma. El parámetro que toma se llama grados de libertad y, como es habitual, este
+                    parámetro determinará la forma de la distribución.
+               </p>
+               <p>
+                    En Python, podemos ver la forma de distribución:
+               </p>
+          </div>
+     </div>
+     <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+          <div class="jp-Cell-inputWrapper">
+               <div class="jp-InputArea jp-Cell-inputArea">
+                    <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[21]:</div>
+                    <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+                         <div class="CodeMirror cm-s-jupyter">
+                              <div class=" highlight hl-ipython3">
+                                   <pre><span></span><span class="c1"># Parámetro de probabilidad especificado</span>
+<span class="n">df1</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">df2</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">df3</span> <span class="o">=</span> <span class="mi">30</span>
+<span class="n">df4</span> <span class="o">=</span> <span class="mi">40</span>
+<span class="n">df5</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="c1"># calcular el rango que queremos mostrar</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span>
+                <span class="mi">30</span><span class="p">,</span>
+                <span class="mi">500</span><span class="p">)</span>
+<span class="c1"># Muestra según distribución chi2</span>
+<span class="n">rv1</span> <span class="o">=</span> <span class="n">chi2</span><span class="p">(</span><span class="n">df1</span><span class="p">)</span>
+<span class="n">rv2</span> <span class="o">=</span> <span class="n">chi2</span><span class="p">(</span><span class="n">df2</span><span class="p">)</span>
+<span class="n">rv3</span> <span class="o">=</span> <span class="n">chi2</span><span class="p">(</span><span class="n">df3</span><span class="p">)</span>
+<span class="n">rv4</span> <span class="o">=</span> <span class="n">chi2</span><span class="p">(</span><span class="n">df4</span><span class="p">)</span>
+<span class="n">rv5</span> <span class="o">=</span> <span class="n">chi2</span><span class="p">(</span><span class="n">df5</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">rv1</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;df = 10&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">rv2</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="s1">&#39;g&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;df = 20&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">rv3</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;df = 30&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">rv4</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="s1">&#39;black&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;df = 40&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">rv5</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="s1">&#39;yellow&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;df = 50&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper left&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre>
+                              </div>
+                         </div>
+                    </div>
+               </div>
+          </div>
+          <div class="jp-Cell-outputWrapper">
+               <div class="jp-OutputArea jp-Cell-outputArea">
+                    <div class="jp-OutputArea-child">
+                         <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+                         <div class="jp-RenderedImage jp-OutputArea-output ">
+                              <img src="python_images/distribuciones_de_probabilidad/image_0009.jpg">
+                         </div>
+                    </div>
+               </div>
+          </div>
+     </div>
+     <div class="jp-Cell-inputWrapper">
+          <div class="jp-InputPrompt jp-InputArea-prompt">
+          </div>
+          <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+               <p>
+                    Otra cosa que los científicos de datos usan a menudo es la prueba de Chi-cuadrado, que se usa
+                    especialmente para calcular la aptitud de los datos de muestreo dada la distribución propuesta o la
+                    prueba de independencia. En scipy.stats, podemos calcular fácilmente la estadística de prueba
+                    Chi-squared mediante scipy.stats.chisquare(your_sample, added_distribution) . ¡Es súper fácil de
+                    usar!
+               </p>
+               <h3 id="10.-Distribución-t-de-Student">
+                    10. Distribución t de Student
+               </h3>
+               <p>
+                    Finalmente, llegamos a la distribución t de Student. Es otra distribución muy utilizada en pruebas
+                    estadísticas. Se originó a partir del problema de estimar el parámetro medio de la distribución
+                    gaussiana con un parámetro de desviación estándar desconocido dado un conjunto de datos de muestra.
+                    Posteriormente, se aplica ampliamente a muchos entornos estadísticos, como la construcción de
+                    intervalos de confianza y el análisis de regresión. Su forma se parece mucho a la distribución
+                    gaussiana con la excepción de que tiene colas más pesadas (más dispersas que la distribución
+                    normal). Al igual que la distribución de Chi-cuadrado, también incluye un parámetro, generalmente
+                    también denominado grado de libertad. Como era de esperar, el DoF también controla la forma de la
+                    distribución.
+               </p>
+               <p>
+                    Una visualización de Python es la siguiente:
+               </p>
+          </div>
+     </div>
+     <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+          <div class="jp-Cell-inputWrapper">
+               <div class="jp-InputArea jp-Cell-inputArea">
+                    <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[23]:</div>
+                    <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+                         <div class="CodeMirror cm-s-jupyter">
+                              <div class=" highlight hl-ipython3">
+                                   <pre><span></span><span class="c1"># Parámetro de probabilidad especificado</span>
+<span class="n">df1</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">df2</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">df3</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">df4</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="c1"># calcular el rango que queremos mostrar</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span>
+                <span class="mi">10</span><span class="p">,</span>
+                <span class="mi">200</span><span class="p">)</span>
+<span class="c1"># Muestra según distribución t</span>
+<span class="n">rv1</span> <span class="o">=</span> <span class="n">t</span><span class="p">(</span><span class="n">df1</span><span class="p">)</span>
+<span class="n">rv2</span> <span class="o">=</span> <span class="n">t</span><span class="p">(</span><span class="n">df2</span><span class="p">)</span>
+<span class="n">rv3</span> <span class="o">=</span> <span class="n">t</span><span class="p">(</span><span class="n">df3</span><span class="p">)</span>
+<span class="n">rv4</span> <span class="o">=</span> <span class="n">t</span><span class="p">(</span><span class="n">df4</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">rv1</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;df = 10&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">rv2</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="s1">&#39;g&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;df = 20&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">rv3</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;df = 30&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">rv4</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="s1">&#39;black&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;df = 40&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="s1">&#39;yellow&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Gaussian&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper left&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre>
+                              </div>
+                         </div>
+                    </div>
+               </div>
+          </div>
+          <div class="jp-Cell-outputWrapper">
+               <div class="jp-OutputArea jp-Cell-outputArea">
+                    <div class="jp-OutputArea-child">
+                         <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+                         <div class="jp-RenderedImage jp-OutputArea-output ">
+                              <img src="python_images/distribuciones_de_probabilidad/image_0010.jpg">
+                         </div>
+                    </div>
+               </div>
+          </div>
+     </div>
+     <div class="jp-Cell-inputWrapper">
+          <div class="jp-InputPrompt jp-InputArea-prompt">
+          </div>
+          <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+               <p>
+                    Deliberadamente puse la distribución gaussiana en la imagen para que pueda tener una visión clara de
+                    su diferencia. Se puede ver que la distribución gaussiana tiene colas más pequeñas que la
+                    distribución t, así como picos más grandes.
+               </p>
+               <p>
+                    Al igual que en la distribución Chi-cuadrado, también podemos hacer una prueba t usando Python. En
+                    el siguiente fragmento de código, hacemos una prueba t para comprobar si la muestra proviene de dos
+                    distribuciones diferentes o no.
+               </p>
+          </div>
+     </div>
+     <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+          <div class="jp-Cell-inputWrapper">
+               <div class="jp-InputArea jp-Cell-inputArea">
+                    <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[25]:</div>
+                    <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+                         <div class="CodeMirror cm-s-jupyter">
+                              <div class=" highlight hl-ipython3">
+                                   <pre><span></span><span class="n">seed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">()</span>
+<span class="c1"># Verdad básica: muestreo de la misma distribución</span>
+<span class="n">rvs1</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">loc</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+                      <span class="n">scale</span> <span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                      <span class="n">size</span> <span class="o">=</span> <span class="mi">500</span><span class="p">,</span>
+                      <span class="n">random_state</span> <span class="o">=</span> <span class="n">seed</span>
+                     <span class="p">)</span>
+<span class="n">rvs2</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">loc</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+                      <span class="n">scale</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+                      <span class="n">size</span> <span class="o">=</span> <span class="mi">500</span><span class="p">,</span>
+                      <span class="n">random_state</span> <span class="o">=</span> <span class="n">seed</span>
+                     <span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">ttest_ind</span><span class="p">(</span><span class="n">rvs1</span><span class="p">,</span> <span class="n">rvs2</span><span class="p">))</span>
+<span class="c1"># Ejemplo de respuesta, varía mucho No se puede decir</span>
+<span class="c1"># nada definitivo del resultado dado el valor p</span>
+<span class="c1"># Ttest_indResult(statistic=-0.7362272777889193,</span>
+<span class="c1"># pvalue=0.46176540317360304)</span>
+<span class="n">rvs3</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">loc</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+                      <span class="n">scale</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+                      <span class="n">size</span> <span class="o">=</span> <span class="mi">500</span><span class="p">,</span>
+                      <span class="n">random_state</span> <span class="o">=</span> <span class="n">seed</span>
+                     <span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">ttest_ind</span><span class="p">(</span><span class="n">rvs1</span><span class="p">,</span> <span class="n">rvs3</span><span class="p">))</span>
+
+<span class="c1"># Respuesta de muestra, varía mucho Podemos decir con</span>
+<span class="c1"># mucha confianza que dos datos no son de la misma</span>
+<span class="c1"># distribución</span>
+<span class="c1"># Ttest_indResult(statistic = 8.065543453125999,</span>
+<span class="c1"># pvalue = 2.078369795336982e-15)</span>
+</pre>
+                              </div>
+                         </div>
+                    </div>
+               </div>
+          </div>
+          <div class="jp-Cell-outputWrapper">
+               <div class="jp-OutputArea jp-Cell-outputArea">
+                    <div class="jp-OutputArea-child">
+                         <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+                         <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+                              <pre>Ttest_indResult(statistic=0.15019938905647343, pvalue=0.8806376574425193)
+Ttest_indResult(statistic=7.761945071408706, pvalue=2.0640142442347023e-14)
+</pre>
+                         </div>
+                    </div>
+               </div>
+          </div>
+     </div>
+     <div class="jp-Cell-inputWrapper">
+          <div class="jp-InputPrompt jp-InputArea-prompt">
+          </div>
+          <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+               <p>
+                    Puede ver en los comentarios que el t-square es bastante preciso en el resultado. (Aquí, el valor p
+                    puede determinar la confianza de la prueba, y vemos que la prueba t nos dice que rvs1 y rvs2 no son
+                    del mismo lugar, lo que coincide con la verdad).
+               </p>
+          </div>
+     </div>
+</body>
+
+</html>
