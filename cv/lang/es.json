@@ -1,0 +1,222 @@
+{
+    "menu":{
+        "menu-profile": "Perfil",
+        "menu-experiences": "Experiencia",
+        "menu-skills": "Habilidades",
+        "menu-education":"Educación"
+    },
+    "profile": {
+        "profile-language-title":"Idiomas",
+        "profile-language-language-1":"<img class='languages-flags-img' src='../img/flags/flag_eng.svg' alt='england-flag'>Competencia profesional completa",
+        "profile-language-language-2":"<img class='languages-flags-img' src='../img/flags/flag_ger.svg' alt='german-flag'>Aprendíz",
+        "profile-language-language-3":"<img class='languages-flags-img' src='../img/flags/flag_esp.svg' alt='german-flag'>Nativo",
+        "profile-title": "MBA, Ingeniero de Datos, Análisis de Datos, Visualización de Datos, Gestor, Coordinador y Modelador de Proyectos BIM, DevOps, Modelador 3D e Ingeniero en Diseño Industrial",
+
+        "profile-resume-bi": "Jhonatan es un profesional con más de veinte años desarrollando y gestionando todo tipo de proyectos, se ha desempeñado como gerente de proyectos con liderazgo, desarrollando proyectos de aplicaciones web y móviles.<br><br>Su experiencia incluye implementación de plataformas de telecomunicaciones, implementación de plataformas audiovisuales, desarrollo de aplicaciones web y móviles, adquirió conocimientos y habilidades en muchos lenguajes de programación, que se detallan a continuación en la sección de habilidades.",
+        "profile-resume-bim": "Jhonatan es un profesional con más de veinte años desarrollando y gestionando todo tipo de proyectos, se ha desempeñado como gerente de proyectos con liderazgo, desarrollando proyectos de aplicaciones web y móviles.<br><br>Es un profesional experto en Building Information Modeling (BIM), ha desempeñado diferentes roles utilizando la metodología BIM como Modelador BIM, Coordinador BIM y Gestor BIM a través de la plataforma Autodesk BIM-360.",
+
+        "profile-knowledge-title": "Conocimientos",
+
+        "profile-knowledge-details-bi":"Procesos de desarrollo y gestión de proyectos bajo metodologías PMI con liderazgo y metodologías ágiles como Scrum y Kanban.<br><br> Uso de lenguajes de bases de datos SQL y NoSQL, recursos informáticos en el despliegue de servicios en la nube. Creación de modelos estadísticos para predicción de eventos en lenguaje R, creación de redes neuronales usando técnicas de aprendizaje automático usando lenguaje Python, manejo de datos del sistema HDFS (Hadoop) usando Spark (Pyspark), análisis y visualización de datos a través de Microsoft Power BI y Tableau.",
+        "profile-knowledge-details-bim":"Procesos de desarrollo y gestión de proyectos bajo metodologías PMI y BIM con liderazgo, así como también, metodologías ágiles como Scrum y Kanban.<br><br>Automatización de procesos BIM mediante lenguaje de scripting de nodos en <strong>Dynamo</strong> y <strong>Revit API</strong> con lenguaje de programación Python.",
+
+        "profile-resume-download-bi":"<a class='profile-btn-link' href='jhonatan_montilla_resumen_bi_esp.pdf' download>Descargar Resumen</a>",
+        "profile-resume-download-bim":"<a class='profile-btn-link' href='jhonatan_montilla_resumen_bim_esp.pdf' download>Descargar Resumen</a>",
+
+        "profile-contact-info-title": "Información de Contacto",
+        "profile-contact-info-email": "<strong>E-mail:</strong> jhonmont@gmail.com",
+        "profile-contact-info-mobile": "",
+        "portfolio-title":"Publicaciones / Portafolios",
+        "portfolio-portfolio-1":"Pubicaciones, Análisis de Datos",
+        "portfolio-portfolio-2":"Portafolio, 3D & Gestor/Coordinador BIM",
+        "profile-contact-personal-info": "Información Personal",
+        "profile-contact-address": "<strong>Ubicación:</strong> <img class='personal-info-flag-img' src='../img/flags/flag_chi.svg' alt='chile_flag'> Santiago, Chile"
+    },
+    "experiences": {
+        "experiences-title": "Experiencia Laboral",
+
+        "experience-jobtitle-1":"Ingeniero Proyectista",
+        "experience-companyname-1":"<img class='experience-company-logo' src='../img/enterprises/nokia_logo.svg' alt='nokia_logo'>Nokia - Venezuela",
+        "experience-jobdate-1":"Enero 2002 a Abril 2004",
+        "experience-jobdescription-1":"Responsable de establecer los registros iniciales del estado del sitio, actualizar los detalles de los registros antiguos, como los dibujos de AutoCAD que indican la ubicación física, la configuración del equipo de telecomunicaciones y garantizar su correcta instalación.",
+
+        "experience-jobtitle-2":"Ingeniero de Equipamiento ",
+        "experience-companyname-2":"<img class='experience-company-logo' src='../img/enterprises/nokia_logo.svg' alt='nokia_logo'>Nokia - Venezuela",
+        "experience-jobdate-2":"Mayo 2004 a Agosto 2006",
+        "experience-jobdescription-2":"Responsable de verificar los requisitos del cliente, revisar las órdenes de compra, realizar inspecciones del sitio para la colocación del equipo, establecer el espacio requerido para la instalación del equipo de telecomunicaciones, completar la configuración del equipo y garantizar que se ordene la adquisición correcta de materiales.",
+
+        "experience-jobtitle-3":"Analista Financiero de Proyectos",
+        "experience-companyname-3":"<img class='experience-company-logo' src='../img/enterprises/nokia_logo.svg' alt='nokia_logo'>Nokia - Venezuela",
+        "experience-jobdate-3":"Septiembre 2006 a Octubre 2008",
+        "experience-jobdescription-3":"Responsable de dirigir las actividades contables y financieras, analizar la estabilidad de los proyectos económicos de la empresa y proporcionar información financiera (sobre costos, productividad, márgenes y gastos de la empresa) que permita al directorio tomar decisiones presupuestarias y de inversión.",
+
+        "experience-jobtitle-4":"Gerente de Proyectos - Desarrollo de Aplicaciones",
+        "experience-companyname-4":"<img class='experience-company-logo' src='../img/enterprises/strix_logo.svg' alt='strix_logo'>Strix Technologies, C.A. - Venezuela",
+        "experience-jobdate-4":"Noviembre 2008 a Diciembre 2015",
+        "experience-jobdescription-4":"Responsable de ser parte integral de la estrategia y el desarrollo, supervisando a los miembros del equipo de desarrolladores, estableciendo procedimientos y procesos siguiendo la metodología de gestión de proyectos de PMI, estableciendo una visión objetiva con un estilo de liderazgo activo, brindando orientación a través de procedimientos y lineamientos para desarrollar un ambiente de ganadores, estableciendo una comunicación efectiva entre los miembros del proyecto y las partes interesadas sobre la planificación de proyectos, análisis de riesgos, mitigación de riesgos, plan de ejecución y cierre del proyecto con lecciones aprendidas.",
+
+        "experience-jobtitle-5":"Profesor de Postgrado",
+        "experience-companyname-5":"<img class='experience-company-logo' src='../img/education/unimet_logo.svg' alt='unimet_logo'>Universidad Metropolitana (UNIMET) - Venezuela",
+        "experience-jobdate-5":"Mayo 2012 a Diciembre 2012",
+        "experience-jobdescription-5":"Profesor de procesos de gestión de proyectos, herramientas profesionales de gestión de proyectos en programas académicos de especializaciones y maestría.",
+
+        "experience-jobtitle-6":"Modelador / Coordinador BIM-MEP",
+        "experience-companyname-6":"<img class='experience-company-logo' src='../img/enterprises/freelance_logo.svg' alt='freelance_logo'>Freelance - Venezuela",
+        "experience-jobdate-6":"Enero 2016 a Diciembre 2016",
+        "experience-jobdescription-6":"Modelado de modelos Revit arquitectónicos, estructurales, mecánicos, eléctricos y de plomería (MEP) para construcción, creando listado de cantidades de elementos y especificaciones técnicas de materiales.",
+
+        "experience-jobtitle-7":"Modelador / Coordinador BIM-MEP",
+        "experience-companyname-7":"<img class='experience-company-logo' src='../img/enterprises/voyansi_logo.svg' alt='voyansi_logo'>AEC Resources (Voyansi) - Argentina",
+        "experience-jobdate-7":"Enero 2017 a Junio 2017",
+        "experience-jobdescription-7":"Revisar y estimar alcances de contratos, información CAD, modelos arquitectónicos, estructurales y MEP para obtener modelos BIM Revit coordinados para la construcción, crear listas de cantidades de elementos, simulaciones de cronogramas de proyectos BIM (4D-5D) y mostrar resultados para clientes en Estados Unidos y Australia a través de presentaciones remotas.",
+        
+        "experience-jobtitle-8":"Modelador / Coordinador BIM-MEP",
+        "experience-companyname-8":"<img class='experience-company-logo' src='../img/enterprises/freelance_logo.svg' alt='freelance_logo'>Freelance - Chile",
+        "experience-jobdate-8":"Julio 2017 a Diciembre 2017",
+        "experience-jobdescription-8":"Modelado y coordinación de modelos Revit arquitectónicos, estructurales, mecánicos, eléctricos y de plomería (MEP), generando lista de cantidades de elementos y especificaciones técnicas de materiales.",
+
+        "experience-jobtitle-9":"Modelador / Coordinador BIM-MEP",
+        "experience-companyname-9":"<img class='experience-company-logo' src='../img/enterprises/arqz_logo.svg' alt='arqz_logo'>ARQZ BIM, Ltda - Chile",
+        "experience-jobdate-9":"Enero 2018 a Junio 2018",
+        "experience-jobdescription-9":"Modelado y coordinación de modelos Revit arquitectónicos, estructurales, mecánicos, eléctricos y de plomería (MEP), creando listas de cantidades de elementos y especificaciones técnicas de materiales, y sesiones para la detección de interferencias entre elementos de construcción para obtener modelos coordinados.",
+
+        "experience-jobtitle-10":"Coordinador BIM-MEP",
+        "experience-companyname-10":"<img class='experience-company-logo' src='../img/enterprises/pry_logo.svg' alt='pry_logo'>Pry Ingeniería, S.A. - Chile",
+        "experience-jobdate-10":"Julio 2018 a Abril 2020",
+        "experience-jobdescription-10":"Revisar y estimar alcances de contratos, información CAD, modelos arquitectónicos, estructurales y MEP para la industria de la construcción, creación de listas de cantidades de elementos, simulaciones de programación de proyectos BIM (4D), sesiones de detección de colisiones de sistemas para obtener modelos coordinados en Revit para clientes como Sodimac, Falabella, WeWork, Aeropuerto Internacional de Chile y otros.",
+
+        "experience-jobtitle-11":"Ingeniero Consultor en Análisis de Datos",
+        "experience-companyname-11":"<img class='experience-company-logo' src='../img/enterprises/freelance_logo.svg' alt='freelance_logo'>Freelance - Chile",
+        "experience-jobdate-11":"Mayo 2020 a Septiembre 2020",
+        "experience-jobdescription-11":"Creación de modelos de predicción y clasificación utilizando lenguaje Python, limpieza y análisis de datos para campañas publicitarias, recolección y transformación de datos para investigación de mercados. Generador de informes de asistencia de Power BI mediante orígenes de datos SQL (MySQL). Tutoría para el análisis básico de datos de Python de archivos CSV de gran tamaño. Análisis de datos de marketing digital, limpieza y análisis de datos sin procesar de Excel para campañas de anuncios en redes sociales con métricas adicionales calculadas (ingeniería de datos). Obtención y transformación de datos para análisis competitivos e investigación de mercados, información general de los competidores con datos detallados, como el tráfico del sitio web y los precios de ciertos productos. Encuesta de segmentos utilizando lenguaje de programa estadístico R.",
+
+        "experience-jobtitle-12":"Gestor / Coordinador BIM-MEP",
+        "experience-companyname-12":"<img class='experience-company-logo' src='../img/enterprises/buildbim_logo.svg' alt='buildbim_logo'>BuildBIM - Chile",
+        "experience-jobdate-12":"Octubre 2020 a Diciembre 2021",
+        "experience-jobdescription-12":"Revisar y estimar alcances de contratos, información CAD, modelos arquitectónicos, estructurales y MEP para obtener modelos BIM Revit coordinados para la construcción, crear listas de cantidades de elementos, simulaciones de cronogramas de proyectos BIM (4D-5D) y mostrar resultados para clientes en Nueva Zelanda. Australia y otros del extranjero a través de presentaciones y reuniones remotas.",
+
+        "experience-jobtitle-13":"Ingeniero de Vizualización de Datos @ Cencosud",
+        "experience-companyname-13":"<img class='experience-company-logo' src='../img/enterprises/acl_logo.svg' alt='acl_logo'>ACL Tecnología - Chile",
+        "experience-jobdate-13":"Enero 2022 a Agosto 2022",
+        "experience-jobdescription-13":"Generador de informes de Power BI y análisis de datos para la gerencia regional de inventarios, mediante Power Query y programación avanzada de Expresiones de Análisis de Datos (DAX) desde varias fuentes de datos, como SAP, MicroStrategy, Dremio (SQL), y AWS Glue.",
+
+        "experience-jobtitle-14":"Ingeniero de Datos @ CitiBank",
+        "experience-companyname-14":"<img class='experience-company-logo' src='../img/enterprises/tcs_logo.svg' alt='tcs_logo'>Tata Consultancy Services - Chile",
+        "experience-jobdate-14":"Septiembre 2022 a Diciembre 2022",
+        "experience-jobdescription-14":"Automatización de procesos de ingesta de datos (ETL) Servidor on-premise de Cloudera a través de UrbanCode Deploy y Autosys, manejo de HDFS (Hadoop) con código Pyspark para modelos de aprendizaje automático (Sckit-Learn de Python) y desarrollo de funciones en Python para visualización de datos en Tableau desde los sistemas de datos distribuidos HDFS Hive.",
+
+        "experience-jobtitle-15":"Gerente de Proyectos @ Banco Estado",
+        "experience-companyname-15":"<img class='experience-company-logo' src='../img/enterprises/tcs_logo.svg' alt='tcs_logo'>Tata Consultancy Services - Chile",
+        "experience-jobdate-15":"Enero 2023 a Marzo 2023",
+        "experience-jobdescription-15":"Colaboración en el proceso de cierre de proyecto para automatización de ingesta de datos desde distintos orígenes a través del desarrollo de una solución ETL en Python, y generación de informes de visualización datos en Power BI.",
+
+        "experience-jobtitle-16":"Consultor Freelance",
+        "experience-companyname-16":"<img class='experience-company-logo' src='../img/enterprises/freelance_logo.svg' alt='freelance_logo'>Freelance - Chile",
+        "experience-jobdate-16":"Abril 2023 al Presente",
+        "experience-jobdescription-16":"Gestión, coordinación y, modelado de elementos arquitectónicos y estructurales, incluidos los sistemas MEP en Revit, generación de modelos estándar IFC para construcción, creación, informes de detección de interferencias entre elementos de especialidades y creación de listas con cantidades de elementos, automatización de procesos de modelado coordinación y gestión de proyectos BIM a través del lenguaje de programación de nodos (Dynamo) y Python. Uso de PowerBI para mostrar mostrar métricas sobre el estado de proyectos BIM, sus especificaciones de técnicas de materiales entre otros."
+    },
+    "skills": {
+        "skill-title":"Habilidades",
+        "skill-category-1":"Herramientas de Office",
+        "skill-category-2":"Edición de imágenes y vídeos",
+        "skill-category-3":"Modelado 3D y Diseño CAD",
+        "skill-category-4":"Herramientas de Desarrollo BIM",
+        "skill-category-5":"Desarrollo web",
+        "skill-category-6":"Bases de datos",
+        "skill-category-7":"Herramientas para gestión de proyectos",
+        "skill-category-8":"Nubes de datos",
+        "skill-category-9":"Control de versiones y repositorios",
+        "skill-category-10":"Programación y ciencia de datos",
+        "skill-category-11":"Visualización de datos"
+    },
+    "education":{
+        "education-title":"Educación",
+        "education-academic-title":"Educación Académica",
+        "education-title-name-1":"T.S.U. Higiene y Seguridad Industrial",
+        "education-university-title-1":"<img class='education-university-img' src='../img/education/ujmv_logo.svg' alt='ujmv_logo'>Universidad José María Vargas",
+        "education-mode-title-1":"Presencial | Caracas, Venezuela",
+        "education-date-title-1":"January 1995 to January 1997",
+        "education-title-name-2":"Ingeniero Industrial mención Procesos",
+        "education-university-title-2":"<img class='education-university-img' src='../img/education/ujmv_logo.svg' alt='ujmv_logo'>Universidad José María Vargas",
+        "education-mode-title-2":"Presencial | Caracas, Venezuela",
+        "education-date-title-2":"January 1995 to January 2000",
+        "education-title-name-3":"Magíster en Adminitración de </br>Empresas",
+        "education-university-title-3":"<img class='education-university-img' src='../img/education/unimet_logo.svg' alt='unimet_logo'>Universidad Metropolitana",
+        "education-mode-title-3":"Presencial | Caracas, Venezuela",
+        "education-date-title-3":"January 2006 to July 2008",
+        "education-title-name-4":"Magíster en Big Data e Inteligencia </br>de Negocios",
+        "education-university-title-4":"<img class='education-university-img' src='../img/education/isabel-i_logo.svg' alt='isabel-i_logo'>Universidad Isabel I",
+        "education-mode-title-4":"Remoto | Madrid, España",
+        "education-date-title-4":"Septiembre 2019 a Marzo 2021",
+
+        "education-certifications-title":"Certificaciones",
+
+        "education-certification-name-1":"R Programming for Statistics </br>and Data Science 2021",
+        "education-institute-certification-1":"<img class='education-university-img' src='../img/education/udemy_logo.svg' alt='udemy_logo'> Udemy",
+        "education-credential-certification-1":"Credencial N°:",
+        "education-date-certification-1":"Emitida en Octubre 2021",
+
+        "education-certification-name-2":"Spark and Python for Big Data </br>with PySpark 2021",
+        "education-institute-certification-2":"<img class='education-university-img' src='../img/education/udemy_logo.svg' alt='udemy_logo'> Udemy",
+        "education-credential-certification-2":"Credencial N°:",
+        "education-date-certification-2":"Emitida en Noviembre 2021",
+
+        "education-certification-name-3":"SQL - MySQL for Data Analytics </br>and Business Intelligence",
+        "education-institute-certification-3":"<img class='education-university-img' src='../img/education/udemy_logo.svg' alt='udemy_logo'> Udemy",
+        "education-credential-certification-3":"Credencial N°:",
+        "education-date-certification-3":"Emitida en Noviembre 2021",
+
+        "education-certification-name-4":"Python for Data Science and </br>Data Analysis",
+        "education-institute-certification-4":"<img class='education-university-img' src='../img/education/udemy_logo.svg' alt='udemy_logo'> Udemy",
+        "education-credential-certification-4":"Credencial N°:",
+        "education-date-certification-4":"Emitida en Noviembre 2021",
+
+        "education-certification-name-5":"MongoDB - The Complete </br>Developer's Guide 2022",
+        "education-institute-certification-5":"<img class='education-university-img' src='../img/education/udemy_logo.svg' alt='udemy_logo'> Udemy",
+        "education-credential-certification-5":"Credencial N°:",
+        "education-date-certification-5":"Emitida en Noviembre 2021",
+
+        "education-certification-name-6":"Microsoft Power BI Desktop </br>for Business Intelligence",
+        "education-institute-certification-6":"<img class='education-university-img' src='../img/education/udemy_logo.svg' alt='udemy_logo'> Udemy",
+        "education-credential-certification-6":"Credencial N°:",
+        "education-date-certification-6":"Emitida en Diciembre 2021",
+
+        "education-certification-name-7":"Advanced DAX for Microsoft </br>Power BI Desktop",
+        "education-institute-certification-7":"<img class='education-university-img' src='../img/education/udemy_logo.svg' alt='udemy_logo'> Udemy",
+        "education-credential-certification-7":"Credencial N°:",
+        "education-date-certification-7":"Emitida en Abril 2022",
+
+        "education-certification-name-8":"Microsoft Power BI - Up & </br>Running With Power BI Service",
+        "education-institute-certification-8":"<img class='education-university-img' src='../img/education/udemy_logo.svg' alt='udemy_logo'> Udemy",
+        "education-credential-certification-8":"Credencial N°:",
+        "education-date-certification-8":"Emitida en Enero 2023",
+
+        "education-certification-name-9":"Tableau 2022 Advanced: Master </br>Tableau in Data Science",
+        "education-institute-certification-9":"<img class='education-university-img' src='../img/education/udemy_logo.svg' alt='udemy_logo'> Udemy",
+        "education-credential-certification-9":"Credencial N°:",
+        "education-date-certification-9":"Emitida en Julio 2023",
+        
+        "education-certification-name-10":"Revit Architecture 2017 Advanced",
+        "education-institute-certification-10":"<img class='education-university-img' src='../img/education/autodesk-training_logo.svg' alt='autodesk-training_logo'> Iconoespacio Training Center",
+        "education-credential-certification-10":"ID Credential:",
+        "education-date-certification-10":"Emitida en Mayo 2017",
+
+        "education-certification-name-11":"Revit Structure 2017 Advanced",
+        "education-institute-certification-11":"<img class='education-university-img' src='../img/education/autodesk-training_logo.svg' alt='autodesk-training_logo'> Iconoespacio Training Center",
+        "education-credential-certification-11":"ID Credential:",
+        "education-date-certification-11":"Emitida en Junio 2017",
+
+        "education-certification-name-12":"Revit MEP 2017 Advanced",
+        "education-institute-certification-12":"<img class='education-university-img' src='../img/education/autodesk-training_logo.svg' alt='autodesk-training_logo'> Iconoespacio Training Center",
+        "education-credential-certification-12":"ID Credential:",
+        "education-date-certification-12":"Emitida en Julio 2017",
+
+        "education-certification-name-13":"Autodesk Navisworks Manage 2017",
+        "education-institute-certification-13":"<img class='education-university-img' src='../img/education/autodesk-training_logo.svg' alt='autodesk-training_logo'> Iconoespacio Training Center",
+        "education-credential-certification-13":"ID Credential:",
+        "education-date-certification-13":"Emitida en Septiembre 2017"
+    },
+    "footer":{
+        "footer-design-by":"Diseñado por: <strong>Jhonatan Montilla</strong> | © 2023"
+    }
+}

@@ -43,6 +43,9 @@
   margin-top: 8px;
   font-weight: bold;
   text-transform: uppercase;
+
+  display: inline-flex;
+  align-items: center;
 }
 
 .experience-date {
@@ -61,6 +64,11 @@
   padding: 25px;
   max-width: 500px;
   margin: 0 auto;
+}
+
+.experience-company-logo {
+  width: 40px;
+  margin-right: 10px;
 }
 
 /* ###### Here Desktop Mode ###### */
