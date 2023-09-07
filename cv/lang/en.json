@@ -12,7 +12,7 @@
         "profile-language-language-3":"<img class='languages-flags-img' src='../img/flags/flag_esp.svg' alt='german-flag'>Native",
         "profile-title": "MBA, Project Manager, Data Engineering, Data Visualization, Data Analytics, BIM-MEP Specialist, BIM Manager, DevOps, 3D Modeler & Industrial Designer",
 
-        "profile-resume-bi": "Jhonatan is a professional with more than twenty years developing and managing many kind of projects, has played as a project manager with leadership, developing web and mobile applications projects.<br><br>His experience includes telecommunication platform deployment, audio-visual platform deployment, web, and mobile applications development, he acquired knowledge and skills in many programming languages, pointed out down below in the skills section.",
+        "profile-resume-bi": "Jhonatan is a professional with more than twenty years developing and managing many kinds of projects, has played as a project manager with leadership, developing web and mobile applications projects.<br><br>His experience includes telecommunication platform deployment, audio-visual platform deployment, web, and mobile applications development, he acquired knowledge and skills in many programming languages, pointed out down below in the skills section.",
         "profile-resume-bim": "Jhonatan is a professional with more than twenty years developing and managing many kind of projects, has played as a project manager with leadership, developing web and mobile applications projects.<br><br>He is a Building Information Modeling (BIM) professional expert, has played in different roles using BIM methodology such as BIM Modeler, BIM Coordinator and BIM Manager through Autodesk BIM-360 platform.",
         
         "profile-knowledge-title":"Knowledge",
@@ -65,32 +65,32 @@
         "experience-jobdate-6":"January 2016 to December 2016",
         "experience-jobdescription-6":"Modeling architectural, structure, mechanical, electrical and plumbing (MEP) Revit models for construction, creating elements quantity list, and material technical specifications.",
 
-        "experience-jobtitle-7":"BIM-MEP Modeler / Coordinator",
+        "experience-jobtitle-7":"BIM-MEP Modeler - Coordinator",
         "experience-companyname-7":"<img class='experience-company-logo' src='../img/enterprises/voyansi_logo.svg' alt='voyansi_logo'>AEC Resources (Voyansi) - Argentina",
         "experience-jobdate-7":"January 2017 to June 2017",
         "experience-jobdescription-7":"Review and estimate contract scopes, CAD information, architectural, structure and MEP models in order to get coordinated BIM Revit models for construction, creating elements quantity list, BIM projects schedule simulations (4D-5D), and showing results for customers in USA and Australia through remote meetings presentations.",
 
-        "experience-jobtitle-8":"BIM-MEP Modeler / Coordinator",
+        "experience-jobtitle-8":"BIM-MEP Modeler - Coordinator",
         "experience-companyname-8":"<img class='experience-company-logo' src='../img/enterprises/freelance_logo.svg' alt='freelance_logo'>Freelance - Chile",
         "experience-jobdate-8":"July 2017 to December 2017",
         "experience-jobdescription-8":"Modeling and coordination for architectural, structure, mechanical, electrical and plumbing (MEP) Revit models, creating elements quantity list, and material technical specifications.",
 
-        "experience-jobtitle-9":"BIM-MEP Modeler / Coordinator",
+        "experience-jobtitle-9":"BIM-MEP Modeler - Coordinator",
         "experience-companyname-9":"<img class='experience-company-logo' src='../img/enterprises/arqz_logo.svg' alt='arqz_logo'>ARQZ BIM, Ltda - Chile",
         "experience-jobdate-9":"January 2018 to June 2018",
         "experience-jobdescription-9":"Modeling and coordination for architectural, structure, mechanical, electrical and plumbing (MEP) Revit models, creating elements quantity list, and material technical specifications, and clash elements detection sessions in order to get Revit coordinated models.",
 
-        "experience-jobtitle-10":"BIM-MEP Modeler / Coordinator",
+        "experience-jobtitle-10":"BIM-MEP Modeler - Coordinator",
         "experience-companyname-10":"<img class='experience-company-logo' src='../img/enterprises/pry_logo.svg' alt='pry_logo'>Pry Ingeniería, S.A. - Chile",
         "experience-jobdate-10":"July 2018 to April 2020 ",
         "experience-jobdescription-10":"Review and estimate contract scopes, CAD information, architectural, structure and MEP models in order to generate BIM Revit models and floorplans for construction, creating elements quantity list, BIM projects schedule simulations (4D), clash elements detection sessions in order to get Revit coordinated models. for customers such as Sodimac, Falabella, WeWork, Chilean International Airport and, others.",
 
-        "experience-jobtitle-11":"Data Engineer & Data Analyst Freelance Consultant",
+        "experience-jobtitle-11":"Data Engineer & Data Analyst Consultant",
         "experience-companyname-11":"<img class='experience-company-logo' src='../img/enterprises/freelance_logo.svg' alt='freelance_logo'>Freelance - Chile",
         "experience-jobdate-11":"May 2020 to September 2020",
-        "experience-jobdescription-11":"Prediction and classification model’s creation using Python language, data cleaning and data analysis for advertising campaigns, data collecting and transformation for marketing research. Power BI assistance report builder using SQL (MySQL) data sources. Tutoring for basic python data analysis of large CSV files. Digital marketing data analysis, clean up and analysis of raw excel data for social media ads campaign with additional metrics calculated (data engineering). Scraping and wrangling data for competitive analysis and market research, competitors' general information with detailed data such as website traffic and pricing on certain products. Segment survey using statistical R program language. ",
+        "experience-jobdescription-11":"Prediction and classification model’s creation using Python language, data cleaning and data analysis for advertising campaigns, data collecting and transformation for marketing research. Power BI assistance report builder using SQL (MySQL) data sources. Tutoring for basic python data analysis of large CSV files. Digital marketing data analysis, clean up and analysis of raw excel data for social media ads campaign with additional metrics calculated (data engineering). Scraping and wrangling data for competitive analysis and market research, competitors' general information with detailed data such as website traffic and pricing on certain products. Segment survey using statistical R program language.",
 
-        "experience-jobtitle-12":"BIM-MEP Modeler / Coordinator",
+        "experience-jobtitle-12":"BIM-MEP Modeler - Coordinator",
         "experience-companyname-12":"<img class='experience-company-logo' src='../img/enterprises/buildbim_logo.svg' alt='buildbim_logo'>BuildBIM - Chile",
         "experience-jobdate-12":"October 2020 to December 2021",
         "experience-jobdescription-12":"Review and estimate contract scopes, CAD information, architectural, structure and MEP models in order to get coordinated BIM Revit models for construction, creating elements quantity list, BIM projects schedule simulations (4D-5D), and showing results for customers on New Zealand, Australia and other from abroad through remote meetings presentations.",
@@ -110,10 +110,10 @@
         "experience-jobdate-15":"January 2023 to March 2023",
         "experience-jobdescription-15":"Project closure collaboration process for data ingest automatization from different sources through an ETL solution development in Python, and Power BI data visualization reports generation.",
 
-        "experience-jobtitle-16":"Freelance Consultant",
+        "experience-jobtitle-16":"Consultant Engineer",
         "experience-companyname-16":"<img class='experience-company-logo' src='../img/enterprises/freelance_logo.svg' alt='freelance_logo'>Freelance - Chile",
         "experience-jobdate-16":"April 2023 to Present",
-        "experience-jobdescription-16":"Managing BIM Projects, Revit modeling and coordination of architectural, structure elements, including MEP systems generate IFC standard models for construction, creating, clash elements detection reports and elements quantity list, automate project modeling processes through node programing language (Dynamo) and Python. PowerBI for show status and project metrics, material specifications for all systems."
+        "experience-jobdescription-16":"<ul style='list-style: none;'><li><strong>BIM projects:</strong> Management, coordination and BIM modeling in Revit, automate project modeling processes through node programing language (Dynamo, Python), creating clash elements detection reports and elements quantity list. PowerBI use in order to show status, project metrics, and material specifications for all systems.</li><br><li><strong>Data Projects:</strong> Data cleaning and labeling from different data sources, in order to create data file repositories for further customer processing.</li></ul>"
     },
     "skills": {
         "skill-title":"Skills",
