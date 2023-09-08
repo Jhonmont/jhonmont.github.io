@@ -132,18 +132,22 @@
     "education":{
         "education-title":"Education",
         "education-academic-title":"Academic Education",
+
         "education-title-name-1":"Industrial Security Technician",
         "education-university-title-1":"<img class='education-university-img' src='../img/education/ujmv_logo.svg' alt='ujmv_logo'>José María Vargas University",
         "education-mode-title-1":"On-Site | Caracas, Venezuela",
         "education-date-title-1":"January 1995 to January 1997",
+
         "education-title-name-2":"Industrial Engineer - Processes",
         "education-university-title-2":"<img class='education-university-img' src='../img/education/ujmv_logo.svg' alt='ujmv_logo'>José María Vargas University",
         "education-mode-title-2":"On-Site | Caracas, Venezuela",
         "education-date-title-2":"January 1995 to January 2000",
+
         "education-title-name-3":"Master Of Business </br>Administration",
         "education-university-title-3":"<img class='education-university-img' src='../img/education/unimet_logo.svg' alt='unimet_logo'>Metropolitan University",
         "education-mode-title-3":"On-Site | Caracas, Venezuela",
         "education-date-title-3":"January 2006 to July 2008",
+
         "education-title-name-4":"Master in Big Data & Business </br>Intelligence",
         "education-university-title-4":"<img class='education-university-img' src='../img/education/isabel-i_logo.svg' alt='isabel-i_logo'>Isabel I University",
         "education-mode-title-4":"Remote | Madrid, España",
@@ -197,22 +201,22 @@
         "education-date-certification-9":"Issued July 2023",
         
         "education-certification-name-10":"Revit Architecture 2017 Advanced",
-        "education-institute-certification-10":"<img class='education-university-img' src='../img/education/autodesk-training_logo.svg' alt='autodesk-training_logo'> Iconoespacio Training Center",
+        "education-institute-certification-10":"<img class='education-university-img' src='../img/education/autodesk-training_logo.svg' alt='autodesk-training_logo'> Icono Espacio Venezuela",
         "education-credential-certification-10":"ID Credential:",
         "education-date-certification-10":"Issue: May 2017",
 
         "education-certification-name-11":"Revit Structure 2017 Advanced",
-        "education-institute-certification-11":"<img class='education-university-img' src='../img/education/autodesk-training_logo.svg' alt='autodesk-training_logo'> Iconoespacio Training Center",
+        "education-institute-certification-11":"<img class='education-university-img' src='../img/education/autodesk-training_logo.svg' alt='autodesk-training_logo'> Icono Espacio Venezuela",
         "education-credential-certification-11":"ID Credential:",
         "education-date-certification-11":"Issue: June 2017",
 
         "education-certification-name-12":"Revit MEP 2017 Advanced",
-        "education-institute-certification-12":"<img class='education-university-img' src='../img/education/autodesk-training_logo.svg' alt='autodesk-training_logo'> Iconoespacio Training Center",
+        "education-institute-certification-12":"<img class='education-university-img' src='../img/education/autodesk-training_logo.svg' alt='autodesk-training_logo'> Icono Espacio Venezuela",
         "education-credential-certification-12":"ID Credential:",
         "education-date-certification-12":"Issue: July 2017",
 
         "education-certification-name-13":"Autodesk Navisworks Manage 2017",
-        "education-institute-certification-13":"<img class='education-university-img' src='../img/education/autodesk-training_logo.svg' alt='autodesk-training_logo'> Iconoespacio Training Center",
+        "education-institute-certification-13":"<img class='education-university-img' src='../img/education/autodesk-training_logo.svg' alt='autodesk-training_logo'> Icono Espacio Venezuela",
         "education-credential-certification-13":"ID Credential:",
         "education-date-certification-13":"Issue: September 2017"
     },

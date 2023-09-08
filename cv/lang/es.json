@@ -131,19 +131,23 @@
     },
     "education":{
         "education-title":"Educación",
+
         "education-academic-title":"Educación Académica",
         "education-title-name-1":"T.S.U. Higiene y Seguridad Industrial",
         "education-university-title-1":"<img class='education-university-img' src='../img/education/ujmv_logo.svg' alt='ujmv_logo'>Universidad José María Vargas",
         "education-mode-title-1":"Presencial | Caracas, Venezuela",
         "education-date-title-1":"Enero 1995 a Enero 1997",
+
         "education-title-name-2":"Ingeniero Industrial mención Procesos",
         "education-university-title-2":"<img class='education-university-img' src='../img/education/ujmv_logo.svg' alt='ujmv_logo'>Universidad José María Vargas",
         "education-mode-title-2":"Presencial | Caracas, Venezuela",
         "education-date-title-2":"Enero 1995 a Enero 2000",
-        "education-title-name-3":"Magíster en Adminitración de </br>Empresas",
+
+        "education-title-name-3":"Magíster en Administración de </br>Empresas",
         "education-university-title-3":"<img class='education-university-img' src='../img/education/unimet_logo.svg' alt='unimet_logo'>Universidad Metropolitana",
         "education-mode-title-3":"Presencial | Caracas, Venezuela",
         "education-date-title-3":"Enero 2006 a Julio 2008",
+
         "education-title-name-4":"Magíster en Big Data e Inteligencia </br>de Negocios",
         "education-university-title-4":"<img class='education-university-img' src='../img/education/isabel-i_logo.svg' alt='isabel-i_logo'>Universidad Isabel I",
         "education-mode-title-4":"Remoto | Madrid, España",
@@ -197,23 +201,23 @@
         "education-date-certification-9":"Emitida en Julio 2023",
         
         "education-certification-name-10":"Revit Architecture 2017 Advanced",
-        "education-institute-certification-10":"<img class='education-university-img' src='../img/education/autodesk-training_logo.svg' alt='autodesk-training_logo'> Iconoespacio Training Center",
-        "education-credential-certification-10":"ID Credential:",
+        "education-institute-certification-10":"<img class='education-university-img' src='../img/education/autodesk-training_logo.svg' alt='autodesk-training_logo'> Icono Espacio Venezuela",
+        "education-credential-certification-10":"Credencial N°:",
         "education-date-certification-10":"Emitida en Mayo 2017",
 
         "education-certification-name-11":"Revit Structure 2017 Advanced",
-        "education-institute-certification-11":"<img class='education-university-img' src='../img/education/autodesk-training_logo.svg' alt='autodesk-training_logo'> Iconoespacio Training Center",
-        "education-credential-certification-11":"ID Credential:",
+        "education-institute-certification-11":"<img class='education-university-img' src='../img/education/autodesk-training_logo.svg' alt='autodesk-training_logo'> Icono Espacio Venezuela",
+        "education-credential-certification-11":"Credencial N°:",
         "education-date-certification-11":"Emitida en Junio 2017",
 
         "education-certification-name-12":"Revit MEP 2017 Advanced",
-        "education-institute-certification-12":"<img class='education-university-img' src='../img/education/autodesk-training_logo.svg' alt='autodesk-training_logo'> Iconoespacio Training Center",
-        "education-credential-certification-12":"ID Credential:",
+        "education-institute-certification-12":"<img class='education-university-img' src='../img/education/autodesk-training_logo.svg' alt='autodesk-training_logo'> Icono Espacio Venezuela",
+        "education-credential-certification-12":"Credencial N°:",
         "education-date-certification-12":"Emitida en Julio 2017",
 
         "education-certification-name-13":"Autodesk Navisworks Manage 2017",
-        "education-institute-certification-13":"<img class='education-university-img' src='../img/education/autodesk-training_logo.svg' alt='autodesk-training_logo'> Iconoespacio Training Center",
-        "education-credential-certification-13":"ID Credential:",
+        "education-institute-certification-13":"<img class='education-university-img' src='../img/education/autodesk-training_logo.svg' alt='autodesk-training_logo'> Icono Espacio Venezuela",
+        "education-credential-certification-13":"Credencial N°:",
         "education-date-certification-13":"Emitida en Septiembre 2017"
     },
     "footer":{
