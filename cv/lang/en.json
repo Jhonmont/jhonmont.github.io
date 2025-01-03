@@ -10,10 +10,10 @@
         "profile-language-language-1":"<img class='languages-flags-img' src='../img/flags/flag_eng.svg' alt='england-flag'>Full professional proficiency",
         "profile-language-language-2":"<img class='languages-flags-img' src='../img/flags/flag_ger.svg' alt='german-flag'>Basic Apprentice",
         "profile-language-language-3":"<img class='languages-flags-img' src='../img/flags/flag_esp.svg' alt='german-flag'>Native",
-        "profile-title": "MBA, Project Manager, Data Engineering, Data Visualization, Data Analytics, BIM-MEP Specialist, BIM Manager, DevOps, 3D Modeler & Industrial Designer",
+        "profile-title": "Technology Innovation, Digital Transformation, Data Visualization and Analysis, BIM Coordination Specialist, Project Engineer, Project Management.",
 
-        "profile-resume-bi": "Jhonatan is a professional with more than twenty years developing and managing many kinds of projects, has played as a project manager with leadership, developing web and mobile applications projects.<br><br>His experience includes telecommunication platform deployment, audio-visual platform deployment, web, and mobile applications development, he acquired knowledge and skills in many programming languages, pointed out down below in the skills section.",
-        "profile-resume-bim": "Jhonatan is a professional with more than twenty years developing and managing many kind of projects, has played as a project manager with leadership, developing web and mobile applications projects.<br><br>He is a Building Information Modeling (BIM) professional expert, has played in different roles using BIM methodology such as BIM Modeler, BIM Coordinator and BIM Manager through Autodesk BIM-360 platform.",
+        "profile-resume-bi": "Jhonatan is a professional with experience in project management and, data analysis. Currently leading data projects through data cleaning, labeling, and repository creation, skilled in implementing project integration and coordination.<br><br>Has developed Power BI visualization solutions and automated data ingestion across various platforms. Experienced in coordinating multidisciplinary teams, improving project planning and execution, committed to continuous improvement and optimizing processes and outcomes.",
+        "profile-resume-bim": "Jhonatan is a professional with experience in project management, BIM modeling and, BIM Coordination, optimizing processes with Dynamo and Revit API through Python.<br><br>Skilled in implementing BIM models with Revit and Navisworks, ensuring project integration and coordination. Has developed Power BI visualization solutions and experienced in coordinating multidisciplinary teams and 4D simulations, improving project planning and execution, committed to continuous improvement and optimizing processes and outcomes.",
         
         "profile-knowledge-title":"Knowledge",
 
@@ -35,85 +35,85 @@
     "experiences": {
         "experiences-title":"Experiences",
 
-        "experience-jobtitle-1":"Site Field Engineer",
+        "experience-jobtitle-1":"Project Engineer",
         "experience-companyname-1":"<img class='experience-company-logo' src='../img/enterprises/nokia_logo.svg' alt='nokia_logo'>Nokia - Venezuela",
         "experience-jobdate-1":"January 2002 to April 2004",
-        "experience-jobdescription-1":"Responsible for establish the initial site status records, update old records details such as AutoCAD drawings indicating physical location, the telecommunications equipment configuration and ensure its correct installation.",
+        "experience-jobdescription-1":"Complete records created and maintained on the initial condition of the facilities, with continuous updates to floor plans, views, and elevations in AutoCAD. This improved accuracy in the planning and execution of telecommunications equipment installation. Additionally, support provided for the proper installation of electronic equipment by ensuring configurations aligned with the detailed plans.",
 
-        "experience-jobtitle-2":"System Equipment Engineer",
+        "experience-jobtitle-2":"Equipment Engineer",
         "experience-companyname-2":"<img class='experience-company-logo' src='../img/enterprises/nokia_logo.svg' alt='nokia_logo'>Nokia - Venezuela",
         "experience-jobdate-2":"May 2004 to August 2006",
-        "experience-jobdescription-2":"Responsible for verify customer requirements, review purchase orders, perform site inspections for equipment placement, establish the space required for telecommunications equipment installation, complete equipment configuration, and ensure the correct material procurement is ordered.",
+        "experience-jobdescription-2":"Customer requirements carefully verified, ensuring alignment between expectations and solutions. Detailed site inspections conducted to ensure proper conditions for the installation of telecommunications equipment and its configuration according to standards. Post-installation functionality ensured through purchase orders and efficient material procurement, preventing delays in the installation process.",
 
-        "experience-jobtitle-3":"Project Financial Accountant",
+        "experience-jobtitle-3":"Project Financial Accountant Analyst",
         "experience-companyname-3":"<img class='experience-company-logo' src='../img/enterprises/nokia_logo.svg' alt='nokia_logo'>Nokia - Venezuela",
         "experience-jobdate-3":"September 2006 to October 2008",
-        "experience-jobdescription-3":"Responsible for project financial activities analysis, provide information on costs, productivity, margins and expenses in order to allow directors board make budget and investment decisions. Prepare profit and loss reports, collect and analyze weekly and monthly data estimates used, respond to financial queries through data analysis and interpretation, advise on estimates for project financing, create KPI reports, weekly cash flow statements and control preparing expenses, conducting internal audits such as proposed budget reviews, examining financial records in SAP platform for accuracy, managing necessary training for projects staff.",
+        "experience-jobdescription-3":"Profit and loss reports created, providing key insights for strategic decision-making. Financial forecasts improved through data analysis from SAP, along with weekly and monthly estimates. Effective responses generated for financial inquiries with clear estimates, using KPI reports and cash flow statements. Project financial planning optimized by conducting internal audits and reviewing budget proposals, ensuring compliance with financial processes. Additionally, project staff trained, enhancing their understanding of processes and improving the team's capabilities.",
 
-        "experience-jobtitle-4":"Software Development Project Manager",
+        "experience-jobtitle-4":"Technical Project Manager - Application Development",
         "experience-companyname-4":"<img class='experience-company-logo' src='../img/enterprises/strix_logo.svg' alt='strix_logo'>Strix Technologies, C.A. - Venezuela",
         "experience-jobdate-4":"November 2008 to December 2015",
-        "experience-jobdescription-4":"As project manager responsible for be an integral part of the strategy and development, supervising developers team members, establishing procedures and processes following PMI project management methodology, establishing an objective vision with active leadership style, providing guidance through procedures and guidelines to develop a winner’s environment, establishing effective communication between project members and stakeholders about projects planning, risks analysis, risk mitigation, execution plan and project closing with lesson learned.",
+        "experience-jobdescription-4":"A full-stack development team successfully supervised, delivering projects on time and to high-quality standards. Processes implemented in alignment with PMI methodology, ensuring efficient management. A positive work environment fostered, achieving high productivity and collaboration. Risk mitigation plans put in place, addressing issues before they impacted the project. Project closure successful, with documentation of lessons learned and continuous process improvement for future projects.",
 
-        "experience-jobtitle-5":"Post Grade Professor",
+        "experience-jobtitle-5":"Postgraduate Professor",
         "experience-companyname-5":"<img class='experience-company-logo' src='../img/education/unimet_logo.svg' alt='unimet_logo'>Universidad Metropolitana (UNIMET) - Venezuela",
         "experience-jobdate-5":"May 2012 to December 2012",
-        "experience-jobdescription-5":"Teaching project management processes and project management professional tools in the UNIMET specialization and master academic programs.",
+        "experience-jobdescription-5":"Curricula designed and implemented for specialization and master’s programs, covering all phases of the project lifecycle. Students trained in key project management tools such as Microsoft Project and other industry platforms. Additionally, practical activities and case studies developed to apply theoretical knowledge, enhancing their readiness to tackle real-world projects. An interactive and collaborative learning environment fostered, encouraging active participation in the development of both academic and professional projects.",
 
         "experience-jobtitle-6":"BIM-MEP Modeler",
         "experience-companyname-6":"<img class='experience-company-logo' src='../img/enterprises/freelance_logo.svg' alt='freelance_logo'>Freelance - Venezuela",
         "experience-jobdate-6":"January 2016 to December 2016",
-        "experience-jobdescription-6":"Modeling architectural, structure, mechanical, electrical and plumbing (MEP) Revit models for construction, creating elements quantity list, and material technical specifications.",
+        "experience-jobdescription-6":"Integrated BIM models successfully developed using Revit, enabling accurate visualization and effective coordination of project elements. Detailed quantity takeoffs and material specifications prepared, reducing errors and ensuring proper procurement. Descriptive reports also created to validate the project design and execution. Coordination between specialties optimized using Navisworks, enhancing the efficiency of both design and construction.",
 
         "experience-jobtitle-7":"BIM-MEP Modeler - Coordinator",
-        "experience-companyname-7":"<img class='experience-company-logo' src='../img/enterprises/voyansi_logo.svg' alt='voyansi_logo'>AEC Resources (Voyansi) - Argentina",
+        "experience-companyname-7":"<img class='experience-company-logo' src='../img/enterprises/voyansi_logo.svg' alt='voyansi_logo'>Voyansi (Hexagon Group) - Argentina",
         "experience-jobdate-7":"January 2017 to June 2017",
-        "experience-jobdescription-7":"Review and estimate contract scopes, CAD information, architectural, structure and MEP models in order to get coordinated BIM Revit models for construction, creating elements quantity list, BIM projects schedule simulations (4D-5D), and showing results for customers in USA and Australia through remote meetings presentations.",
+        "experience-jobdescription-7":"BIM models effectively coordinated, integrating all specialties to ensure seamless execution. 4D BIM schedule simulations created using Navisworks and Synchro, facilitating the visualization of deadlines and costs, which improved project planning and tracking. Additionally, results successfully presented to clients in the United States and Australia via remote platforms, demonstrating effective communication and the delivery of innovative solutions on an international scale.",
 
         "experience-jobtitle-8":"BIM-MEP Modeler - Coordinator",
         "experience-companyname-8":"<img class='experience-company-logo' src='../img/enterprises/freelance_logo.svg' alt='freelance_logo'>Freelance - Chile",
         "experience-jobdate-8":"July 2017 to December 2017",
-        "experience-jobdescription-8":"Modeling and coordination for architectural, structure, mechanical, electrical and plumbing (MEP) Revit models, creating elements quantity list, and material technical specifications.",
+        "experience-jobdescription-8":"Coordinated BIM models developed for various specialties, providing accurate visualization of the projects. Quantity takeoffs and material specifications created, facilitating procurement planning and project execution. Effective coordination between specialties ensured seamless integration, optimizing resources and timelines. Additionally, models and detailed documentation delivered, enhancing decision-making and communication with the project teams during execution.",
 
         "experience-jobtitle-9":"BIM-MEP Modeler - Coordinator",
         "experience-companyname-9":"<img class='experience-company-logo' src='../img/enterprises/arqz_logo.svg' alt='arqz_logo'>ARQZ BIM, Ltda - Chile",
         "experience-jobdate-9":"January 2018 to June 2018",
-        "experience-jobdescription-9":"Modeling and coordination for architectural, structure, mechanical, electrical and plumbing (MEP) Revit models, creating elements quantity list, and material technical specifications, and clash elements detection sessions in order to get Revit coordinated models.",
+        "experience-jobdescription-9":"BIM models built for all specialties in Revit, ensuring smooth project execution and detailed procurement planning. Accurate quantity takeoffs and material specifications created, optimizing resource organization. Clash detection and resolution using Navisworks enabled the delivery of coordinated, conflict-free models, reducing errors. Additionally, detailed documentation provided, improving decision-making and communication with the construction team, which helped reduce execution time and project costs.",
 
         "experience-jobtitle-10":"BIM-MEP Modeler - Coordinator",
         "experience-companyname-10":"<img class='experience-company-logo' src='../img/enterprises/pry_logo.svg' alt='pry_logo'>Pry Ingeniería, S.A. - Chile",
         "experience-jobdate-10":"July 2018 to April 2020 ",
-        "experience-jobdescription-10":"Review and estimate contract scopes, CAD information, architectural, structure and MEP models in order to generate BIM Revit models and floorplans for construction, creating elements quantity list, BIM projects schedule simulations (4D), clash elements detection sessions in order to get Revit coordinated models. for customers such as Sodimac, Falabella, WeWork, Chilean International Airport and, others.",
+        "experience-jobdescription-10":"Architectural, structural, and MEP models for Sodimac stores nationwide were successfully coordinated, ensuring integration and optimization of the designs. Fully coordinated BIM models were created, eliminating clashes and improving construction efficiency. Additionally, 4D simulations were implemented using Autodesk Navisworks, allowing precise visualization of schedules and facilitating time management on the projects, reducing errors and improving the execution process.",
 
-        "experience-jobtitle-11":"Data Engineer & Data Analyst Consultant",
+        "experience-jobtitle-11":"Freelance Engineer",
         "experience-companyname-11":"<img class='experience-company-logo' src='../img/enterprises/freelance_logo.svg' alt='freelance_logo'>Freelance - Chile",
         "experience-jobdate-11":"May 2020 to September 2020",
-        "experience-jobdescription-11":"Prediction and classification model’s creation using Python language, data cleaning and data analysis for advertising campaigns, data collecting and transformation for marketing research. Power BI assistance report builder using SQL (MySQL) data sources. Tutoring for basic python data analysis of large CSV files. Digital marketing data analysis, clean up and analysis of raw excel data for social media ads campaign with additional metrics calculated (data engineering). Scraping and wrangling data for competitive analysis and market research, competitors' general information with detailed data such as website traffic and pricing on certain products. Segment survey using statistical R program language.",
+        "experience-jobdescription-11":"Prediction and classification models created in Python, enhancing the effectiveness advertising campaigns by anticipating consumer behavior. Large files (.csv, .parquet, SQL) cleaned and analyzed, improving data quality for marketing. Interactive reports generated in Power BI from SQL data, making it easier to visualize metrics and results. Additionally, data analysis consulting provided with Python, improving the teams' ability to handle large volumes of data, and key insights from competitors gathered to optimize marketing strategies.",
 
         "experience-jobtitle-12":"BIM-MEP Modeler - Coordinator",
         "experience-companyname-12":"<img class='experience-company-logo' src='../img/enterprises/buildbim_logo.svg' alt='buildbim_logo'>BuildBIM - Chile",
         "experience-jobdate-12":"October 2020 to December 2021",
-        "experience-jobdescription-12":"Review and estimate contract scopes, CAD information, architectural, structure and MEP models in order to get coordinated BIM Revit models for construction, creating elements quantity list, BIM projects schedule simulations (4D-5D), and showing results for customers on New Zealand, Australia and other from abroad through remote meetings presentations.",
+        "experience-jobdescription-12":"BIM models created in Revit for construction projects, validated in Navisworks to ensure proper integration of elements. 4D schedule simulations generated, improving visibility of progress and resource management. Successful remote presentations delivered to international customers, showcasing results accurately and on time. Additionally, coordination between disciplines optimized using BIMTrack, enhancing collaboration between MEP teams and reducing errors, which increased project efficiency.",
 
-        "experience-jobtitle-13":"Data Visualization Engineer @ Cencosud",
+        "experience-jobtitle-13":"Professional Services Engineer",
         "experience-companyname-13":"<img class='experience-company-logo' src='../img/enterprises/acl_logo.svg' alt='acl_logo'>ACL Tecnología - Chile",
         "experience-jobdate-13":"January 2022 to August 2022",
-        "experience-jobdescription-13":"Data analytics and Power BI reports builder using Power Query and advance Data Analysis Expressions (DAX) programming from several data sources Kubernetes.",
+        "experience-jobdescription-13":"Detailed graphical reports created in Power BI for Cencosud’s regional inventory management, improving the accuracy and efficiency of analyses using DAX. Data integration from sources such as SAP, MicroStrategy, SQL, and AWS Glue provided a comprehensive view of inventory management. This facilitated key decision-making, optimizing the company’s operations and resources with clear reports and visualizations on product performance and operations, contributing to the success of regional inventory management.",
 
-        "experience-jobtitle-14":"Data Engineer @ CitiBank",
+        "experience-jobtitle-14":"Professional Services Engineer",
         "experience-companyname-14":"<img class='experience-company-logo' src='../img/enterprises/tcs_logo.svg' alt='tcs_logo'>Tata Consultancy Services - Chile",
         "experience-jobdate-14":"September 2022 to December 2022",
-        "experience-jobdescription-14":"ETL data processes automatization from HDFS Hadoop Ecosystem through PySpark, machine learning model’s development using Scikit-Learn and TensorFlow technologies, including Tableau advance data visualization reports.",
+        "experience-jobdescription-14":"<strong>At CityBank</strong>, data ingestion automated on Cloudera servers using UrbanCode Deploy and Autosys, optimizing the speed and accuracy of processes. Additionally, machine learning models implemented in Python (Scikit-Learn) and advanced data visualization in Tableau, enhancing efficiency and data-driven decision-making.",
 
-        "experience-jobtitle-15":"Project Manager @ Banco Estado ",
+        "experience-jobtitle-15":"Professional Services Engineer",
         "experience-companyname-15":"<img class='experience-company-logo' src='../img/enterprises/tcs_logo.svg' alt='tcs_logo'>Tata Consultancy Services - Chile",
         "experience-jobdate-15":"January 2023 to March 2023",
-        "experience-jobdescription-15":"Project closure collaboration process for data ingest automatization from different sources through an ETL solution development in Python, and Power BI data visualization reports generation.",
+        "experience-jobdescription-15":"<strong>At Banco Estado</strong>, an ETL solution developed in Python to automate data ingestion at Banco Estado, improving processing and generating visual reports in Power BI to provide clear metrics on asset management.",
 
-        "experience-jobtitle-16":"Consultant Engineer",
+        "experience-jobtitle-16":"Freelance Engineer",
         "experience-companyname-16":"<img class='experience-company-logo' src='../img/enterprises/freelance_logo.svg' alt='freelance_logo'>Freelance - Chile",
         "experience-jobdate-16":"April 2023 to Present",
-        "experience-jobdescription-16":"<ul style='list-style: none;'><li><strong>BIM projects:</strong> Management, coordination and BIM modeling in Revit, automate project modeling processes through node programing language (Dynamo, Python), creating clash elements detection reports and elements quantity list. PowerBI use in order to show status, project metrics, and material specifications for all systems.</li><br><li><strong>Data Projects:</strong> Data cleaning and labeling from different data sources, in order to create data file repositories for further customer processing.</li></ul>"
+        "experience-jobdescription-16":"<ul style='list-style: none;'><li><strong>Data projects</strong> completed by cleaning, labeling, and creating optimized repositories for processing within specific projects.</li><br><li><strong>BIM projects</strong> successful modeling and coordination achieved using Revit and Navisworks, ensuring seamless integration and optimization of project elements. Processes automated using Dynamo and Python, reducing time and increasing accuracy. Additionally, Power BI visualization solutions implemented, providing clear metrics to monitor project status and progress in real-time.</li></ul>"
     },
     "skills": {
         "skill-title":"Skills",
